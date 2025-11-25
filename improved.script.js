@@ -1,1 +1,872 @@
-'use strict';(function(_0x46ef62,_0x3af915){const _0x317014=_0x2dca,_0x5441c5=_0x46ef62();while(!![]){try{const _0x222154=-parseInt(_0x317014(0x1ae))/0x1*(parseInt(_0x317014(0x198))/0x2)+parseInt(_0x317014(0x1c5))/0x3*(-parseInt(_0x317014(0x14f))/0x4)+-parseInt(_0x317014(0x120))/0x5*(-parseInt(_0x317014(0x14c))/0x6)+-parseInt(_0x317014(0x1be))/0x7*(-parseInt(_0x317014(0x197))/0x8)+-parseInt(_0x317014(0x13f))/0x9+-parseInt(_0x317014(0x121))/0xa+parseInt(_0x317014(0x1ab))/0xb;if(_0x222154===_0x3af915)break;else _0x5441c5['push'](_0x5441c5['shift']());}catch(_0x20a027){_0x5441c5['push'](_0x5441c5['shift']());}}}(_0x2325,0x21b56));let contestants=[],contestantNames={},judges=[],categories=[],categoryNames={};const scoresData={};let dropOutliers=![],useAverageForWinner=!![],currentCarouselIndex=0x0;function setupContestants(){const _0x59a952=_0x2dca;console['log']('setupContestants\x20called');const _0x189caf=document['getElementById'](_0x59a952(0x150));console[_0x59a952(0x17e)]('numInput\x20element:',_0x189caf);if(!_0x189caf){console['error']('numContestants\x20element\x20not\x20found!'),alert(_0x59a952(0x12d));return;}const _0x41ce08=parseInt(_0x189caf[_0x59a952(0x1a3)]);console[_0x59a952(0x17e)](_0x59a952(0x14e),_0x41ce08);if(isNaN(_0x41ce08)||_0x41ce08<0x1){alert('Please\x20enter\x20a\x20valid\x20number\x20of\x20contestants\x20(must\x20be\x201\x20or\x20more)');return;}contestants=[],contestantNames={};for(let _0x41df9f=0x1;_0x41df9f<=_0x41ce08;_0x41df9f++){contestants[_0x59a952(0x1bd)](_0x41df9f),contestantNames[_0x41df9f]=_0x59a952(0x181)+_0x41df9f;}console['log']('Contestants\x20array:',contestants);const _0x4d1ae7=document[_0x59a952(0x142)](_0x59a952(0x182));if(_0x4d1ae7){let _0x4994d3=_0x59a952(0x1c8)+_0x41ce08+_0x59a952(0x170);_0x4d1ae7[_0x59a952(0x175)]=_0x4994d3,console['log']('Display\x20updated\x20successfully');}else console[_0x59a952(0x191)](_0x59a952(0x18c));localStorage[_0x59a952(0x17a)](_0x59a952(0x1a4),JSON[_0x59a952(0x13b)](contestants)),console['log'](_0x59a952(0x179));}function setupCategories(){const _0x4a005a=_0x2dca;console[_0x4a005a(0x17e)](_0x4a005a(0x18e));const _0x3b4b3a=document[_0x4a005a(0x142)](_0x4a005a(0x13a));if(!_0x3b4b3a){console[_0x4a005a(0x191)]('numCategories\x20element\x20not\x20found!'),alert('Error:\x20numCategories\x20element\x20not\x20found');return;}const _0x2bafb7=parseInt(_0x3b4b3a[_0x4a005a(0x1a3)]);console[_0x4a005a(0x17e)](_0x4a005a(0x15a),_0x2bafb7);if(isNaN(_0x2bafb7)||_0x2bafb7<0x1){alert(_0x4a005a(0x1b7));return;}categories=[],categoryNames={};for(let _0x3e8efd=0x1;_0x3e8efd<=_0x2bafb7;_0x3e8efd++){categories[_0x4a005a(0x1bd)]('category_'+_0x3e8efd),categoryNames['category_'+_0x3e8efd]=_0x4a005a(0x14a)+_0x3e8efd;}console[_0x4a005a(0x17e)]('Categories\x20array:',categories);const _0x616742=document[_0x4a005a(0x142)](_0x4a005a(0x124));if(_0x616742){let _0x1b5a81=_0x4a005a(0x177);_0x1b5a81+=_0x4a005a(0x132);for(let _0x190901=0x0;_0x190901<categories[_0x4a005a(0x1c2)];_0x190901++){const _0x2496a5=categories[_0x190901];_0x1b5a81+=_0x4a005a(0x144),_0x1b5a81+=_0x4a005a(0x195)+_0x190901+_0x4a005a(0x148)+(_0x190901+0x1)+_0x4a005a(0x1c9),_0x1b5a81+='<input\x20type=\x22text\x22\x20id=\x22categoryName'+_0x190901+_0x4a005a(0x15b)+categoryNames[_0x2496a5]+'\x22>',_0x1b5a81+='</div>';}_0x1b5a81+=_0x4a005a(0x128),_0x1b5a81+=_0x4a005a(0x1a7),_0x616742[_0x4a005a(0x175)]=_0x1b5a81;}localStorage[_0x4a005a(0x17a)](_0x4a005a(0x12f),JSON[_0x4a005a(0x13b)](categories)),localStorage[_0x4a005a(0x17a)]('pageantCategoryNames',JSON[_0x4a005a(0x13b)](categoryNames));}function saveCategoryNames(){const _0x1302b7=_0x2dca;for(let _0x14d56c=0x0;_0x14d56c<categories['length'];_0x14d56c++){const _0x2c31dd=categories[_0x14d56c],_0x477288=document['getElementById'](_0x1302b7(0x16d)+_0x14d56c),_0x3fd2c7=_0x477288[_0x1302b7(0x1a3)]['trim']();_0x3fd2c7&&(categoryNames[_0x2c31dd]=_0x3fd2c7);}for(let _0x38d24d=0x0;_0x38d24d<categories[_0x1302b7(0x1c2)];_0x38d24d++){scoresData[categories[_0x38d24d]]=[];}localStorage[_0x1302b7(0x17a)]('pageantCategoryNames',JSON[_0x1302b7(0x13b)](categoryNames)),alert(_0x1302b7(0x1af));}function setupJudges(){const _0x45d4a7=_0x2dca;console[_0x45d4a7(0x17e)](_0x45d4a7(0x147));const _0x1320ce=document[_0x45d4a7(0x142)](_0x45d4a7(0x158));if(!_0x1320ce){console[_0x45d4a7(0x191)]('numJudges\x20element\x20not\x20found!'),alert(_0x45d4a7(0x138));return;}const _0x18bb8e=parseInt(_0x1320ce['value']);console[_0x45d4a7(0x17e)](_0x45d4a7(0x143),_0x18bb8e);if(isNaN(_0x18bb8e)||_0x18bb8e<0x1){alert(_0x45d4a7(0x1cc));return;}judges=[];for(let _0x2a8554=0x1;_0x2a8554<=_0x18bb8e;_0x2a8554++){judges[_0x45d4a7(0x1bd)](_0x2a8554);}console[_0x45d4a7(0x17e)](_0x45d4a7(0x122),judges);const _0x11049f=document[_0x45d4a7(0x142)]('judgeListDisplay');if(_0x11049f){let _0x328137=_0x45d4a7(0x1c7)+_0x18bb8e+_0x45d4a7(0x178);_0x11049f[_0x45d4a7(0x175)]=_0x328137,console[_0x45d4a7(0x17e)](_0x45d4a7(0x125));}else console[_0x45d4a7(0x191)]('judgeListDisplay\x20element\x20not\x20found!');generateScoreTables(),localStorage[_0x45d4a7(0x17a)](_0x45d4a7(0x169),JSON[_0x45d4a7(0x13b)](judges)),console['log'](_0x45d4a7(0x13d));}function generateScoreTables(){const _0x5f079d=_0x2dca,_0x5b73d4=document[_0x5f079d(0x142)]('scoreTableSection'),_0x412f68=document[_0x5f079d(0x142)](_0x5f079d(0x174));if(!_0x5b73d4||!_0x412f68){console[_0x5f079d(0x191)](_0x5f079d(0x146));return;}if(!contestants||contestants[_0x5f079d(0x1c2)]===0x0){alert(_0x5f079d(0x133));return;}if(!categories||categories[_0x5f079d(0x1c2)]===0x0){alert('Please\x20create\x20categories\x20first');return;}if(!judges||judges[_0x5f079d(0x1c2)]===0x0){alert('Please\x20create\x20judges\x20first');return;}let _0x346d06='';for(let _0x437dbc=0x0;_0x437dbc<categories[_0x5f079d(0x1c2)];_0x437dbc++){const _0x277b3b=categories[_0x437dbc],_0x1063c9=categoryNames[_0x277b3b];_0x346d06+=_0x5f079d(0x141),_0x346d06+=_0x5f079d(0x1b0),_0x346d06+='<h4\x20class=\x22mb-0\x22>'+_0x1063c9+'</h4>',_0x346d06+=_0x5f079d(0x128),_0x346d06+=_0x5f079d(0x1c1),_0x346d06+='<table\x20class=\x22table\x20table-bordered\x22>',_0x346d06+=_0x5f079d(0x19e),_0x346d06+='<tr>',_0x346d06+=_0x5f079d(0x161);for(let _0x5b0d36=0x0;_0x5b0d36<judges[_0x5f079d(0x1c2)];_0x5b0d36++){_0x346d06+='<th>Judge\x20#'+judges[_0x5b0d36]+_0x5f079d(0x183);}_0x346d06+=_0x5f079d(0x165),_0x346d06+='</thead>',_0x346d06+='<tbody>';for(let _0x21c146=0x0;_0x21c146<contestants[_0x5f079d(0x1c2)];_0x21c146++){const _0x218050=contestants[_0x21c146];_0x346d06+=_0x5f079d(0x12c),_0x346d06+='<td><strong>Contestant\x20#'+_0x218050+_0x5f079d(0x151);for(let _0x5b44ae=0x0;_0x5b44ae<judges['length'];_0x5b44ae++){const _0x354ff2=judges[_0x5b44ae],_0x1f894d=_0x5f079d(0x17d)+_0x277b3b+'_'+_0x218050+'_'+_0x354ff2;_0x346d06+=_0x5f079d(0x190),_0x346d06+=_0x5f079d(0x1b8)+_0x1f894d+'\x22\x20class=\x22form-control\x22\x20min=\x221\x22\x20max=\x221000\x22\x20value=\x22\x22>',_0x346d06+=_0x5f079d(0x12a);}_0x346d06+=_0x5f079d(0x165);}_0x346d06+=_0x5f079d(0x17c),_0x346d06+=_0x5f079d(0x18f),_0x346d06+=_0x5f079d(0x196)+_0x277b3b+'\x27)\x22>Save\x20'+_0x1063c9+_0x5f079d(0x1bf),_0x346d06+=_0x5f079d(0x128),_0x346d06+='</div>';}_0x346d06+=_0x5f079d(0x185),_0x412f68['innerHTML']=_0x346d06,_0x5b73d4['style'][_0x5f079d(0x1ac)]=_0x5f079d(0x15d);}function saveScoresForCategory(_0x2255d7){const _0x469c02=_0x2dca;scoresData[_0x2255d7]=[];let _0x3d3c98=0x0;for(let _0xbb45d0=0x0;_0xbb45d0<contestants[_0x469c02(0x1c2)];_0xbb45d0++){const _0x39714d=contestants[_0xbb45d0];for(let _0x30cb26=0x0;_0x30cb26<judges[_0x469c02(0x1c2)];_0x30cb26++){const _0xa09033=judges[_0x30cb26],_0x14216d=_0x469c02(0x17d)+_0x2255d7+'_'+_0x39714d+'_'+_0xa09033,_0x24777a=document['getElementById'](_0x14216d);if(_0x24777a&&_0x24777a['value']){const _0x10400b=parseFloat(_0x24777a[_0x469c02(0x1a3)]);!isNaN(_0x10400b)&&_0x10400b>=0x1&&_0x10400b<=0x3e8&&(scoresData[_0x2255d7][_0x469c02(0x1bd)]({'contestantNumber':_0x39714d,'judgeNumber':_0xa09033,'score':_0x10400b}),_0x3d3c98++);}}}alert(_0x469c02(0x153)+_0x3d3c98+_0x469c02(0x186)+categoryNames[_0x2255d7]),saveToStorage();}function toggleOutliers(){const _0x1b6844=_0x2dca;dropOutliers=!dropOutliers;const _0x39180c=document[_0x1b6844(0x142)](_0x1b6844(0x134));_0x39180c&&(_0x39180c[_0x1b6844(0x1b2)]=dropOutliers);}function toggleScoringMethod(){const _0x3d30f5=_0x2dca;useAverageForWinner=!useAverageForWinner;const _0x566ecb=document[_0x3d30f5(0x142)](_0x3d30f5(0x187)),_0x1402f4=document[_0x3d30f5(0x142)]('scoringMethodText');_0x566ecb&&(_0x566ecb['checked']=useAverageForWinner),useAverageForWinner?_0x1402f4['textContent']=_0x3d30f5(0x1a1):_0x1402f4[_0x3d30f5(0x130)]=_0x3d30f5(0x145);}function getAdjustedScores(_0x3ab70d){const _0x31ad17=_0x2dca;if(_0x3ab70d[_0x31ad17(0x1c2)]<=0x2)return _0x3ab70d;const _0x560837=[];for(let _0x4610b9=0x0;_0x4610b9<_0x3ab70d[_0x31ad17(0x1c2)];_0x4610b9++){_0x560837['push'](_0x3ab70d[_0x4610b9]);}for(let _0x2d8047=0x0;_0x2d8047<_0x560837[_0x31ad17(0x1c2)];_0x2d8047++){for(let _0x19917c=_0x2d8047+0x1;_0x19917c<_0x560837[_0x31ad17(0x1c2)];_0x19917c++){if(_0x560837[_0x19917c]<_0x560837[_0x2d8047]){const _0x374ba7=_0x560837[_0x2d8047];_0x560837[_0x2d8047]=_0x560837[_0x19917c],_0x560837[_0x19917c]=_0x374ba7;}}}const _0x6e5c66=[];for(let _0x378293=0x1;_0x378293<_0x560837['length']-0x1;_0x378293++){_0x6e5c66[_0x31ad17(0x1bd)](_0x560837[_0x378293]);}return _0x6e5c66;}function carouselNext(){const _0x457c96=_0x2dca,_0x32e5dc=document[_0x457c96(0x13e)]('.carousel-slide-inline'),_0x42ef32=document['querySelectorAll'](_0x457c96(0x18a));currentCarouselIndex=(currentCarouselIndex+0x1)%_0x32e5dc[_0x457c96(0x1c2)],carouselShow(currentCarouselIndex);}function _0x2325(){const _0x32d1d4=['<span\x20class=\x22dot-inline','<button\x20class=\x22btn\x20btn-primary\x20mt-3\x22\x20onclick=\x22calculateFinalScores()\x22>Calculate\x20Final\x20Scores</button>','\x20scores\x20for\x20','scoringMethodToggle','<h4\x20class=\x22mb-0\x22>Detailed\x20Breakdown\x20by\x20Contestant</h4>','.carousel-wrapper-inline\x20{\x20position:\x20relative;\x20height:\x20500px;\x20margin:\x2020px\x200;\x20overflow:\x20hidden;\x20border:\x201px\x20solid\x20#ddd;\x20background:\x20#f9f9f9;\x20}','.dot-inline','score','contestantListDisplay\x20element\x20not\x20found!','Rank\x20#','setupCategories\x20called','</table>','<td>','error','judgeListDisplay','<h5>Category\x20Winners:</h5>','.carousel-controls-inline\x20{\x20display:\x20flex;\x20justify-content:\x20center;\x20gap:\x2015px;\x20align-items:\x20center;\x20margin:\x2020px\x200;\x20}','<label\x20for=\x22categoryName','<button\x20class=\x22btn\x20btn-success\x20mt-2\x22\x20onclick=\x22saveScoresForCategory(\x27','498808yoJCbA','186LliyNd','Total\x20Scores','<td><strong>','<tbody>','</tbody></table>','<h5>Highest\x20Category\x20Averages\x20Sum:</h5>','<thead>',')\x22></span>','slice','Use\x20Average\x20Scores\x20of\x20Categories','<p><strong>Category\x20Averages\x20Sum:</strong>\x20','value','pageantContestants','<h4\x20class=\x22mb-0\x22>Judge\x20Overall\x20Averages\x20Per\x20Contestant</h4>','<img\x20src=\x22','<button\x20class=\x22btn\x20btn-success\x20mt-3\x22\x20onclick=\x22saveCategoryNames()\x22>Save\x20Category\x20Names</button>','.carousel-slide-inline','\x20-\x20Average:\x20','pageantScores','4479266dXtOLN','display','.position-name-inline\x20{\x20font-size:\x2018px;\x20color:\x20#666;\x20margin:\x205px\x200;\x20}','30ivdgfj','Category\x20names\x20saved!','<div\x20class=\x22card-header\x20bg-info\x20text-white\x22>','<thead><tr><th>Category</th><th>Scores</th><th>Category\x20Average</th></tr></thead>','checked','<div\x20class=\x22card\x20mb-4\x20border-info\x22>','2ND\x20ALTERNATE','<p><strong>Contestant\x20#','remove','Please\x20enter\x20a\x20valid\x20number\x20of\x20categories\x20(must\x20be\x201\x20or\x20more)','<input\x20type=\x22number\x22\x20id=\x22','\x22\x20onclick=\x22carouselShow(','contestantNumber','</h5>','<p><strong>Total\x20All\x20Scores:</strong>\x20','push','7FJSLCn','\x20Scores</button>','judgeNumber','<div\x20class=\x22card-body\x22>','length','categoryAverages','WINNER','402iZjFtx','<h6>Category\x20Breakdown:</h6>','<p><strong>Judges\x20created:</strong>\x20','<p><strong>Contestants\x20created:</strong>\x20','\x20Name:</label>','<h4\x20class=\x22mb-0\x22>TOP\x203\x20WINNERS\x20CAROUSEL</h4>','.dots-container-inline\x20{\x20display:\x20flex;\x20gap:\x208px;\x20}','Please\x20enter\x20a\x20valid\x20number\x20of\x20judges\x20(must\x20be\x201\x20or\x20more)','50CRsYmx','434610wgOyWx','Judges\x20array:','<div\x20class=\x22card-header\x20bg-warning\x20text-dark\x22>','categoryInputsDisplay','Judges\x20display\x20updated\x20successfully','file:///C:/Users/rando/OneDrive/Documents/GitHub/pageant-score-sheet/Photos/2nd.png','<table\x20class=\x22table\x20table-sm\x22>','</div>','<p><em>Outliers\x20Removed\x20(Highest\x20and\x20Lowest\x20scores\x20per\x20category)</em></p>','</td>','<div\x20class=\x22winner-name-inline\x22>Contestant\x20#','<tr>','Error:\x20numContestants\x20element\x20not\x20found','</p>','pageantCategories','textContent','file:///C:/Users/rando/OneDrive/Documents/GitHub/pageant-score-sheet/Photos/1st.png','<div\x20class=\x22row\x22>','Please\x20create\x20contestants\x20first','outlierToggle','.medal-image-inline\x20{\x20width:\x20300px;\x20height:\x20300px;\x20object-fit:\x20contain;\x20margin-bottom:\x2015px;\x20}','file:///C:/Users/rando/OneDrive/Documents/GitHub/pageant-score-sheet/Photos/3rd.png','.carousel-controls-inline\x20button\x20{\x20background:\x20#007bff;\x20color:\x20white;\x20border:\x20none;\x20padding:\x208px\x2015px;\x20cursor:\x20pointer;\x20}','Error:\x20numJudges\x20element\x20not\x20found','active','numCategories','stringify','<div\x20class=\x22carousel-slide-inline','Judges\x20saved\x20to\x20localStorage','querySelectorAll','2058696pADqkg','parse','<div\x20class=\x22card\x20mb-4\x22>','getElementById','Number\x20of\x20judges\x20entered:','<div\x20class=\x22col-md-6\x20mb-3\x22>','Use\x20Grand\x20Total','Score\x20table\x20section\x20or\x20container\x20not\x20found','setupJudges\x20called','\x22\x20class=\x22form-label\x22>Category\x20#','categoryAveragesSum','Category\x20#','<div\x20class=\x22card\x20mb-4\x20border-warning\x22>','26646UgJFhP','<div\x20class=\x22card-header\x20bg-primary\x20text-white\x22>','Number\x20entered:','3012flBqId','numContestants','</strong></td>','<div\x20class=\x22carousel-controls-inline\x22>','Saved\x20','<button\x20onclick=\x22carouselNext()\x22>Next\x20→</button>','<p><strong>','1ST\x20ALTERNATE','total','numJudges','toFixed','Number\x20of\x20categories\x20entered:','\x22\x20class=\x22form-control\x22\x20placeholder=\x22Enter\x20category\x20name\x22\x20value=\x22',':</strong>\x20Contestant\x20#','block','categoryBreakdown','classList','<div\x20class=\x22carousel-wrapper-inline\x22>','<th>Contestant\x20#</th>','<th>Judge\x20#','forEach','<p><strong>Ranking\x20Method:</strong>\x20','</tr>','<td><strong>Contestant\x20#','<div\x20class=\x22card\x20mb-3\x22>','<p><strong>Contestants\x20loaded:</strong>\x20','pageantJudges','<div\x20class=\x22carousel-container-inline\x22>','min','<thead><tr><th>Category</th><th>Total\x20Score</th></tr></thead>','categoryName','<div\x20class=\x22card-header\x20bg-success\x20text-white\x22>','</strong>\x20-\x20Category\x20Averages\x20Sum:\x20','\x20contestants</p>','</style>','.carousel-controls-inline\x20button:hover\x20{\x20background:\x20#0056b3;\x20}','Category\x20Averages\x20Sum','scoreTableContainer','innerHTML','\x20-\x20Contestant\x20#','<h4>Enter\x20Category\x20Names</h4>','\x20judges</p>','Saved\x20to\x20localStorage','setItem','getItem','</tbody>','score_','log','\x20active','.dot-inline\x20{\x20width:\x2010px;\x20height:\x2010px;\x20border-radius:\x2050%;\x20background:\x20#ccc;\x20cursor:\x20pointer;\x20}','Contestant\x20#','contestantListDisplay','</th>'];_0x2325=function(){return _0x32d1d4;};return _0x2325();}function carouselPrev(){const _0x2aa521=_0x2dca,_0x357cd4=document[_0x2aa521(0x13e)](_0x2aa521(0x1a8)),_0x45b2e0=document[_0x2aa521(0x13e)](_0x2aa521(0x18a));currentCarouselIndex=(currentCarouselIndex-0x1+_0x357cd4[_0x2aa521(0x1c2)])%_0x357cd4[_0x2aa521(0x1c2)],carouselShow(currentCarouselIndex);}function carouselShow(_0xac4fda){const _0xf1d5fb=_0x2dca,_0x524575=document['querySelectorAll']('.carousel-slide-inline'),_0x5d35ec=document[_0xf1d5fb(0x13e)]('.dot-inline');if(_0xac4fda>=_0x524575['length'])currentCarouselIndex=0x0;if(_0xac4fda<0x0)currentCarouselIndex=_0x524575['length']-0x1;_0x524575[_0xf1d5fb(0x163)](_0x2dea1e=>_0x2dea1e['classList']['remove'](_0xf1d5fb(0x139))),_0x5d35ec['forEach'](_0x2715fb=>_0x2715fb['classList'][_0xf1d5fb(0x1b6)](_0xf1d5fb(0x139))),_0x524575[currentCarouselIndex][_0xf1d5fb(0x15f)]['add'](_0xf1d5fb(0x139)),_0x5d35ec[currentCarouselIndex]['classList']['add']('active');}function calculateFinalScores(){const _0x5e21a3=_0x2dca,_0xfa462e={};for(let _0x20ae3d=0x0;_0x20ae3d<contestants[_0x5e21a3(0x1c2)];_0x20ae3d++){_0xfa462e[contestants[_0x20ae3d]]={};for(let _0x5308d7=0x0;_0x5308d7<categories[_0x5e21a3(0x1c2)];_0x5308d7++){_0xfa462e[contestants[_0x20ae3d]][categories[_0x5308d7]]=[];}}for(let _0x215608=0x0;_0x215608<categories[_0x5e21a3(0x1c2)];_0x215608++){const _0x35bc25=categories[_0x215608];for(let _0x4f4165=0x0;_0x4f4165<scoresData[_0x35bc25][_0x5e21a3(0x1c2)];_0x4f4165++){const _0x5b1d0a=scoresData[_0x35bc25][_0x4f4165];_0xfa462e[_0x5b1d0a[_0x5e21a3(0x1ba)]]&&_0xfa462e[_0x5b1d0a['contestantNumber']][_0x35bc25][_0x5e21a3(0x1bd)](_0x5b1d0a[_0x5e21a3(0x18b)]);}}const _0x6b5a23=[];for(const _0x338684 in _0xfa462e){let _0x2be94b=[];const _0x43be32={},_0x419230={};for(let _0x3b9431=0x0;_0x3b9431<categories[_0x5e21a3(0x1c2)];_0x3b9431++){const _0x392c8a=categories[_0x3b9431];let _0x4334ce=_0xfa462e[_0x338684][_0x392c8a];_0x419230[_0x392c8a]=_0x4334ce[_0x5e21a3(0x1a0)]();dropOutliers&&_0x4334ce[_0x5e21a3(0x1c2)]>0x0&&(_0x4334ce=getAdjustedScores(_0x4334ce));if(_0x4334ce[_0x5e21a3(0x1c2)]>0x0){let _0x48bcc9=0x0;for(let _0x520065=0x0;_0x520065<_0x4334ce[_0x5e21a3(0x1c2)];_0x520065++){_0x48bcc9+=_0x4334ce[_0x520065];}_0x43be32[_0x392c8a]=(_0x48bcc9/_0x4334ce[_0x5e21a3(0x1c2)])[_0x5e21a3(0x159)](0x2);}else _0x43be32[_0x392c8a]='0.00';for(let _0x9c9055=0x0;_0x9c9055<_0x4334ce['length'];_0x9c9055++){_0x2be94b['push'](_0x4334ce[_0x9c9055]);}}if(_0x2be94b['length']===0x0)continue;let _0x2c7cd0=0x0;for(let _0x2a349d=0x0;_0x2a349d<_0x2be94b[_0x5e21a3(0x1c2)];_0x2a349d++){_0x2c7cd0+=_0x2be94b[_0x2a349d];}const _0x3f3f05=(_0x2c7cd0/_0x2be94b[_0x5e21a3(0x1c2)])['toFixed'](0x2);let _0x214e44=0x0;for(let _0x5a3b38=0x0;_0x5a3b38<categories[_0x5e21a3(0x1c2)];_0x5a3b38++){const _0x1495e3=categories[_0x5a3b38];_0x214e44+=parseFloat(_0x43be32[_0x1495e3]);}_0x214e44=_0x214e44['toFixed'](0x2),_0x6b5a23['push']({'contestantNumber':_0x338684,'average':_0x3f3f05,'total':_0x2c7cd0['toFixed'](0x2),'categoryAveragesSum':_0x214e44,'categoryAverages':_0x43be32,'categoryBreakdown':_0x419230});}if(useAverageForWinner)for(let _0x69c59e=0x0;_0x69c59e<_0x6b5a23[_0x5e21a3(0x1c2)];_0x69c59e++){for(let _0x2e365d=_0x69c59e+0x1;_0x2e365d<_0x6b5a23[_0x5e21a3(0x1c2)];_0x2e365d++){if(parseFloat(_0x6b5a23[_0x2e365d][_0x5e21a3(0x149)])>parseFloat(_0x6b5a23[_0x69c59e][_0x5e21a3(0x149)])){const _0x35de94=_0x6b5a23[_0x69c59e];_0x6b5a23[_0x69c59e]=_0x6b5a23[_0x2e365d],_0x6b5a23[_0x2e365d]=_0x35de94;}}}else for(let _0x1e2016=0x0;_0x1e2016<_0x6b5a23['length'];_0x1e2016++){for(let _0x213f2d=_0x1e2016+0x1;_0x213f2d<_0x6b5a23[_0x5e21a3(0x1c2)];_0x213f2d++){if(parseFloat(_0x6b5a23[_0x213f2d][_0x5e21a3(0x157)])>parseFloat(_0x6b5a23[_0x1e2016][_0x5e21a3(0x157)])){const _0x1494a5=_0x6b5a23[_0x1e2016];_0x6b5a23[_0x1e2016]=_0x6b5a23[_0x213f2d],_0x6b5a23[_0x213f2d]=_0x1494a5;}}}displayFinalScores(_0x6b5a23);}function displayFinalScores(_0x5eac8f){const _0x34afef=_0x2dca,_0x5aed43=document[_0x34afef(0x142)]('finalScoresDisplay');let _0x5afd74='';dropOutliers&&(_0x5afd74+=_0x34afef(0x129));_0x5afd74+='<div\x20class=\x22card\x20mb-4\x20border-success\x22>',_0x5afd74+=_0x34afef(0x16e),_0x5afd74+='<h4\x20class=\x22mb-0\x22>WINNERS\x20&\x20SUMMARY</h4>',_0x5afd74+='</div>',_0x5afd74+=_0x34afef(0x1c1);const _0x4d4888=useAverageForWinner?_0x34afef(0x173):_0x34afef(0x199);_0x5afd74+=_0x34afef(0x164)+_0x4d4888+'</p>';if(useAverageForWinner){_0x5afd74+=_0x34afef(0x19d);let _0xb61323=-Infinity,_0x137e0d=null;for(let _0x3fec15=0x0;_0x3fec15<_0x5eac8f[_0x34afef(0x1c2)];_0x3fec15++){parseFloat(_0x5eac8f[_0x3fec15]['categoryAveragesSum'])>_0xb61323&&(_0xb61323=parseFloat(_0x5eac8f[_0x3fec15][_0x34afef(0x149)]),_0x137e0d=_0x5eac8f[_0x3fec15]);}_0x5afd74+=_0x34afef(0x1b5)+_0x137e0d[_0x34afef(0x1ba)]+_0x34afef(0x16f)+_0x137e0d[_0x34afef(0x149)]+_0x34afef(0x12e);}else{_0x5afd74+='<h5>Highest\x20Total\x20Score:</h5>';let _0x292738=-Infinity,_0x1797aa=null;for(let _0x1607c1=0x0;_0x1607c1<_0x5eac8f[_0x34afef(0x1c2)];_0x1607c1++){parseFloat(_0x5eac8f[_0x1607c1][_0x34afef(0x157)])>_0x292738&&(_0x292738=parseFloat(_0x5eac8f[_0x1607c1][_0x34afef(0x157)]),_0x1797aa=_0x5eac8f[_0x1607c1]);}_0x5afd74+=_0x34afef(0x1b5)+_0x1797aa[_0x34afef(0x1ba)]+'</strong>\x20-\x20Total:\x20'+_0x1797aa['total']+_0x34afef(0x12e);}_0x5afd74+=_0x34afef(0x193);for(let _0x4841ec=0x0;_0x4841ec<categories[_0x34afef(0x1c2)];_0x4841ec++){const _0x2d5320=categories[_0x4841ec],_0x35daae=categoryNames[_0x2d5320];if(useAverageForWinner){let _0x2bd379=-Infinity,_0x2b561d=null;for(let _0x5790f7=0x0;_0x5790f7<_0x5eac8f[_0x34afef(0x1c2)];_0x5790f7++){const _0x2bda16=parseFloat(_0x5eac8f[_0x5790f7][_0x34afef(0x1c3)][_0x2d5320]);_0x2bda16>_0x2bd379&&(_0x2bd379=_0x2bda16,_0x2b561d=_0x5eac8f[_0x5790f7][_0x34afef(0x1ba)]);}_0x5afd74+=_0x34afef(0x155)+_0x35daae+_0x34afef(0x15c)+_0x2b561d+_0x34afef(0x1a9)+_0x2bd379[_0x34afef(0x159)](0x2)+'</p>';}else{let _0x1195ee=-Infinity,_0x1a886b=null;for(let _0x9f3a1d=0x0;_0x9f3a1d<_0x5eac8f[_0x34afef(0x1c2)];_0x9f3a1d++){let _0x5826f6=0x0;const _0x599b9a=_0x5eac8f[_0x9f3a1d][_0x34afef(0x15e)][_0x2d5320];if(_0x599b9a&&_0x599b9a[_0x34afef(0x1c2)]>0x0)for(let _0x55512d=0x0;_0x55512d<_0x599b9a[_0x34afef(0x1c2)];_0x55512d++){_0x5826f6+=_0x599b9a[_0x55512d];}_0x5826f6>_0x1195ee&&(_0x1195ee=_0x5826f6,_0x1a886b=_0x5eac8f[_0x9f3a1d][_0x34afef(0x1ba)]);}_0x5afd74+=_0x34afef(0x155)+_0x35daae+':</strong>\x20Contestant\x20#'+_0x1a886b+'\x20-\x20Total:\x20'+_0x1195ee['toFixed'](0x2)+_0x34afef(0x12e);}}_0x5afd74+='</div>',_0x5afd74+=_0x34afef(0x128);if(_0x5eac8f[_0x34afef(0x1c2)]>=0x1){_0x5afd74+=_0x34afef(0x14b),_0x5afd74+=_0x34afef(0x123),_0x5afd74+=_0x34afef(0x1ca),_0x5afd74+=_0x34afef(0x128),_0x5afd74+=_0x34afef(0x1c1),_0x5afd74+='<style>',_0x5afd74+='.carousel-container-inline\x20{\x20margin:\x2020px\x200;\x20}',_0x5afd74+=_0x34afef(0x189),_0x5afd74+='.carousel-slide-inline\x20{\x20position:\x20absolute;\x20width:\x20100%;\x20height:\x20100%;\x20opacity:\x200;\x20transition:\x20opacity\x200.5s;\x20display:\x20flex;\x20flex-direction:\x20column;\x20justify-content:\x20center;\x20align-items:\x20center;\x20}',_0x5afd74+='.carousel-slide-inline.active\x20{\x20opacity:\x201;\x20z-index:\x2010;\x20}',_0x5afd74+=_0x34afef(0x135),_0x5afd74+='.winner-name-inline\x20{\x20font-size:\x2028px;\x20font-weight:\x20bold;\x20margin:\x2010px\x200;\x20}',_0x5afd74+=_0x34afef(0x1ad),_0x5afd74+=_0x34afef(0x194),_0x5afd74+=_0x34afef(0x137),_0x5afd74+=_0x34afef(0x172),_0x5afd74+=_0x34afef(0x1cb),_0x5afd74+=_0x34afef(0x180),_0x5afd74+='.dot-inline.active\x20{\x20background:\x20#007bff;\x20}',_0x5afd74+=_0x34afef(0x171),_0x5afd74+=_0x34afef(0x16a),_0x5afd74+=_0x34afef(0x160);for(let _0x1f29b4=0x2;_0x1f29b4>=0x0;_0x1f29b4--){if(_0x1f29b4>=_0x5eac8f[_0x34afef(0x1c2)])continue;const _0x3cc0cb=_0x5eac8f[_0x1f29b4],_0x29f625=0x2-_0x1f29b4,_0x54506a=_0x29f625===0x0?_0x34afef(0x17f):'';let _0x1846a2='';if(_0x1f29b4===0x2)_0x1846a2=_0x34afef(0x136);else{if(_0x1f29b4===0x1)_0x1846a2=_0x34afef(0x126);else _0x1f29b4===0x0&&(_0x1846a2=_0x34afef(0x131));}_0x5afd74+=_0x34afef(0x13c)+_0x54506a+'\x22>',_0x5afd74+=_0x34afef(0x1a6)+_0x1846a2+'\x22\x20alt=\x22Contestant\x22\x20class=\x22medal-image-inline\x22>',_0x5afd74+=_0x34afef(0x12b)+_0x3cc0cb[_0x34afef(0x1ba)]+'</div>',_0x5afd74+=_0x34afef(0x128);}_0x5afd74+=_0x34afef(0x128),_0x5afd74+=_0x34afef(0x152),_0x5afd74+='<button\x20onclick=\x22carouselPrev()\x22>←\x20Prev</button>',_0x5afd74+='<div\x20class=\x22dots-container-inline\x22>';for(let _0x1aec1d=0x0;_0x1aec1d<Math[_0x34afef(0x16b)](0x3,_0x5eac8f[_0x34afef(0x1c2)]);_0x1aec1d++){const _0x12106a=_0x1aec1d===0x0?_0x34afef(0x17f):'';_0x5afd74+=_0x34afef(0x184)+_0x12106a+_0x34afef(0x1b9)+_0x1aec1d+_0x34afef(0x19f);}_0x5afd74+=_0x34afef(0x128),_0x5afd74+=_0x34afef(0x154),_0x5afd74+=_0x34afef(0x128),_0x5afd74+=_0x34afef(0x128),_0x5afd74+=_0x34afef(0x128),_0x5afd74+=_0x34afef(0x128);}_0x5afd74+=_0x34afef(0x167),_0x5afd74+=_0x34afef(0x14d),_0x5afd74+=_0x34afef(0x188),_0x5afd74+=_0x34afef(0x128),_0x5afd74+=_0x34afef(0x1c1);const _0x1ebcc6=[_0x34afef(0x1c4),_0x34afef(0x156),_0x34afef(0x1b4)];for(let _0x5e5833=0x0;_0x5e5833<_0x5eac8f[_0x34afef(0x1c2)];_0x5e5833++){const _0x37913d=_0x5eac8f[_0x5e5833],_0x25af4e=_0x1ebcc6[_0x5e5833]||_0x34afef(0x18d)+(_0x5e5833+0x1);_0x5afd74+='<div\x20class=\x22mb-4\x22>',_0x5afd74+='<h5>'+_0x25af4e+_0x34afef(0x176)+_0x37913d['contestantNumber']+_0x34afef(0x1bb),_0x5afd74+=_0x34afef(0x1c6),_0x5afd74+=_0x34afef(0x127);useAverageForWinner?_0x5afd74+=_0x34afef(0x1b1):_0x5afd74+=_0x34afef(0x16c);_0x5afd74+='<tbody>';for(let _0x33c578=0x0;_0x33c578<categories[_0x34afef(0x1c2)];_0x33c578++){const _0x2e3a61=categories[_0x33c578],_0x438a88=_0x37913d[_0x34afef(0x15e)][_0x2e3a61];let _0x5da2f3='',_0x20d352=0x0;if(_0x438a88&&_0x438a88['length']>0x0)for(let _0xf1e9f3=0x0;_0xf1e9f3<_0x438a88[_0x34afef(0x1c2)];_0xf1e9f3++){_0x5da2f3+=_0x438a88[_0xf1e9f3];if(_0xf1e9f3<_0x438a88[_0x34afef(0x1c2)]-0x1)_0x5da2f3+=',\x20';_0x20d352+=_0x438a88[_0xf1e9f3];}const _0x5508de=categoryNames[_0x2e3a61];_0x5afd74+=_0x34afef(0x12c),_0x5afd74+=_0x34afef(0x190)+_0x5508de+_0x34afef(0x12a),useAverageForWinner?(_0x5afd74+='<td>'+_0x5da2f3+_0x34afef(0x12a),_0x5afd74+=_0x34afef(0x19a)+_0x37913d[_0x34afef(0x1c3)][_0x2e3a61]+_0x34afef(0x151)):_0x5afd74+='<td><strong>'+_0x20d352+_0x34afef(0x151),_0x5afd74+='</tr>';}_0x5afd74+=_0x34afef(0x19c),_0x5afd74+='<div\x20style=\x22margin:\x2015px\x200;\x20padding:\x2010px;\x20background:\x20#f9f9f9;\x20border-radius:\x204px;\x22>',_0x5afd74+=_0x34afef(0x1a2)+_0x37913d[_0x34afef(0x149)]+_0x34afef(0x12e),_0x5afd74+=_0x34afef(0x1bc)+_0x37913d[_0x34afef(0x157)]+'</p>',_0x5afd74+=_0x34afef(0x128),_0x5afd74+=_0x34afef(0x128);}_0x5afd74+=_0x34afef(0x128),_0x5afd74+=_0x34afef(0x128),_0x5afd74+=_0x34afef(0x1b3),_0x5afd74+=_0x34afef(0x1b0),_0x5afd74+=_0x34afef(0x1a5),_0x5afd74+='</div>',_0x5afd74+=_0x34afef(0x1c1),_0x5afd74+=_0x34afef(0x127),_0x5afd74+='<thead><tr><th>Contestant\x20#</th>';for(let _0x1faf6a=0x0;_0x1faf6a<judges[_0x34afef(0x1c2)];_0x1faf6a++){_0x5afd74+=_0x34afef(0x162)+judges[_0x1faf6a]+'</th>';}_0x5afd74+='<th>Judge\x20Avg</th></tr></thead>',_0x5afd74+=_0x34afef(0x19b);for(let _0x24d65d=0x0;_0x24d65d<_0x5eac8f[_0x34afef(0x1c2)];_0x24d65d++){const _0x422a9e=_0x5eac8f[_0x24d65d];_0x5afd74+=_0x34afef(0x12c),_0x5afd74+=_0x34afef(0x166)+_0x422a9e[_0x34afef(0x1ba)]+'</strong></td>';const _0x2e44ce={};for(let _0x2aa460=0x0;_0x2aa460<categories['length'];_0x2aa460++){const _0x5b9399=categories[_0x2aa460];for(let _0x346992=0x0;_0x346992<scoresData[_0x5b9399][_0x34afef(0x1c2)];_0x346992++){const _0x1b51e6=scoresData[_0x5b9399][_0x346992];_0x1b51e6[_0x34afef(0x1ba)]==_0x422a9e[_0x34afef(0x1ba)]&&(!_0x2e44ce[_0x1b51e6[_0x34afef(0x1c0)]]&&(_0x2e44ce[_0x1b51e6['judgeNumber']]=[]),_0x2e44ce[_0x1b51e6[_0x34afef(0x1c0)]][_0x34afef(0x1bd)](_0x1b51e6[_0x34afef(0x18b)]));}}let _0x574a07=[];for(let _0x135923=0x0;_0x135923<judges[_0x34afef(0x1c2)];_0x135923++){const _0x15ea84=judges[_0x135923];let _0x426744='-';if(_0x2e44ce[_0x15ea84]){let _0x165b24=0x0;for(let _0x59aa74=0x0;_0x59aa74<_0x2e44ce[_0x15ea84][_0x34afef(0x1c2)];_0x59aa74++){_0x165b24+=_0x2e44ce[_0x15ea84][_0x59aa74],_0x574a07[_0x34afef(0x1bd)](_0x2e44ce[_0x15ea84][_0x59aa74]);}_0x426744=(_0x165b24/_0x2e44ce[_0x15ea84][_0x34afef(0x1c2)])[_0x34afef(0x159)](0x2);}_0x5afd74+=_0x34afef(0x190)+_0x426744+_0x34afef(0x12a);}let _0x4e059e='-';if(_0x574a07[_0x34afef(0x1c2)]>0x0){let _0x3a9c5e=0x0;for(let _0x1c6961=0x0;_0x1c6961<_0x574a07[_0x34afef(0x1c2)];_0x1c6961++){_0x3a9c5e+=_0x574a07[_0x1c6961];}_0x4e059e=(_0x3a9c5e/_0x574a07['length'])[_0x34afef(0x159)](0x2);}_0x5afd74+=_0x34afef(0x19a)+_0x4e059e+'</strong></td>',_0x5afd74+=_0x34afef(0x165);}_0x5afd74+=_0x34afef(0x19c),_0x5afd74+=_0x34afef(0x128),_0x5afd74+=_0x34afef(0x128),_0x5aed43['innerHTML']=_0x5afd74;}function _0x2dca(_0x11eec9,_0x1a2b23){const _0x232502=_0x2325();return _0x2dca=function(_0x2dcae1,_0x2f8a3c){_0x2dcae1=_0x2dcae1-0x120;let _0x5d23a3=_0x232502[_0x2dcae1];return _0x5d23a3;},_0x2dca(_0x11eec9,_0x1a2b23);}function saveToStorage(){const _0x43ab49=_0x2dca;localStorage[_0x43ab49(0x17a)](_0x43ab49(0x1aa),JSON[_0x43ab49(0x13b)](scoresData));}function loadFromStorage(){const _0xaf4915=_0x2dca,_0x557706=localStorage['getItem'](_0xaf4915(0x1a4));if(_0x557706){contestants=JSON[_0xaf4915(0x140)](_0x557706),contestantNames={};for(let _0x354bbb=0x0;_0x354bbb<contestants[_0xaf4915(0x1c2)];_0x354bbb++){contestantNames[contestants[_0x354bbb]]=_0xaf4915(0x181)+contestants[_0x354bbb];}const _0x1c81de=document[_0xaf4915(0x142)](_0xaf4915(0x182));if(_0x1c81de){let _0xce50d0=_0xaf4915(0x168)+contestants[_0xaf4915(0x1c2)]+'\x20contestants</p>';_0x1c81de['innerHTML']=_0xce50d0;}}const _0x4b95d8=localStorage[_0xaf4915(0x17b)](_0xaf4915(0x12f));if(_0x4b95d8){categories=JSON[_0xaf4915(0x140)](_0x4b95d8);const _0x4a5314=localStorage['getItem']('pageantCategoryNames');_0x4a5314&&(categoryNames=JSON['parse'](_0x4a5314));for(let _0x530118=0x0;_0x530118<categories[_0xaf4915(0x1c2)];_0x530118++){scoresData[categories[_0x530118]]=[];}}const _0x4157f1=localStorage[_0xaf4915(0x17b)](_0xaf4915(0x169));if(_0x4157f1){judges=JSON[_0xaf4915(0x140)](_0x4157f1);const _0x1f9fe7=document['getElementById'](_0xaf4915(0x192));if(_0x1f9fe7){let _0x4d89a1='<p><strong>Judges\x20loaded:</strong>\x20'+judges['length']+_0xaf4915(0x178);_0x1f9fe7[_0xaf4915(0x175)]=_0x4d89a1;}}const _0x2abf19=localStorage[_0xaf4915(0x17b)](_0xaf4915(0x1aa));if(_0x2abf19){const _0x497cd4=JSON['parse'](_0x2abf19);for(const _0x4d0fb0 in _0x497cd4){scoresData[_0x4d0fb0]=_0x497cd4[_0x4d0fb0];}}}loadFromStorage();
+"use strict";
+
+// Store contestant numbers and names
+let contestants = [];
+let contestantNames = {};
+
+// Store judge numbers
+let judges = [];
+
+// Store category names
+let categories = [];
+let categoryNames = {};
+
+// Store all scores
+const scoresData = {};
+
+// Check if we should remove high and low scores
+let dropOutliers = false;
+
+// Check if we use averages or totals for winner
+let useAverageForWinner = true;
+
+// Carousel variables
+let currentCarouselIndex = 0;
+
+// Create contestant list
+function setupContestants() {
+    console.log('setupContestants called');
+    const numInput = document.getElementById('numContestants');
+    console.log('numInput element:', numInput);
+    
+    if (!numInput) {
+        console.error('numContestants element not found!');
+        alert('Error: numContestants element not found');
+        return;
+    }
+    
+    const num = parseInt(numInput.value);
+    console.log('Number entered:', num);
+
+    if (isNaN(num) || num < 1) {
+        alert('Please enter a valid number of contestants (must be 1 or more)');
+        return;
+    }
+
+    contestants = [];
+    contestantNames = {};
+    for (let i = 1; i <= num; i++) {
+        contestants.push(i);
+        contestantNames[i] = 'Contestant #' + i;
+    }
+
+    console.log('Contestants array:', contestants);
+
+    // Show the list on page
+    const display = document.getElementById('contestantListDisplay');
+    if (display) {
+        let html = '<p><strong>Contestants created:</strong> ' + num + ' contestants</p>';
+        display.innerHTML = html;
+        console.log('Display updated successfully');
+    } else {
+        console.error('contestantListDisplay element not found!');
+    }
+
+    // Save to browser storage
+    localStorage.setItem('pageantContestants', JSON.stringify(contestants));
+    console.log('Saved to localStorage');
+}
+
+// Create category list
+function setupCategories() {
+    console.log('setupCategories called');
+    const numInput = document.getElementById('numCategories');
+    
+    if (!numInput) {
+        console.error('numCategories element not found!');
+        alert('Error: numCategories element not found');
+        return;
+    }
+    
+    const num = parseInt(numInput.value);
+    console.log('Number of categories entered:', num);
+
+    if (isNaN(num) || num < 1) {
+        alert('Please enter a valid number of categories (must be 1 or more)');
+        return;
+    }
+
+    categories = [];
+    categoryNames = {};
+    for (let i = 1; i <= num; i++) {
+        categories.push('category_' + i);
+        categoryNames['category_' + i] = 'Category #' + i;
+    }
+
+    console.log('Categories array:', categories);
+
+    // Show input boxes for category names
+    const display = document.getElementById('categoryInputsDisplay');
+    if (display) {
+        let html = '<h4>Enter Category Names</h4>';
+        html += '<div class="row">';
+
+        for (let i = 0; i < categories.length; i++) {
+            const catKey = categories[i];
+            html += '<div class="col-md-6 mb-3">';
+            html += '<label for="categoryName' + i + '" class="form-label">Category #' + (i + 1) + ' Name:</label>';
+            html += '<input type="text" id="categoryName' + i + '" class="form-control" placeholder="Enter category name" value="' + categoryNames[catKey] + '">';
+            html += '</div>';
+        }
+
+        html += '</div>';
+        html += '<button class="btn btn-success mt-3" onclick="saveCategoryNames()">Save Category Names</button>';
+        display.innerHTML = html;
+    }
+
+    // Save to browser storage
+    localStorage.setItem('pageantCategories', JSON.stringify(categories));
+    localStorage.setItem('pageantCategoryNames', JSON.stringify(categoryNames));
+}
+
+// Save the category names user typed
+function saveCategoryNames() {
+    for (let i = 0; i < categories.length; i++) {
+        const catKey = categories[i];
+        const nameInput = document.getElementById('categoryName' + i);
+        const name = nameInput.value.trim();
+        
+        if (name) {
+            categoryNames[catKey] = name;
+        }
+    }
+
+    // Start storing scores for each category
+    for (let i = 0; i < categories.length; i++) {
+        scoresData[categories[i]] = [];
+    }
+
+    // Save to browser storage
+    localStorage.setItem('pageantCategoryNames', JSON.stringify(categoryNames));
+
+    alert('Category names saved!');
+}
+
+// Create judge list
+function setupJudges() {
+    console.log('setupJudges called');
+    const numInput = document.getElementById('numJudges');
+    
+    if (!numInput) {
+        console.error('numJudges element not found!');
+        alert('Error: numJudges element not found');
+        return;
+    }
+    
+    const num = parseInt(numInput.value);
+    console.log('Number of judges entered:', num);
+
+    if (isNaN(num) || num < 1) {
+        alert('Please enter a valid number of judges (must be 1 or more)');
+        return;
+    }
+
+    judges = [];
+    for (let i = 1; i <= num; i++) {
+        judges.push(i);
+    }
+
+    console.log('Judges array:', judges);
+
+    // Show the judge count on page
+    const display = document.getElementById('judgeListDisplay');
+    if (display) {
+        let html = '<p><strong>Judges created:</strong> ' + num + ' judges</p>';
+        display.innerHTML = html;
+        console.log('Judges display updated successfully');
+    } else {
+        console.error('judgeListDisplay element not found!');
+    }
+
+    // Create score tables
+    generateScoreTables();
+
+    // Save to browser storage
+    localStorage.setItem('pageantJudges', JSON.stringify(judges));
+    console.log('Judges saved to localStorage');
+}
+
+// Create the score input tables for each category
+function generateScoreTables() {
+    const scoreTableSection = document.getElementById('scoreTableSection');
+    const scoreTableContainer = document.getElementById('scoreTableContainer');
+    
+    if (!scoreTableSection || !scoreTableContainer) {
+        console.error('Score table section or container not found');
+        return;
+    }
+
+    if (!contestants || contestants.length === 0) {
+        alert('Please create contestants first');
+        return;
+    }
+
+    if (!categories || categories.length === 0) {
+        alert('Please create categories first');
+        return;
+    }
+
+    if (!judges || judges.length === 0) {
+        alert('Please create judges first');
+        return;
+    }
+
+    let html = '';
+
+    // Make a table for each category
+    for (let cat = 0; cat < categories.length; cat++) {
+        const category = categories[cat];
+        const categoryName = categoryNames[category];
+
+        html += '<div class="card mb-4">';
+        html += '<div class="card-header bg-info text-white">';
+        html += '<h4 class="mb-0">' + categoryName + '</h4>';
+        html += '</div>';
+        html += '<div class="card-body">';
+        html += '<table class="table table-bordered">';
+        html += '<thead>';
+        html += '<tr>';
+        html += '<th>Contestant #</th>';
+
+        // Add judge column headers
+        for (let j = 0; j < judges.length; j++) {
+            html += '<th>Judge #' + judges[j] + '</th>';
+        }
+
+        html += '</tr>';
+        html += '</thead>';
+        html += '<tbody>';
+
+        // Add rows for each contestant
+        for (let c = 0; c < contestants.length; c++) {
+            const contestantNum = contestants[c];
+            html += '<tr>';
+            html += '<td><strong>Contestant #' + contestantNum + '</strong></td>';
+
+            // Add input boxes for each judge score
+            for (let j = 0; j < judges.length; j++) {
+                const judgeNum = judges[j];
+                const inputId = 'score_' + category + '_' + contestantNum + '_' + judgeNum;
+                html += '<td>';
+                html += '<input type="number" id="' + inputId + '" class="form-control" min="1" max="1000" value="">';
+                html += '</td>';
+            }
+
+            html += '</tr>';
+        }
+
+        html += '</tbody>';
+        html += '</table>';
+        html += '<button class="btn btn-success mt-2" onclick="saveScoresForCategory(\'' + category + '\')">Save ' + categoryName + ' Scores</button>';
+        html += '</div>';
+        html += '</div>';
+    }
+
+    html += '<button class="btn btn-primary mt-3" onclick="calculateFinalScores()">Calculate Final Scores</button>';
+
+    scoreTableContainer.innerHTML = html;
+    scoreTableSection.style.display = 'block';
+}
+
+// Save all scores for one category
+function saveScoresForCategory(category) {
+    // Clear old scores for this category
+    scoresData[category] = [];
+
+    let savedCount = 0;
+
+    // Get all scores from input boxes
+    for (let c = 0; c < contestants.length; c++) {
+        const contestantNum = contestants[c];
+
+        for (let j = 0; j < judges.length; j++) {
+            const judgeNum = judges[j];
+            const inputId = 'score_' + category + '_' + contestantNum + '_' + judgeNum;
+            const input = document.getElementById(inputId);
+
+            if (input && input.value) {
+                const score = parseFloat(input.value);
+                if (!isNaN(score) && score >= 1 && score <= 1000) {
+                    scoresData[category].push({
+                        contestantNumber: contestantNum,
+                        judgeNumber: judgeNum,
+                        score: score
+                    });
+                    savedCount++;
+                }
+            }
+        }
+    }
+
+    alert('Saved ' + savedCount + ' scores for ' + categoryNames[category]);
+    saveToStorage();
+}
+
+// Turn on/off outlier removal
+function toggleOutliers() {
+    dropOutliers = !dropOutliers;
+    const toggle = document.getElementById('outlierToggle');
+    if (toggle) {
+        toggle.checked = dropOutliers;
+    }
+}
+
+// Turn on/off scoring method (averages vs totals)
+function toggleScoringMethod() {
+    useAverageForWinner = !useAverageForWinner;
+    const toggle = document.getElementById('scoringMethodToggle');
+    const text = document.getElementById('scoringMethodText');
+    
+    if (toggle) {
+        toggle.checked = useAverageForWinner;
+    }
+    
+    // Update the text shown to user
+    if (useAverageForWinner) {
+        text.textContent = 'Use Average Scores of Categories';
+    } else {
+        text.textContent = 'Use Grand Total';
+    }
+}
+
+// Remove the highest and lowest score from a list
+function getAdjustedScores(scores) {
+    if (scores.length <= 2) {
+        return scores;
+    }
+
+    const sorted = [];
+    for (let i = 0; i < scores.length; i++) {
+        sorted.push(scores[i]);
+    }
+
+    // Sort from lowest to highest
+    for (let i = 0; i < sorted.length; i++) {
+        for (let j = i + 1; j < sorted.length; j++) {
+            if (sorted[j] < sorted[i]) {
+                const temp = sorted[i];
+                sorted[i] = sorted[j];
+                sorted[j] = temp;
+            }
+        }
+    }
+
+    // Remove lowest and highest
+    const adjusted = [];
+    for (let i = 1; i < sorted.length - 1; i++) {
+        adjusted.push(sorted[i]);
+    }
+
+    return adjusted;
+}
+
+// Carousel functions
+function carouselNext() {
+    const slides = document.querySelectorAll('.carousel-slide-inline');
+    const dots = document.querySelectorAll('.dot-inline');
+    currentCarouselIndex = (currentCarouselIndex + 1) % slides.length;
+    carouselShow(currentCarouselIndex);
+}
+
+function carouselPrev() {
+    const slides = document.querySelectorAll('.carousel-slide-inline');
+    const dots = document.querySelectorAll('.dot-inline');
+    currentCarouselIndex = (currentCarouselIndex - 1 + slides.length) % slides.length;
+    carouselShow(currentCarouselIndex);
+}
+
+function carouselShow(n) {
+    const slides = document.querySelectorAll('.carousel-slide-inline');
+    const dots = document.querySelectorAll('.dot-inline');
+    
+    if (n >= slides.length) currentCarouselIndex = 0;
+    if (n < 0) currentCarouselIndex = slides.length - 1;
+    
+    slides.forEach(slide => slide.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+    
+    slides[currentCarouselIndex].classList.add('active');
+    dots[currentCarouselIndex].classList.add('active');
+}
+
+// Calculate final scores and rank contestants
+function calculateFinalScores() {
+    const contestantScores = {};
+
+    // Create empty score holder for each contestant
+    for (let i = 0; i < contestants.length; i++) {
+        contestantScores[contestants[i]] = {};
+        for (let c = 0; c < categories.length; c++) {
+            contestantScores[contestants[i]][categories[c]] = [];
+        }
+    }
+
+    // Add all scores to the holders
+    for (let c = 0; c < categories.length; c++) {
+        const category = categories[c];
+        for (let i = 0; i < scoresData[category].length; i++) {
+            const item = scoresData[category][i];
+            if (contestantScores[item.contestantNumber]) {
+                contestantScores[item.contestantNumber][category].push(item.score);
+            }
+        }
+    }
+
+    // Calculate averages for each contestant
+    const results = [];
+    for (const contestantNum in contestantScores) {
+        let allScores = [];
+        const categoryAverages = {};
+        const categoryBreakdown = {};
+
+        // Get scores from each category
+        for (let i = 0; i < categories.length; i++) {
+            const category = categories[i];
+            let categoryScores = contestantScores[contestantNum][category];
+
+            // Save original scores
+            categoryBreakdown[category] = categoryScores.slice();
+
+            // Remove high and low if checkbox is on
+            if (dropOutliers && categoryScores.length > 0) {
+                categoryScores = getAdjustedScores(categoryScores);
+            }
+
+            // Calculate average for this category
+            if (categoryScores.length > 0) {
+                let categoryTotal = 0;
+                for (let j = 0; j < categoryScores.length; j++) {
+                    categoryTotal += categoryScores[j];
+                }
+                categoryAverages[category] = (categoryTotal / categoryScores.length).toFixed(2);
+            } else {
+                categoryAverages[category] = '0.00';
+            }
+
+            // Add all scores together
+            for (let j = 0; j < categoryScores.length; j++) {
+                allScores.push(categoryScores[j]);
+            }
+        }
+
+        if (allScores.length === 0) {
+            continue;
+        }
+
+        // Calculate overall total
+        let total = 0;
+        for (let i = 0; i < allScores.length; i++) {
+            total += allScores[i];
+        }
+        const average = (total / allScores.length).toFixed(2);
+        
+        // Calculate sum of all category averages
+        let categoryAveragesSum = 0;
+        for (let i = 0; i < categories.length; i++) {
+            const category = categories[i];
+            categoryAveragesSum += parseFloat(categoryAverages[category]);
+        }
+        categoryAveragesSum = categoryAveragesSum.toFixed(2);
+        
+        results.push({
+            contestantNumber: contestantNum,
+            average: average,
+            total: total.toFixed(2),
+            categoryAveragesSum: categoryAveragesSum,
+            categoryAverages: categoryAverages,
+            categoryBreakdown: categoryBreakdown
+        });
+    }
+
+    // Sort based on which method was chosen
+    if (useAverageForWinner) {
+        // Sort by category averages sum (highest first)
+        for (let i = 0; i < results.length; i++) {
+            for (let j = i + 1; j < results.length; j++) {
+                if (parseFloat(results[j].categoryAveragesSum) > parseFloat(results[i].categoryAveragesSum)) {
+                    const temp = results[i];
+                    results[i] = results[j];
+                    results[j] = temp;
+                }
+            }
+        }
+    } else {
+        // Sort by total scores (highest first)
+        for (let i = 0; i < results.length; i++) {
+            for (let j = i + 1; j < results.length; j++) {
+                if (parseFloat(results[j].total) > parseFloat(results[i].total)) {
+                    const temp = results[i];
+                    results[i] = results[j];
+                    results[j] = temp;
+                }
+            }
+        }
+    }
+
+    // Show the results
+    displayFinalScores(results);
+}
+
+// Show all the results on the page
+function displayFinalScores(results) {
+    const display = document.getElementById('finalScoresDisplay');
+    let html = '';
+    
+    if (dropOutliers) {
+        html += '<p><em>Outliers Removed (Highest and Lowest scores per category)</em></p>';
+    }
+
+    // SUMMARY SECTION
+    html += '<div class="card mb-4 border-success">';
+    html += '<div class="card-header bg-success text-white">';
+    html += '<h4 class="mb-0">WINNERS & SUMMARY</h4>';
+    html += '</div>';
+    html += '<div class="card-body">';
+
+    const scoringMethod = useAverageForWinner ? 'Category Averages Sum' : 'Total Scores';
+    html += '<p><strong>Ranking Method:</strong> ' + scoringMethod + '</p>';
+
+    if (useAverageForWinner) {
+        // Show Category Averages Sum (highest score that determines winner)
+        html += '<h5>Highest Category Averages Sum:</h5>';
+        let highestCatAvgSum = -Infinity;
+        let highestCatAvgSumContestant = null;
+        for (let i = 0; i < results.length; i++) {
+            if (parseFloat(results[i].categoryAveragesSum) > highestCatAvgSum) {
+                highestCatAvgSum = parseFloat(results[i].categoryAveragesSum);
+                highestCatAvgSumContestant = results[i];
+            }
+        }
+        html += '<p><strong>Contestant #' + highestCatAvgSumContestant.contestantNumber + '</strong> - Category Averages Sum: ' + highestCatAvgSumContestant.categoryAveragesSum + '</p>';
+    } else {
+        // Show Total Scores (highest score that determines winner)
+        html += '<h5>Highest Total Score:</h5>';
+        let highestTotal = -Infinity;
+        let highestTotalContestant = null;
+        for (let i = 0; i < results.length; i++) {
+            if (parseFloat(results[i].total) > highestTotal) {
+                highestTotal = parseFloat(results[i].total);
+                highestTotalContestant = results[i];
+            }
+        }
+        html += '<p><strong>Contestant #' + highestTotalContestant.contestantNumber + '</strong> - Total: ' + highestTotalContestant.total + '</p>';
+    }
+
+    // Category Winners
+    html += '<h5>Category Winners:</h5>';
+    for (let c = 0; c < categories.length; c++) {
+        const category = categories[c];
+        const categoryName = categoryNames[category];
+        
+        if (useAverageForWinner) {
+            // Show category with highest average
+            let highestCatAvg = -Infinity;
+            let winnerContestant = null;
+            
+            for (let i = 0; i < results.length; i++) {
+                const catAvg = parseFloat(results[i].categoryAverages[category]);
+                if (catAvg > highestCatAvg) {
+                    highestCatAvg = catAvg;
+                    winnerContestant = results[i].contestantNumber;
+                }
+            }
+            
+            html += '<p><strong>' + categoryName + ':</strong> Contestant #' + winnerContestant + ' - Average: ' + highestCatAvg.toFixed(2) + '</p>';
+        } else {
+            // Show category with highest total
+            let highestCatTotal = -Infinity;
+            let totalWinnerContestant = null;
+            
+            for (let i = 0; i < results.length; i++) {
+                let categoryTotal = 0;
+                const categoryScores = results[i].categoryBreakdown[category];
+                if (categoryScores && categoryScores.length > 0) {
+                    for (let j = 0; j < categoryScores.length; j++) {
+                        categoryTotal += categoryScores[j];
+                    }
+                }
+                
+                if (categoryTotal > highestCatTotal) {
+                    highestCatTotal = categoryTotal;
+                    totalWinnerContestant = results[i].contestantNumber;
+                }
+            }
+            
+            html += '<p><strong>' + categoryName + ':</strong> Contestant #' + totalWinnerContestant + ' - Total: ' + highestCatTotal.toFixed(2) + '</p>';
+        }
+    }
+
+    html += '</div>';
+    html += '</div>';
+
+    // CAROUSEL SECTION FOR TOP 3 WINNERS
+    if (results.length >= 1) {
+        html += '<div class="card mb-4 border-warning">';
+        html += '<div class="card-header bg-warning text-dark">';
+        html += '<h4 class="mb-0">TOP 3 WINNERS CAROUSEL</h4>';
+        html += '</div>';
+        html += '<div class="card-body">';
+        html += '<style>';
+        html += '.carousel-container-inline { margin: 20px 0; }';
+        html += '.carousel-wrapper-inline { position: relative; height: 500px; margin: 20px 0; overflow: hidden; border: 1px solid #ddd; background: #f9f9f9; }';
+        html += '.carousel-slide-inline { position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 0.5s; display: flex; flex-direction: column; justify-content: center; align-items: center; }';
+        html += '.carousel-slide-inline.active { opacity: 1; z-index: 10; }';
+        html += '.medal-image-inline { width: 300px; height: 300px; object-fit: contain; margin-bottom: 15px; }';
+        html += '.winner-name-inline { font-size: 28px; font-weight: bold; margin: 10px 0; }';
+        html += '.position-name-inline { font-size: 18px; color: #666; margin: 5px 0; }';
+        html += '.carousel-controls-inline { display: flex; justify-content: center; gap: 15px; align-items: center; margin: 20px 0; }';
+        html += '.carousel-controls-inline button { background: #007bff; color: white; border: none; padding: 8px 15px; cursor: pointer; }';
+        html += '.carousel-controls-inline button:hover { background: #0056b3; }';
+        html += '.dots-container-inline { display: flex; gap: 8px; }';
+        html += '.dot-inline { width: 10px; height: 10px; border-radius: 50%; background: #ccc; cursor: pointer; }';
+        html += '.dot-inline.active { background: #007bff; }';
+        html += '</style>';
+        html += '<div class="carousel-container-inline">';
+        html += '<div class="carousel-wrapper-inline">';
+
+        // Carousel slides - show 3rd, 2nd, then 1st
+        for (let i = 2; i >= 0; i--) {
+            if (i >= results.length) continue;
+            
+            const result = results[i];
+            const slideIndex = 2 - i; // 0, 1, 2
+            const isActive = slideIndex === 0 ? ' active' : '';
+            let medal = '';
+            
+            if (i === 2) {
+                medal = 'file:///C:/Users/rando/OneDrive/Documents/GitHub/pageant-score-sheet/Photos/3rd.png';
+            } else if (i === 1) {
+                medal = 'file:///C:/Users/rando/OneDrive/Documents/GitHub/pageant-score-sheet/Photos/2nd.png';
+            } else if (i === 0) {
+                medal = 'file:///C:/Users/rando/OneDrive/Documents/GitHub/pageant-score-sheet/Photos/1st.png';
+            }
+
+            html += '<div class="carousel-slide-inline' + isActive + '">';
+            html += '<img src="' + medal + '" alt="Contestant" class="medal-image-inline">';
+            html += '<div class="winner-name-inline">Contestant #' + result.contestantNumber + '</div>';
+            html += '</div>';
+        }
+
+        html += '</div>';
+        html += '<div class="carousel-controls-inline">';
+        html += '<button onclick="carouselPrev()">← Prev</button>';
+        html += '<div class="dots-container-inline">';
+        
+        for (let i = 0; i < Math.min(3, results.length); i++) {
+            const dotActive = i === 0 ? ' active' : '';
+            html += '<span class="dot-inline' + dotActive + '" onclick="carouselShow(' + i + ')"></span>';
+        }
+        
+        html += '</div>';
+        html += '<button onclick="carouselNext()">Next →</button>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+    }
+
+    // Detailed breakdown for each contestant
+    html += '<div class="card mb-3">';
+    html += '<div class="card-header bg-primary text-white">';
+    html += '<h4 class="mb-0">Detailed Breakdown by Contestant</h4>';
+    html += '</div>';
+    html += '<div class="card-body">';
+
+    const rankLabels = ['WINNER', '1ST ALTERNATE', '2ND ALTERNATE'];
+
+    for (let i = 0; i < results.length; i++) {
+        const result = results[i];
+        const rankLabel = rankLabels[i] || 'Rank #' + (i + 1);
+        
+        html += '<div class="mb-4">';
+        html += '<h5>' + rankLabel + ' - Contestant #' + result.contestantNumber + '</h5>';
+        
+        // Show breakdown by category
+        html += '<h6>Category Breakdown:</h6>';
+        html += '<table class="table table-sm">';
+        
+        if (useAverageForWinner) {
+            // Show averages method
+            html += '<thead><tr><th>Category</th><th>Scores</th><th>Category Average</th></tr></thead>';
+        } else {
+            // Show totals method
+            html += '<thead><tr><th>Category</th><th>Total Score</th></tr></thead>';
+        }
+        
+        html += '<tbody>';
+        
+        for (let j = 0; j < categories.length; j++) {
+            const category = categories[j];
+            const categoryScores = result.categoryBreakdown[category];
+            
+            let scoresStr = '';
+            let totalCategoryScore = 0;
+            
+            if (categoryScores && categoryScores.length > 0) {
+                for (let k = 0; k < categoryScores.length; k++) {
+                    scoresStr += categoryScores[k];
+                    if (k < categoryScores.length - 1) scoresStr += ', ';
+                    totalCategoryScore += categoryScores[k];
+                }
+            }
+            
+            const categoryName = categoryNames[category];
+            html += '<tr>';
+            html += '<td>' + categoryName + '</td>';
+            
+            if (useAverageForWinner) {
+                // Show individual scores and average
+                html += '<td>' + scoresStr + '</td>';
+                html += '<td><strong>' + result.categoryAverages[category] + '</strong></td>';
+            } else {
+                // Show only total score
+                html += '<td><strong>' + totalCategoryScore + '</strong></td>';
+            }
+            
+            html += '</tr>';
+        }
+        
+        html += '</tbody></table>';
+        
+        // Show score summary
+        html += '<div style="margin: 15px 0; padding: 10px; background: #f9f9f9; border-radius: 4px;">';
+        html += '<p><strong>Category Averages Sum:</strong> ' + result.categoryAveragesSum + '</p>';
+        html += '<p><strong>Total All Scores:</strong> ' + result.total + '</p>';
+        html += '</div>';
+        
+        html += '</div>';
+    }
+
+    html += '</div>';
+    html += '</div>';
+
+    // Judge averages for each contestant
+    html += '<div class="card mb-4 border-info">';
+    html += '<div class="card-header bg-info text-white">';
+    html += '<h4 class="mb-0">Judge Overall Averages Per Contestant</h4>';
+    html += '</div>';
+    html += '<div class="card-body">';
+    html += '<table class="table table-sm">';
+    html += '<thead><tr><th>Contestant #</th>';
+    
+    for (let j = 0; j < judges.length; j++) {
+        html += '<th>Judge #' + judges[j] + '</th>';
+    }
+    html += '<th>Judge Avg</th></tr></thead>';
+    html += '<tbody>';
+
+    for (let i = 0; i < results.length; i++) {
+        const result = results[i];
+        html += '<tr>';
+        html += '<td><strong>Contestant #' + result.contestantNumber + '</strong></td>';
+
+        // Calculate each judge's average for this contestant
+        const judgeAverages = {};
+        for (let c = 0; c < categories.length; c++) {
+            const category = categories[c];
+            for (let s = 0; s < scoresData[category].length; s++) {
+                const scoreItem = scoresData[category][s];
+                if (scoreItem.contestantNumber == result.contestantNumber) {
+                    if (!judgeAverages[scoreItem.judgeNumber]) {
+                        judgeAverages[scoreItem.judgeNumber] = [];
+                    }
+                    judgeAverages[scoreItem.judgeNumber].push(scoreItem.score);
+                }
+            }
+        }
+
+        let allJudgeScores = [];
+        for (let j = 0; j < judges.length; j++) {
+            const judgeNum = judges[j];
+            let judgeAvg = '-';
+            if (judgeAverages[judgeNum]) {
+                let judgeTotal = 0;
+                for (let s = 0; s < judgeAverages[judgeNum].length; s++) {
+                    judgeTotal += judgeAverages[judgeNum][s];
+                    allJudgeScores.push(judgeAverages[judgeNum][s]);
+                }
+                judgeAvg = (judgeTotal / judgeAverages[judgeNum].length).toFixed(2);
+            }
+            html += '<td>' + judgeAvg + '</td>';
+        }
+
+        // Calculate average of all judge averages
+        let judgeOverallAvg = '-';
+        if (allJudgeScores.length > 0) {
+            let totalJudgeScores = 0;
+            for (let s = 0; s < allJudgeScores.length; s++) {
+                totalJudgeScores += allJudgeScores[s];
+            }
+            judgeOverallAvg = (totalJudgeScores / allJudgeScores.length).toFixed(2);
+        }
+        html += '<td><strong>' + judgeOverallAvg + '</strong></td>';
+        html += '</tr>';
+    }
+
+    html += '</tbody></table>';
+    html += '</div>';
+    html += '</div>';
+
+    display.innerHTML = html;
+}
+
+// Save scores to browser storage
+function saveToStorage() {
+    localStorage.setItem('pageantScores', JSON.stringify(scoresData));
+}
+
+// Load saved data from browser storage when page opens
+function loadFromStorage() {
+    const storedContestants = localStorage.getItem('pageantContestants');
+    if (storedContestants) {
+        contestants = JSON.parse(storedContestants);
+        
+        contestantNames = {};
+        for (let i = 0; i < contestants.length; i++) {
+            contestantNames[contestants[i]] = 'Contestant #' + contestants[i];
+        }
+        
+        const display = document.getElementById('contestantListDisplay');
+        if (display) {
+            let html = '<p><strong>Contestants loaded:</strong> ' + contestants.length + ' contestants</p>';
+            display.innerHTML = html;
+        }
+    }
+
+    const storedCategories = localStorage.getItem('pageantCategories');
+    if (storedCategories) {
+        categories = JSON.parse(storedCategories);
+        
+        const storedCategoryNames = localStorage.getItem('pageantCategoryNames');
+        if (storedCategoryNames) {
+            categoryNames = JSON.parse(storedCategoryNames);
+        }
+
+        // Start storing scores for each category
+        for (let i = 0; i < categories.length; i++) {
+            scoresData[categories[i]] = [];
+        }
+    }
+
+    const storedJudges = localStorage.getItem('pageantJudges');
+    if (storedJudges) {
+        judges = JSON.parse(storedJudges);
+        
+        const display = document.getElementById('judgeListDisplay');
+        if (display) {
+            let html = '<p><strong>Judges loaded:</strong> ' + judges.length + ' judges</p>';
+            display.innerHTML = html;
+        }
+    }
+
+    const stored = localStorage.getItem('pageantScores');
+    if (stored) {
+        const parsed = JSON.parse(stored);
+        for (const key in parsed) {
+            scoresData[key] = parsed[key];
+        }
+    }
+}
+
+// Load saved data when page first opens
+loadFromStorage();
