@@ -65,6 +65,7 @@ header {
 .nav-link:hover {
     color: #f0f0f0 !important;
     opacity: 0.8;
+    text-decoration: underline;
 }
 
 .nav-link.active {
