@@ -634,11 +634,11 @@ function displayFinalScores(results) {
             let medal = '';
             
             if (i === 2) {
-                medal = 'file:///C:/Users/rando/OneDrive/Documents/GitHub/pageant-score-sheet/Photos/3rd.png';
+                medal = '3rd.png';
             } else if (i === 1) {
-                medal = 'file:///C:/Users/rando/OneDrive/Documents/GitHub/pageant-score-sheet/Photos/2nd.png';
+                medal = '2nd.png';
             } else if (i === 0) {
-                medal = 'file:///C:/Users/rando/OneDrive/Documents/GitHub/pageant-score-sheet/Photos/1st.png';
+                medal = '1st.png';
             }
 
             html += '<div class="carousel-slide-inline' + isActive + '">';
