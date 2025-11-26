@@ -98,8 +98,7 @@ h2 {
 }
 
 h3 {
-    color: white;
-    -webkit-text-stroke: 1px blue;
+    color: blue;
     font-family: Arial, sans-serif;
 }
 
