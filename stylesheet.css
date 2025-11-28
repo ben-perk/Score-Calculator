@@ -1,4 +1,8 @@
 /* Global Styles */
+:root {
+    --header-color: #0defd;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -22,7 +26,7 @@ p {
 
 /* Header and Navigation */
 header {
-    background-color: #0d6efd;
+    background-color: var(--header-color);
     color: white;
     padding: 10px;
     margin-bottom: 20px;
@@ -35,7 +39,7 @@ header {
 }
 
 .navbar {
-    background-color: #0d6efd !important;
+    background-color: var(--header-color) !important;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -53,7 +57,7 @@ header {
 }
 
 .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%230d6efd' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%230defd' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
 .nav-link {
@@ -80,7 +84,7 @@ main {
 
 /* Headings */
 h1 {
-    color: blue;
+    color: var(--header-color);
     text-align: center;
     margin-bottom: 20px;
     font-weight: bold;
@@ -88,7 +92,7 @@ h1 {
 }
 
 h2 {
-    color: blue;
+    color: var(--header-color);
     text-align: center;
     margin-top: 20px;
     margin-bottom: 15px;
@@ -96,27 +100,27 @@ h2 {
 }
 
 h3 {
-    color: blue;
+    color: var(--header-color);
     font-family: Arial, sans-serif;
 }
 
 h4, h5 {
     color: white;
     font-family: Arial, sans-serif;
-    background-color: blue;
+    background-color: var(--header-color);
     padding: 5px;
     border-radius: 4px;
 }
 
 h5 strong {
-    color: blue;
+    color: var(--header-color);
     background-color: white;
     padding: 2px 4px;
     border-radius: 2px;
 }
 
 h5 span {
-    color: blue;
+    color: var(--header-color);
 }
 
 /* Links */
@@ -144,7 +148,7 @@ td, th {
 }
 
 th {
-    background-color: blue;
+    background-color: var(--header-color);
     color: white;
     font-weight: bold;
 }
@@ -168,7 +172,7 @@ form {
 }
 
 label {
-    color: #0d6efd;
+    color: var(--header-color);
     font-weight: 600;
     margin-bottom: 5px;
 }
@@ -189,12 +193,12 @@ input[type="number"]:focus,
 select:focus,
 .form-control:focus {
     outline: none;
-    border-color: #0d6efd;
+    border-color: var(--header-color);
     box-shadow: 0 0 5px rgba(13, 110, 253, 0.25);
 }
 
 #accordion:focus {
-    background-color: #0d6efd !important;
+    background-color: var(--header-color) !important;
     color: white !important;
 }
 
@@ -214,7 +218,7 @@ select:focus,
 /* Buttons */
 button,
 .btn {
-    background-color: #0d6efd !important;
+    background-color: var(--header-color) !important;
     color: #f0f0f0 !important;
     border: none !important;
     padding: 10px 20px;
@@ -227,15 +231,15 @@ button,
 button:hover,
 .btn:hover {
     background-color: #f0f0f0 !important;
-    color: #0d6efd !important;
-    border: 1px solid #0d6efd !important;
+    color: var(--header-color) !important;
+    border: 1px solid var(--header-color) !important;
 }
 
 button:active,
 .btn:active {
     background-color: #f0f0f0;
-    color: #0d6efd;
-    border: 1px solid #0d6efd;
+    color: var(--header-color);
+    border: 1px solid var(--header-color);
     box-shadow: 0 5px #666;
     transform: translateY(4px);
 }
@@ -247,21 +251,21 @@ form button {
 }
 
 .btn-primary {
-    background-color: #0d6efd !important;
+    background-color: var(--header-color) !important;
 }
 
 .btn-primary:hover {
     background-color: #f0f0f0 !important;
-    color: #0d6efd !important;
+    color: var(--header-color) !important;
 }
 
 .btn-success {
-    background-color: #0d6efd !important;
+    background-color: var(--header-color) !important;
 }
 
 .btn-success:hover {
     background-color: #f0f0f0 !important;
-    color: #0d6efd !important;
+    color: var(--header-color) !important;
 }
 
 .btn-danger {
@@ -274,24 +278,24 @@ form button {
 
 .btn-outline-secondary {
     background-color: transparent !important;
-    color: #0d6efd !important;
-    border: 1px solid #0d6efd !important;
+    color: var(--header-color) !important;
+    border: 1px solid var(--header-color) !important;
 }
 
 .btn-outline-secondary:hover {
-    background-color: #0d6efd !important;
+    background-color: var(--header-color) !important;
     color: #f0f0f0 !important;
 }
 
 /* Cards */
 .card {
-    border: 1px solid #0d6efd !important;
+    border: 1px solid var(--header-color) !important;
     margin-bottom: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
-    background-color: #0d6efd !important;
+    background-color: var(--header-color) !important;
     color: white;
     font-weight: bold;
 }
@@ -321,7 +325,7 @@ form button {
 .alert-success {
     background-color: #d4edda;
     color: #155724;
-    border: 1px solid #0d6efd;
+    border: 1px solid var(--header-color);
 }
 
 /* Sections */
@@ -331,7 +335,7 @@ section {
 
 /* Footer */
 footer {
-    background-color: #0d6efd;
+    background-color: var(--header-color);
     color: white;
     text-align: center;
     padding: 20px;
@@ -353,12 +357,12 @@ footer {
 
 /* Utility Classes */
 .bg-primary {
-    background-color: #0d6efd !important;
+    background-color: var(--header-color) !important;
     color: white;
 }
 
 .bg-info {
-    background-color: #0d6efd !important;
+    background-color: var(--header-color) !important;
     color: white;
 }
 
