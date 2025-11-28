@@ -108,6 +108,13 @@ h4, h5 {
     border-radius: 4px;
 }
 
+h5 strong {
+    color: blue;
+    background-color: white;
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+
 h5 span {
     color: blue;
 }
