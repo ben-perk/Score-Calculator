@@ -347,43 +347,44 @@ function clearAllData() {
     }
 }
 
-// Clear all data and reset the calculator
-function clearAllData() {
-    if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
-        // Clear all variables
-        contestants = [];
-        contestantNames = {};
-        judges = [];
-        categories = [];
-        categoryNames = {};
-        for (const key in scoresData) {
-            delete scoresData[key];
-        }
-        dropOutliers = false;
-        currentCarouselIndex = 0;
-        
-        // Clear all localStorage
-        localStorage.removeItem('pageantContestants');
-        localStorage.removeItem('pageantJudges');
-        localStorage.removeItem('pageantCategories');
-        localStorage.removeItem('pageantCategoryNames');
-        localStorage.removeItem('pageantScores');
-        
-        // Clear all displays
-        document.getElementById('contestantListDisplay').innerHTML = '';
-        document.getElementById('categoryInputsDisplay').innerHTML = '';
-        document.getElementById('judgeListDisplay').innerHTML = '';
-        document.getElementById('scoreTableSection').style.display = 'none';
-        document.getElementById('scoreTableContainer').innerHTML = '';
-        document.getElementById('finalScoresDisplay').innerHTML = '';
-        
-        // Clear all input fields
-        document.getElementById('numContestants').value = '';
-        document.getElementById('numCategories').value = '';
-        document.getElementById('numJudges').value = '';
-        
-        alert('All data has been cleared!');
+// Export scores to CSV file
+function exportToCSV() {
+    // Check if there is any data to export
+    if (Object.keys(scoresData).length === 0) {
+        alert('No scores to export. Please enter some scores first.');
+        return;
     }
+
+    // Create CSV header row
+    let csv = 'Contestant,Judge,Category,Score\n';
+
+    // Loop through each category in scoresData
+    for (const category in scoresData) {
+        // Loop through each score object in that category
+        for (const scoreObj of scoresData[category]) {
+            // Add a row to the CSV with the contestant, judge, category, and score
+            csv += scoreObj.contestantNumber + ',' + scoreObj.judgeNumber + ',' + category + ',' + scoreObj.score + '\n';
+        }
+    }
+
+    // Create a blob (binary data) from the CSV string
+    const blob = new Blob([csv], { type: 'text/csv' });
+    
+    // Create a temporary URL for the blob
+    const url = window.URL.createObjectURL(blob);
+    
+    // Create a temporary link element
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'pageant-scores-' + new Date().toISOString().split('T')[0] + '.csv';
+    
+    // Trigger the download by clicking the link
+    link.click();
+    
+    // Clean up the temporary URL
+    window.URL.revokeObjectURL(url);
+    
+    alert('Scores exported successfully!');
 }
 
 // Remove the highest and lowest score from a list
@@ -897,3 +898,18 @@ function installApp() {
         });
     }
 }
+
+// Add event listeners when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Button event listeners
+    document.getElementById('createContestantBtn').addEventListener('click', setupContestants);
+    document.getElementById('createCategoryBtn').addEventListener('click', setupCategories);
+    document.getElementById('createJudgeBtn').addEventListener('click', setupJudges);
+    document.getElementById('calculateBtn').addEventListener('click', calculateFinalScores);
+    document.getElementById('exportBtn').addEventListener('click', exportToCSV);
+    document.getElementById('clearBtn').addEventListener('click', clearAllData);
+    document.getElementById('installBtn').addEventListener('click', installApp);
+    
+    // Checkbox event listener
+    document.getElementById('outlierToggle').addEventListener('change', toggleOutliers);
+});
