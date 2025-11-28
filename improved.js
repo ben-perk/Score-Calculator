@@ -17,9 +17,6 @@ const scoresData = {};
 // Check if we should remove high and low scores
 let dropOutliers = false;
 
-// Check if we use averages or totals for winner
-let useAverageForWinner = true;
-
 // Carousel variables
 let currentCarouselIndex = 0;
 
@@ -311,24 +308,6 @@ function toggleOutliers() {
     }
 }
 
-// Turn on/off scoring method (averages vs totals)
-function toggleScoringMethod() {
-    useAverageForWinner = !useAverageForWinner;
-    const toggle = document.getElementById('scoringMethodToggle');
-    const text = document.getElementById('scoringMethodText');
-    
-    if (toggle) {
-        toggle.checked = useAverageForWinner;
-    }
-    
-    // Update the text shown to user
-    if (useAverageForWinner) {
-        text.textContent = 'Use Average Scores of Categories';
-    } else {
-        text.textContent = 'Use Grand Total';
-    }
-}
-
 // Remove the highest and lowest score from a list
 function getAdjustedScores(scores) {
     if (scores.length <= 2) {
@@ -412,12 +391,12 @@ function calculateFinalScores() {
         }
     }
 
-    // Calculate averages for each contestant
+    // Calculate totals for each contestant
     const results = [];
     for (const contestantNum in contestantScores) {
         let allScores = [];
-        const categoryAverages = {};
         const categoryBreakdown = {};
+        const categoryAverages = {};
 
         // Get scores from each category
         for (let i = 0; i < categories.length; i++) {
@@ -460,45 +439,22 @@ function calculateFinalScores() {
         }
         const average = (total / allScores.length).toFixed(2);
         
-        // Calculate sum of all category averages
-        let categoryAveragesSum = 0;
-        for (let i = 0; i < categories.length; i++) {
-            const category = categories[i];
-            categoryAveragesSum += parseFloat(categoryAverages[category]);
-        }
-        categoryAveragesSum = categoryAveragesSum.toFixed(2);
-        
         results.push({
             contestantNumber: contestantNum,
             average: average,
             total: total.toFixed(2),
-            categoryAveragesSum: categoryAveragesSum,
-            categoryAverages: categoryAverages,
-            categoryBreakdown: categoryBreakdown
+            categoryBreakdown: categoryBreakdown,
+            categoryAverages: categoryAverages
         });
     }
 
-    // Sort based on which method was chosen
-    if (useAverageForWinner) {
-        // Sort by category averages sum (highest first)
-        for (let i = 0; i < results.length; i++) {
-            for (let j = i + 1; j < results.length; j++) {
-                if (parseFloat(results[j].categoryAveragesSum) > parseFloat(results[i].categoryAveragesSum)) {
-                    const temp = results[i];
-                    results[i] = results[j];
-                    results[j] = temp;
-                }
-            }
-        }
-    } else {
-        // Sort by total scores (highest first)
-        for (let i = 0; i < results.length; i++) {
-            for (let j = i + 1; j < results.length; j++) {
-                if (parseFloat(results[j].total) > parseFloat(results[i].total)) {
-                    const temp = results[i];
-                    results[i] = results[j];
-                    results[j] = temp;
-                }
+    // Sort by total scores (highest first)
+    for (let i = 0; i < results.length; i++) {
+        for (let j = i + 1; j < results.length; j++) {
+            if (parseFloat(results[j].total) > parseFloat(results[i].total)) {
+                const temp = results[i];
+                results[i] = results[j];
+                results[j] = temp;
             }
         }
     }
@@ -523,77 +479,46 @@ function displayFinalScores(results) {
     html += '</div>';
     html += '<div class="card-body">';
 
-    const scoringMethod = useAverageForWinner ? 'Category Averages Sum' : 'Total Scores';
-    html += '<p><strong>Ranking Method:</strong> ' + scoringMethod + '</p>';
+    html += '<p><strong>Ranking Method:</strong> Total Scores</p>';
 
-    if (useAverageForWinner) {
-        // Show Category Averages Sum (highest score that determines winner)
-        html += '<h5>Highest Category Averages Sum:</h5>';
-        let highestCatAvgSum = -Infinity;
-        let highestCatAvgSumContestant = null;
-        for (let i = 0; i < results.length; i++) {
-            if (parseFloat(results[i].categoryAveragesSum) > highestCatAvgSum) {
-                highestCatAvgSum = parseFloat(results[i].categoryAveragesSum);
-                highestCatAvgSumContestant = results[i];
-            }
+    // Show Highest Total Score (winner)
+    html += '<h5>Highest Total Score:</h5>';
+    let highestTotal = -Infinity;
+    let highestTotalContestant = null;
+    for (let i = 0; i < results.length; i++) {
+        if (parseFloat(results[i].total) > highestTotal) {
+            highestTotal = parseFloat(results[i].total);
+            highestTotalContestant = results[i];
         }
-        html += '<p><strong>Contestant #' + highestCatAvgSumContestant.contestantNumber + '</strong> - Category Averages Sum: ' + highestCatAvgSumContestant.categoryAveragesSum + '</p>';
-    } else {
-        // Show Total Scores (highest score that determines winner)
-        html += '<h5>Highest Total Score:</h5>';
-        let highestTotal = -Infinity;
-        let highestTotalContestant = null;
-        for (let i = 0; i < results.length; i++) {
-            if (parseFloat(results[i].total) > highestTotal) {
-                highestTotal = parseFloat(results[i].total);
-                highestTotalContestant = results[i];
-            }
-        }
-        html += '<p><strong>Contestant #' + highestTotalContestant.contestantNumber + '</strong> - Total: ' + highestTotalContestant.total + '</p>';
     }
+    html += '<p><strong>Contestant #' + highestTotalContestant.contestantNumber + '</strong> - Total: ' + highestTotalContestant.total + '</p>';
 
-    // Category Winners
-    html += '<h5>Category Winners:</h5>';
+    // Category Winners (by total score)
+    html += '<h5>Category Winners (by total score):</h5>';
     for (let c = 0; c < categories.length; c++) {
         const category = categories[c];
         const categoryName = categoryNames[category];
         
-        if (useAverageForWinner) {
-            // Show category with highest average
-            let highestCatAvg = -Infinity;
-            let winnerContestant = null;
-            
-            for (let i = 0; i < results.length; i++) {
-                const catAvg = parseFloat(results[i].categoryAverages[category]);
-                if (catAvg > highestCatAvg) {
-                    highestCatAvg = catAvg;
-                    winnerContestant = results[i].contestantNumber;
+        // Show category with highest total
+        let highestCatTotal = -Infinity;
+        let totalWinnerContestant = null;
+        
+        for (let i = 0; i < results.length; i++) {
+            let categoryTotal = 0;
+            const categoryScores = results[i].categoryBreakdown[category];
+            if (categoryScores && categoryScores.length > 0) {
+                for (let j = 0; j < categoryScores.length; j++) {
+                    categoryTotal += categoryScores[j];
                 }
             }
             
-            html += '<p><strong>' + categoryName + ':</strong> Contestant #' + winnerContestant + ' - Average: ' + highestCatAvg.toFixed(2) + '</p>';
-        } else {
-            // Show category with highest total
-            let highestCatTotal = -Infinity;
-            let totalWinnerContestant = null;
-            
-            for (let i = 0; i < results.length; i++) {
-                let categoryTotal = 0;
-                const categoryScores = results[i].categoryBreakdown[category];
-                if (categoryScores && categoryScores.length > 0) {
-                    for (let j = 0; j < categoryScores.length; j++) {
-                        categoryTotal += categoryScores[j];
-                    }
-                }
-                
-                if (categoryTotal > highestCatTotal) {
-                    highestCatTotal = categoryTotal;
-                    totalWinnerContestant = results[i].contestantNumber;
-                }
+            if (categoryTotal > highestCatTotal) {
+                highestCatTotal = categoryTotal;
+                totalWinnerContestant = results[i].contestantNumber;
             }
-            
-            html += '<p><strong>' + categoryName + ':</strong> Contestant #' + totalWinnerContestant + ' - Total: ' + highestCatTotal.toFixed(2) + '</p>';
         }
+        
+        html += '<p><strong>' + categoryName + ':</strong> Contestant #' + totalWinnerContestant + ' - Total: ' + highestCatTotal.toFixed(2) + '</p>';
     }
 
     html += '</div>';
@@ -685,45 +610,27 @@ function displayFinalScores(results) {
         // Show breakdown by category
         html += '<h6>Category Breakdown:</h6>';
         html += '<table class="table table-sm">';
-        
-        if (useAverageForWinner) {
-            // Show averages method
-            html += '<thead><tr><th>Category</th><th>Scores</th><th>Category Average</th></tr></thead>';
-        } else {
-            // Show totals method
-            html += '<thead><tr><th>Category</th><th>Total Score</th></tr></thead>';
-        }
-        
+        html += '<thead><tr><th>Category</th><th>Total Score</th><th>Average</th></tr></thead>';
         html += '<tbody>';
         
         for (let j = 0; j < categories.length; j++) {
             const category = categories[j];
             const categoryScores = result.categoryBreakdown[category];
             
-            let scoresStr = '';
             let totalCategoryScore = 0;
             
             if (categoryScores && categoryScores.length > 0) {
                 for (let k = 0; k < categoryScores.length; k++) {
-                    scoresStr += categoryScores[k];
-                    if (k < categoryScores.length - 1) scoresStr += ', ';
                     totalCategoryScore += categoryScores[k];
                 }
             }
             
             const categoryName = categoryNames[category];
+            const categoryAverage = result.categoryAverages[category];
             html += '<tr>';
             html += '<td>' + categoryName + '</td>';
-            
-            if (useAverageForWinner) {
-                // Show individual scores and average
-                html += '<td>' + scoresStr + '</td>';
-                html += '<td><strong>' + result.categoryAverages[category] + '</strong></td>';
-            } else {
-                // Show only total score
-                html += '<td><strong>' + totalCategoryScore + '</strong></td>';
-            }
-            
+            html += '<td><strong>' + totalCategoryScore + '</strong></td>';
+            html += '<td><strong>' + categoryAverage + '</strong></td>';
             html += '</tr>';
         }
         
@@ -731,7 +638,6 @@ function displayFinalScores(results) {
         
         // Show score summary
         html += '<div style="margin: 15px 0; padding: 10px; background: #f9f9f9; border-radius: 4px;">';
-        html += '<p><strong>Category Averages Sum:</strong> ' + result.categoryAveragesSum + '</p>';
         html += '<p><strong>Total All Scores:</strong> ' + result.total + '</p>';
         html += '</div>';
         
