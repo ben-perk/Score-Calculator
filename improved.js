@@ -308,6 +308,45 @@ function toggleOutliers() {
     }
 }
 
+// Clear all data and reset the calculator
+function clearAllData() {
+    if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+        // Clear all variables
+        contestants = [];
+        contestantNames = {};
+        judges = [];
+        categories = [];
+        categoryNames = {};
+        for (const key in scoresData) {
+            delete scoresData[key];
+        }
+        dropOutliers = false;
+        currentCarouselIndex = 0;
+        
+        // Clear all localStorage
+        localStorage.removeItem('pageantContestants');
+        localStorage.removeItem('pageantJudges');
+        localStorage.removeItem('pageantCategories');
+        localStorage.removeItem('pageantCategoryNames');
+        localStorage.removeItem('pageantScores');
+        
+        // Clear all displays
+        document.getElementById('contestantListDisplay').innerHTML = '';
+        document.getElementById('categoryInputsDisplay').innerHTML = '';
+        document.getElementById('judgeListDisplay').innerHTML = '';
+        document.getElementById('scoreTableSection').style.display = 'none';
+        document.getElementById('scoreTableContainer').innerHTML = '';
+        document.getElementById('finalScoresDisplay').innerHTML = '';
+        
+        // Clear all input fields
+        document.getElementById('numContestants').value = '';
+        document.getElementById('numCategories').value = '';
+        document.getElementById('numJudges').value = '';
+        
+        alert('All data has been cleared!');
+    }
+}
+
 // Remove the highest and lowest score from a list
 function getAdjustedScores(scores) {
     if (scores.length <= 2) {
@@ -605,7 +644,7 @@ function displayFinalScores(results) {
         const rankLabel = rankLabels[i] || 'Rank #' + (i + 1);
         
         html += '<div class="mb-4">';
-        html += '<h5>' + rankLabel + ' - Contestant #' + result.contestantNumber + '</h5>';
+        html += '<h5>' + rankLabel + ' - <span>Contestant #' + result.contestantNumber + '</span></h5>';
         
         // Show breakdown by category
         html += '<h6>Category Breakdown:</h6>';
