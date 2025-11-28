@@ -632,13 +632,14 @@ function displayFinalScores(results) {
             const slideIndex = 2 - i; // 0, 1, 2
             const isActive = slideIndex === 0 ? ' active' : '';
             let medal = '';
-            
+
+            // Use web-friendly relative paths for medal images stored in the Photos folder
             if (i === 2) {
-                medal = '3rd.png';
+                medal = 'Photos/3rd.png';
             } else if (i === 1) {
-                medal = '2nd.png';
+                medal = 'Photos/2nd.png';
             } else if (i === 0) {
-                medal = '1st.png';
+                medal = 'Photos/1st.png';
             }
 
             html += '<div class="carousel-slide-inline' + isActive + '">';
