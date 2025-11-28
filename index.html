@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Benjamin Perk">
     <meta name="theme-color" content="#0d6efd">
-    <title>Pageant Calculator</title>
+    <meta name="description" content="A fast and easy pageant score calculator to speed up scoring at pageants">
+    <title>Pageant Score Calculator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css">
     <link rel="manifest" href="/Score-Calculator/manifest.json">
@@ -16,7 +17,7 @@
     <header>
         <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
             <div class="container-fluid">
-                <a href="#home" class="navbar-brand">Pageant Calculator</a>
+                <a href="#home" class="navbar-brand">Pageant Score Calculator</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -46,7 +47,7 @@
             <!-- Welcome Section -->
             <section id="home" class="mb-4">
                 <div class="p-3 bg-light rounded">
-                    <h1>Welcome to the Pageant Calculator</h1>
+                    <h1>Welcome to the Pageant Score Calculator</h1>
                     <p>I am tired of it taking an hour to count the scores</p>
                     <p>Input the number of Contestants, Judges, and Categories along with the category names</p>
                 </div>
@@ -112,6 +113,8 @@
                         </label>
                     </div>
                     <button class="btn btn-success me-2" onclick="calculateFinalScores()">Calculate Final Scores</button>
+                    <button class="btn btn-danger" onclick="clearAllData()">Clear All Data</button>
+                    <button id="installBtn" class="btn btn-primary ms-2" style="display: none;" onclick="installApp()">Install App</button>
                     <div id="finalScoresDisplay" class="mt-3"></div>
                 </div>
             </section>
@@ -126,21 +129,5 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js"></script>
     <script defer src="improved.js"></script>
-    <script>
-        // Initialize jQuery Accordion when page loads
-        $(document).ready(function() {
-            $("#accordion").accordion({
-                collapsible: true,
-                active: 0
-            });
-        });
-    </script>
-    
-    <script>
-        if (navigator.serviceWorker) {
-            navigator.serviceWorker.register('/Score-Calculator/sw.js', 
-                {scope: '/Score-Calculator/'});
-        }
-    </script>
 </body>
 </html>

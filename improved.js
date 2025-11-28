@@ -347,6 +347,45 @@ function clearAllData() {
     }
 }
 
+// Clear all data and reset the calculator
+function clearAllData() {
+    if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+        // Clear all variables
+        contestants = [];
+        contestantNames = {};
+        judges = [];
+        categories = [];
+        categoryNames = {};
+        for (const key in scoresData) {
+            delete scoresData[key];
+        }
+        dropOutliers = false;
+        currentCarouselIndex = 0;
+        
+        // Clear all localStorage
+        localStorage.removeItem('pageantContestants');
+        localStorage.removeItem('pageantJudges');
+        localStorage.removeItem('pageantCategories');
+        localStorage.removeItem('pageantCategoryNames');
+        localStorage.removeItem('pageantScores');
+        
+        // Clear all displays
+        document.getElementById('contestantListDisplay').innerHTML = '';
+        document.getElementById('categoryInputsDisplay').innerHTML = '';
+        document.getElementById('judgeListDisplay').innerHTML = '';
+        document.getElementById('scoreTableSection').style.display = 'none';
+        document.getElementById('scoreTableContainer').innerHTML = '';
+        document.getElementById('finalScoresDisplay').innerHTML = '';
+        
+        // Clear all input fields
+        document.getElementById('numContestants').value = '';
+        document.getElementById('numCategories').value = '';
+        document.getElementById('numJudges').value = '';
+        
+        alert('All data has been cleared!');
+    }
+}
+
 // Remove the highest and lowest score from a list
 function getAdjustedScores(scores) {
     if (scores.length <= 2) {
@@ -816,3 +855,45 @@ function loadFromStorage() {
 
 // Load saved data when page first opens
 loadFromStorage();
+
+// Initialize jQuery Accordion when page loads
+$(document).ready(function() {
+    $("#accordion").accordion({
+        collapsible: true,
+        active: 0
+    });
+});
+
+// Register Service Worker
+if (navigator.serviceWorker) {
+    navigator.serviceWorker.register('/Score-Calculator/sw.js', 
+        {scope: '/Score-Calculator/'});
+}
+
+// PWA Install functionality
+let deferredPrompt;
+
+// Listen for the beforeinstallprompt event
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the mini-infobar from appearing
+    e.preventDefault();
+    // Stash the event for later use
+    deferredPrompt = e;
+    // Show the install button
+    document.getElementById('installBtn').style.display = 'inline-block';
+});
+
+// Handle install button click
+function installApp() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+            } else {
+                console.log('User dismissed the install prompt');
+            }
+            deferredPrompt = null;
+        });
+    }
+}
