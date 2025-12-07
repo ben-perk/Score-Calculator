@@ -13,12 +13,14 @@ Pageant Calculator is a Progressive Web App (PWA) designed to streamline score c
 - Configured workflow to serve the application on port 5000
 - Set up static deployment configuration
 - Added service worker registration to index.html
+- **Replaced accordion interface with numbered steps** for easier navigation
+- **Fixed outlier removal** to properly affect category scores and winners
 
 ## Project Architecture
 
 ### Frontend (Static PWA)
-- **index.html**: Main application page with navigation and setup sections
-- **stylesheet.css**: Custom styling for the pageant calculator UI
+- **index.html**: Main application page with numbered step sections
+- **stylesheet.css**: Custom styling including step-section, step-header, step-number styles
 - **improved.js**: Core application logic for score calculation
 - **manifest.json**: PWA manifest for installable app experience
 - **sw.js**: Service worker for offline functionality and caching
@@ -34,27 +36,30 @@ Pageant Calculator is a Progressive Web App (PWA) designed to streamline score c
 
 ### Assets
 - **Photos/icon/icon.png**: PWA app icon (192x192 and 512x512)
-- **Photos/**: Additional screenshot images
+- **Photos/**: Additional screenshot images (1st.png, 2nd.png, 3rd.png for winners)
 
 ## Features
-1. **Contestant Management**: Set up contestants with custom numbers
-2. **Category Setup**: Define multiple scoring categories
-3. **Judge Configuration**: Configure number of judges
-4. **Score Entry**: Input scores in organized tables by category
-5. **Outlier Removal**: Optional removal of highest/lowest scores
-6. **CSV Import/Export**: 
+1. **Numbered Step Interface**: Clear 3-step setup process
+   - Step 1: Contestant Setup
+   - Step 2: Category Setup
+   - Step 3: Judge Setup
+2. **Score Entry**: Input scores in organized tables by category
+3. **Outlier Removal**: Optional removal of highest/lowest scores
+   - Correctly affects category totals and averages
+   - Properly determines category winners based on adjusted scores
+4. **CSV Import/Export**: 
    - Export scores to CSV
    - Download blank score sheets
    - Import scores from CSV files
-7. **Demo Data**: Load sample data for testing
-8. **PWA Capabilities**: 
+5. **Demo Data**: Load sample data for testing
+6. **PWA Capabilities**: 
    - Installable as standalone app
    - Offline functionality via service worker
    - LocalStorage for data persistence
 
 ## Technology Stack
 - **Frontend**: Vanilla JavaScript, HTML5, CSS3
-- **UI Framework**: jQuery + jQuery UI (Accordion component)
+- **UI Library**: jQuery (for utility functions)
 - **Server**: Python 3.11 HTTP server
 - **PWA**: Service Worker API, Web App Manifest
 
@@ -72,15 +77,18 @@ The server runs on port 5000 and serves all static files.
 Configured as a static site deployment. The entire current directory is served as the public directory.
 
 ## User Workflow
-1. Enter number of contestants, judges, and categories
-2. Name each category
-3. Input scores for each contestant/judge combination per category
-4. Optionally enable outlier removal
-5. Calculate final scores
-6. Export results to CSV
+1. Follow the numbered steps (1, 2, 3) to set up contestants, categories, and judges
+2. Enter scores in the generated tables
+3. Optionally enable "Remove Highest and Lowest Scores" for outlier removal
+4. Calculate final scores - results will show:
+   - Overall winner
+   - Category winners (respects outlier removal setting)
+   - Detailed breakdown per contestant
+5. Export results to CSV
 
 ## Important Notes
 - All data is stored in browser localStorage
 - The app works offline once loaded (PWA feature)
 - Cache control headers prevent stale content in development
 - Service worker caches static assets for offline use
+- Outlier removal properly affects both category scores and winner determination
