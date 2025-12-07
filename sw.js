@@ -1,9 +1,9 @@
 const CACHE_NAME = 'score-calculator-v1';
 const urlsToCache = [
-  '/Score-Calculator/',
-  '/Score-Calculator/index.html',
-  '/Score-Calculator/stylesheet.css',
-  '/Score-Calculator/improved.js'
+  '/',
+  '/index.html',
+  '/stylesheet.css',
+  '/improved.js'
 ];
 
 self.addEventListener('install', event => {

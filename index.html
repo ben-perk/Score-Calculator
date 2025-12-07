@@ -7,6 +7,7 @@
     <meta name="author" content="Benjamin Perk">
     <meta name="description" content="A fast and easy pageant score calculator to speed up and check scoring at pageants">
     <title>Pageant Calculator</title>
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="stylesheet.css">
 </head>
@@ -121,5 +122,12 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js"></script>
     <script defer src="improved.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => console.log('Service Worker registered'))
+                .catch(error => console.log('Service Worker registration failed:', error));
+        }
+    </script>
 </body>
 </html>

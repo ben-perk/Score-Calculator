@@ -1136,12 +1136,6 @@ $(document).ready(function() {
     });
 });
 
-// Register Service Worker
-if (navigator.serviceWorker) {
-    navigator.serviceWorker.register('/Score-Calculator/sw.js', 
-        {scope: '/Score-Calculator/'});
-}
-
 // PWA Install functionality
 let deferredPrompt;
 
