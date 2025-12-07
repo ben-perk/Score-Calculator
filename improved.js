@@ -1,65 +1,48 @@
 "use strict";
 
-// Store contestant numbers and names
-let contestants = [];
-let contestantNames = {};
+// Encapsulated application state for better modularity
+const appState = {
+    contestants: [],
+    contestantNames: {},
+    judges: [],
+    categories: [],
+    categoryNames: {},
+    scoresData: {},
+    dropOutliers: false,
+    currentCarouselIndex: 0
+};
 
-// Store judge numbers
-let judges = [];
-
-// Store category names
-let categories = [];
-let categoryNames = {};
-
-// Store all scores
-const scoresData = {};
-
-// Check if we should remove high and low scores
-let dropOutliers = false;
-
-// Carousel variables
-let currentCarouselIndex = 0;
-
-// Create contestant list
+/**
+ * Sets up the list of contestants based on user input.
+ */
 function setupContestants() {
-    console.log('setupContestants called');
     const numInput = document.getElementById('numContestants');
-    console.log('numInput element:', numInput);
-    
+
     if (!numInput) {
-        console.error('numContestants element not found!');
         alert('Error: numContestants element not found');
         return;
     }
-    
+
     const num = parseInt(numInput.value);
-    console.log('Number entered:', num);
 
     if (isNaN(num) || num < 1) {
         alert('Please enter a valid number of contestants (must be 1 or more)');
         return;
     }
 
-    contestants = [];
-    contestantNames = {};
+    appState.contestants = [];
+    appState.contestantNames = {};
     for (let i = 1; i <= num; i++) {
-        contestants.push(i);
-        contestantNames[i] = 'Contestant #' + i;
+        appState.contestants.push(i);
+        appState.contestantNames[i] = 'Contestant #' + i;
     }
-
-    console.log('Contestants array:', contestants);
 
     const display = document.getElementById('contestantListDisplay');
     if (display) {
-        let html = '<p><strong>Contestants created:</strong> ' + num + ' contestants</p>';
-        display.innerHTML = html;
-        console.log('Display updated successfully');
-    } else {
-        console.error('contestantListDisplay element not found!');
+        display.textContent = `Contestants created: ${num} contestants`;
     }
 
-    localStorage.setItem('pageantContestants', JSON.stringify(contestants));
-    console.log('Saved to localStorage');
+    localStorage.setItem('pageantContestants', JSON.stringify(appState.contestants));
 }
 
 // Create category list
@@ -415,18 +398,32 @@ function loadDemoData() {
 }
 
 // Export scores to CSV file
-function exportToCSV() {
+   function exportToCSV() {
     if (Object.keys(scoresData).length === 0) {
         alert('No scores to export. Please enter some scores first.');
         return;
     }
 
-    let csv = 'Contestant,Judge,Category,Score\n';
+    // CSV Header: Contestant #, Category, Judge, Score
+    let csv = 'Contestant #,Category,Judge,Score\n';
 
-    for (const category in scoresData) {
-        for (const scoreObj of scoresData[category]) {
-            const catName = categoryNames[category] || category;
-            csv += scoreObj.contestantNumber + ',' + scoreObj.judgeNumber + ',' + catName + ',' + scoreObj.score + '\n';
+    // Sort by contestant, then category, then judge for readability
+    for (let c = 0; c < contestants.length; c++) {
+        const contestantNum = contestants[c];
+        
+        for (let cat = 0; cat < categories.length; cat++) {
+            const category = categories[cat];
+            const categoryName = categoryNames[category] || category;
+            
+            if (!scoresData[category]) continue;
+            
+            for (let s = 0; s < scoresData[category].length; s++) {
+                const scoreObj = scoresData[category][s];
+                
+                if (scoreObj.contestantNumber === contestantNum) {
+                    csv += contestantNum + ',' + categoryName + ',' + scoreObj.judgeNumber + ',' + scoreObj.score + '\n';
+                }
+            }
         }
     }
 
@@ -440,7 +437,6 @@ function exportToCSV() {
     
     alert('Scores exported successfully!');
 }
-
 // Download blank score sheet with current setup
 function downloadBlankScores() {
     if (!categories || categories.length === 0) {
