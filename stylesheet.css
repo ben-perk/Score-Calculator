@@ -386,6 +386,66 @@ footer {
     border: 1px solid #ddd;
 }
 
+/* Step Sections */
+.step-section {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.step-header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background-color: #0d6efd;
+    color: white;
+}
+
+.step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    color: #0d6efd;
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.step-title {
+    color: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    text-align: left !important;
+    font-size: 1.5rem;
+}
+
+.step-content {
+    padding: 24px;
+    background-color: #f8f9fa;
+}
+
+.step-content p {
+    text-align: left;
+    color: #333;
+}
+
+.step-content .form-label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.step-content .form-control {
+    max-width: 300px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     body {
@@ -407,5 +467,19 @@ footer {
 
     td, th {
         padding: 5px;
+    }
+
+    .step-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .step-number {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .step-title {
+        text-align: center !important;
     }
 }

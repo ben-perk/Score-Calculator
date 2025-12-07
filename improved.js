@@ -768,30 +768,37 @@ function calculateFinalScores() {
     for (const contestantNum in contestantScores) {
         let allScores = [];
         const categoryBreakdown = {};
+        const categoryAdjusted = {};
         const categoryAverages = {};
+        const categoryTotals = {};
 
         for (let i = 0; i < categories.length; i++) {
             const category = categories[i];
-            let categoryScores = contestantScores[contestantNum][category];
+            const originalScores = contestantScores[contestantNum][category].slice();
 
-            categoryBreakdown[category] = categoryScores.slice();
+            categoryBreakdown[category] = originalScores.slice();
 
-            if (dropOutliers && categoryScores.length > 0) {
-                categoryScores = getAdjustedScores(categoryScores);
+            let adjustedScores = originalScores.slice();
+            if (dropOutliers && adjustedScores.length > 0) {
+                adjustedScores = getAdjustedScores(adjustedScores);
             }
 
-            if (categoryScores.length > 0) {
+            categoryAdjusted[category] = adjustedScores.slice();
+
+            if (adjustedScores.length > 0) {
                 let categoryTotal = 0;
-                for (let j = 0; j < categoryScores.length; j++) {
-                    categoryTotal += categoryScores[j];
+                for (let j = 0; j < adjustedScores.length; j++) {
+                    categoryTotal += adjustedScores[j];
                 }
-                categoryAverages[category] = (categoryTotal / categoryScores.length).toFixed(2);
+                categoryAverages[category] = (categoryTotal / adjustedScores.length).toFixed(2);
+                categoryTotals[category] = categoryTotal;
             } else {
                 categoryAverages[category] = '0.00';
+                categoryTotals[category] = 0;
             }
 
-            for (let j = 0; j < categoryScores.length; j++) {
-                allScores.push(categoryScores[j]);
+            for (let j = 0; j < adjustedScores.length; j++) {
+                allScores.push(adjustedScores[j]);
             }
         }
 
@@ -810,7 +817,9 @@ function calculateFinalScores() {
             average: average,
             total: total.toFixed(2),
             categoryBreakdown: categoryBreakdown,
-            categoryAverages: categoryAverages
+            categoryAdjusted: categoryAdjusted,
+            categoryAverages: categoryAverages,
+            categoryTotals: categoryTotals
         });
     }
 
@@ -855,7 +864,7 @@ function displayFinalScores(results) {
     }
     html += '<p><strong>Contestant #' + highestTotalContestant.contestantNumber + '</strong> - Total: ' + highestTotalContestant.total + '</p>';
 
-    html += '<h5>Category Winners (by total score):</h5>';
+    html += '<h5>Category Winners (by total score' + (dropOutliers ? ', outliers removed' : '') + '):</h5>';
     for (let c = 0; c < categories.length; c++) {
         const category = categories[c];
         const categoryName = categoryNames[category];
@@ -864,13 +873,7 @@ function displayFinalScores(results) {
         let totalWinnerContestant = null;
         
         for (let i = 0; i < results.length; i++) {
-            let categoryTotal = 0;
-            const categoryScores = results[i].categoryBreakdown[category];
-            if (categoryScores && categoryScores.length > 0) {
-                for (let j = 0; j < categoryScores.length; j++) {
-                    categoryTotal += categoryScores[j];
-                }
-            }
+            const categoryTotal = results[i].categoryTotals[category] || 0;
             
             if (categoryTotal > highestCatTotal) {
                 highestCatTotal = categoryTotal;
@@ -963,28 +966,20 @@ function displayFinalScores(results) {
         html += '<div class="mb-4">';
         html += '<h5>' + rankLabel + ' - <span>Contestant #' + result.contestantNumber + '</span></h5>';
         
-        html += '<h6>Category Breakdown:</h6>';
+        html += '<h6>Category Breakdown' + (dropOutliers ? ' (outliers removed)' : '') + ':</h6>';
         html += '<table class="table table-sm">';
         html += '<thead><tr><th>Category</th><th>Total Score</th><th>Average</th></tr></thead>';
         html += '<tbody>';
         
         for (let j = 0; j < categories.length; j++) {
             const category = categories[j];
-            const categoryScores = result.categoryBreakdown[category];
-            
-            let totalCategoryScore = 0;
-            
-            if (categoryScores && categoryScores.length > 0) {
-                for (let k = 0; k < categoryScores.length; k++) {
-                    totalCategoryScore += categoryScores[k];
-                }
-            }
+            const totalCategoryScore = result.categoryTotals[category] || 0;
             
             const categoryName = categoryNames[category];
             const categoryAverage = result.categoryAverages[category];
             html += '<tr>';
             html += '<td>' + categoryName + '</td>';
-            html += '<td><strong>' + totalCategoryScore + '</strong></td>';
+            html += '<td><strong>' + totalCategoryScore.toFixed(2) + '</strong></td>';
             html += '<td><strong>' + categoryAverage + '</strong></td>';
             html += '</tr>';
         }
@@ -1128,13 +1123,6 @@ function loadFromStorage() {
 // Load saved data when page first opens
 loadFromStorage();
 
-// Initialize jQuery Accordion when page loads
-$(document).ready(function() {
-    $("#accordion").accordion({
-        collapsible: true,
-        active: 0
-    });
-});
 
 // PWA Install functionality
 let deferredPrompt;

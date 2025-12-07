@@ -8,7 +8,6 @@
     <meta name="description" content="A fast and easy pageant score calculator to speed up and check scoring at pageants">
     <title>Pageant Calculator</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
@@ -20,16 +19,16 @@
                     <a href="#home" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#contestants" class="nav-link">Contestants</a>
+                    <a href="#step1" class="nav-link">Step 1</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#categories" class="nav-link">Categories</a>
+                    <a href="#step2" class="nav-link">Step 2</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#judges" class="nav-link">Judges</a>
+                    <a href="#step3" class="nav-link">Step 3</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#scores" class="nav-link">Final Scores</a>
+                    <a href="#scores" class="nav-link">Results</a>
                 </li>
             </ul>
         </nav>
@@ -41,55 +40,68 @@
                 <div class="p-3 bg-light rounded">
                     <h1>Welcome to the Pageant Calculator</h1>
                     <p>I am tired of it taking an hour to count the scores</p>
-                    <p>Input the number of Contestants, Judges, and Categories along with the category names</p>
+                    <p>Follow the 3 simple steps below to calculate your pageant scores</p>
                     <div class="mt-3">
                         <button class="btn btn-info" id="demoBtn">Load Demo Data</button>
                         <button class="btn btn-warning" id="importBtn">Upload Scores (CSV)</button>
-
                     </div>
                 </div>
             </section>
 
-            <section id="setupAccordion" class="mb-4">
-                <div id="accordion">
-                    <h3>Contestant Setup</h3>
-                    <div id="contestants">
-                        <p>Enter the number of contestants competing in this pageant.</p>
-                        <div class="mb-3">
-                            <label for="numContestants" class="form-label">Number of Contestants:</label>
-                            <input type="number" id="numContestants" class="form-control" min="1" placeholder="Enter number">
-                        </div>
-                        <button class="btn btn-primary" id="createContestantBtn">Create Contestant List</button>
-                        <div id="contestantListDisplay" class="mt-3"></div>
+            <section id="step1" class="step-section mb-4">
+                <div class="step-header">
+                    <span class="step-number">1</span>
+                    <h2 class="step-title">Contestant Setup</h2>
+                </div>
+                <div class="step-content">
+                    <p>Enter the number of contestants competing in this pageant.</p>
+                    <div class="mb-3">
+                        <label for="numContestants" class="form-label">Number of Contestants:</label>
+                        <input type="number" id="numContestants" class="form-control" min="1" placeholder="Enter number">
                     </div>
+                    <button class="btn btn-primary" id="createContestantBtn">Create Contestant List</button>
+                    <div id="contestantListDisplay" class="mt-3"></div>
+                </div>
+            </section>
 
-                    <h3>Category Setup</h3>
-                    <div id="categories">
-                        <p>Enter the number of categories and their names.</p>
-                        <div class="mb-3">
-                            <label for="numCategories" class="form-label">Number of Categories:</label>
-                            <input type="number" id="numCategories" class="form-control" min="1" placeholder="Enter number">
-                        </div>
-                        <button class="btn btn-primary" id="createCategoryBtn">Create Category List</button>
-                        <div id="categoryInputsDisplay" class="mt-3"></div>
+            <section id="step2" class="step-section mb-4">
+                <div class="step-header">
+                    <span class="step-number">2</span>
+                    <h2 class="step-title">Category Setup</h2>
+                </div>
+                <div class="step-content">
+                    <p>Enter the number of categories and their names.</p>
+                    <div class="mb-3">
+                        <label for="numCategories" class="form-label">Number of Categories:</label>
+                        <input type="number" id="numCategories" class="form-control" min="1" placeholder="Enter number">
                     </div>
+                    <button class="btn btn-primary" id="createCategoryBtn">Create Category List</button>
+                    <div id="categoryInputsDisplay" class="mt-3"></div>
+                </div>
+            </section>
 
-                    <h3>Judge Setup</h3>
-                    <div id="Judges">
-                        <p>Enter the number of judges for this pageant.</p>
-                        <div class="mb-3">
-                            <label for="numJudges" class="form-label">Number of Judges:</label>
-                            <input type="number" id="numJudges" class="form-control" min="1" placeholder="Enter number">
-                        </div>
-                        <button class="btn btn-primary" id="createJudgeBtn">Create Judge List</button>
-                        <div id="judgeListDisplay" class="mt-3"></div>
+            <section id="step3" class="step-section mb-4">
+                <div class="step-header">
+                    <span class="step-number">3</span>
+                    <h2 class="step-title">Judge Setup</h2>
+                </div>
+                <div class="step-content">
+                    <p>Enter the number of judges for this pageant.</p>
+                    <div class="mb-3">
+                        <label for="numJudges" class="form-label">Number of Judges:</label>
+                        <input type="number" id="numJudges" class="form-control" min="1" placeholder="Enter number">
                     </div>
+                    <button class="btn btn-primary" id="createJudgeBtn">Create Judge List</button>
+                    <div id="judgeListDisplay" class="mt-3"></div>
                 </div>
             </section>
 
             <section id="scoreTableSection" class="mb-4" style="display: none;">
-                <div class="p-3 bg-light rounded">
-                    <h2>Enter Scores by Category</h2>
+                <div class="step-header">
+                    <span class="step-number">4</span>
+                    <h2 class="step-title">Enter Scores by Category</h2>
+                </div>
+                <div class="step-content">
                     <div id="scoreTableContainer"></div>
                 </div>
             </section>
@@ -120,7 +132,6 @@
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js"></script>
     <script defer src="improved.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
