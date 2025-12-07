@@ -36,19 +36,21 @@
 
     <main>
         <div class="container">
-            <!-- Welcome Section -->
             <section id="home" class="mb-4">
                 <div class="p-3 bg-light rounded">
                     <h1>Welcome to the Pageant Calculator</h1>
                     <p>I am tired of it taking an hour to count the scores</p>
                     <p>Input the number of Contestants, Judges, and Categories along with the category names</p>
+                    <div class="mt-3">
+                        <button class="btn btn-info" id="demoBtn">Load Demo Data</button>
+                        <button class="btn btn-warning" id="importBtn">Upload Scores (CSV)</button>
+
+                    </div>
                 </div>
             </section>
 
-            <!-- Setup Accordion -->
             <section id="setupAccordion" class="mb-4">
                 <div id="accordion">
-                    <!-- Contestant Setup -->
                     <h3>Contestant Setup</h3>
                     <div id="contestants">
                         <p>Enter the number of contestants competing in this pageant.</p>
@@ -60,7 +62,6 @@
                         <div id="contestantListDisplay" class="mt-3"></div>
                     </div>
 
-                    <!-- Category Setup -->
                     <h3>Category Setup</h3>
                     <div id="categories">
                         <p>Enter the number of categories and their names.</p>
@@ -72,7 +73,6 @@
                         <div id="categoryInputsDisplay" class="mt-3"></div>
                     </div>
 
-                    <!-- Judge Setup -->
                     <h3>Judge Setup</h3>
                     <div id="Judges">
                         <p>Enter the number of judges for this pageant.</p>
@@ -86,7 +86,6 @@
                 </div>
             </section>
 
-            <!-- Score Entry Table Section -->
             <section id="scoreTableSection" class="mb-4" style="display: none;">
                 <div class="p-3 bg-light rounded">
                     <h2>Enter Scores by Category</h2>
@@ -94,28 +93,6 @@
                 </div>
             </section>
 
-            <!-- Resources Section with Carousel -->
-            <section id="resources" class="mb-4">
-                <h2>Pageant Resources</h2>
-                <p class="section-description">Explore helpful resources and guidelines for running successful pageant events.</p>
-                
-                <!-- Carousel for Resources (3+ items) -->
-                <h3>Featured Resources</h3>
-                <div class="carousel-section">
-                    <div class="carousel-wrapper">
-                        <div id="carouselSlides"></div>
-                    </div>
-                    <div class="carousel-controls">
-                        <button id="prevResourceBtn" class="btn btn-primary">← Previous</button>
-                        <div id="carouselDots" class="carousel-dots"></div>
-                        <button id="nextResourceBtn" class="btn btn-primary">Next →</button>
-                    </div>
-                </div>
-
-              
-            </section>
-
-            <!-- Final Scores Section -->
             <section id="scores" class="mt-4">
                 <div class="p-3 bg-white rounded border">
                     <h2>Final Scores</h2>
@@ -126,8 +103,11 @@
                         </label>
                     </div>
                     <button class="btn btn-success" id="calculateBtn">Calculate Final Scores</button>
-                    <button class="btn btn-primary" id="exportBtn">Export Scores to CSV</button>
+                    <button class="btn btn-primary" id="exportBtn">Download Scores (CSV)</button>
+                    <button class="btn btn-outline-secondary" id="downloadBlankBtn">Download Blank Sheet</button>
+                    <button class="btn btn-outline-secondary" id="downloadFilledBtn">Download Filled Sheet</button>
                     <button class="btn btn-danger" id="clearBtn">Clear All Data</button>
+                    <button class="btn btn-secondary" id="installBtn" style="display: none;">Install App</button>
                     <div id="finalScoresDisplay" class="mt-3"></div>
                 </div>
             </section>
@@ -138,11 +118,8 @@
         <p>&copy; 2025 Pageant Calculator | Created by: B. Perk</p>
     </footer>
 
-    <!-- jQuery and jQuery UI for Accordion Widget -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.min.js"></script>
-
-    <!-- Main Application Script -->
     <script defer src="improved.js"></script>
 </body>
 </html>

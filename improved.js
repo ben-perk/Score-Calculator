@@ -49,7 +49,6 @@ function setupContestants() {
 
     console.log('Contestants array:', contestants);
 
-    // Show the list on page
     const display = document.getElementById('contestantListDisplay');
     if (display) {
         let html = '<p><strong>Contestants created:</strong> ' + num + ' contestants</p>';
@@ -59,7 +58,6 @@ function setupContestants() {
         console.error('contestantListDisplay element not found!');
     }
 
-    // Save to browser storage
     localStorage.setItem('pageantContestants', JSON.stringify(contestants));
     console.log('Saved to localStorage');
 }
@@ -92,7 +90,6 @@ function setupCategories() {
 
     console.log('Categories array:', categories);
 
-    // Show input boxes for category names
     const display = document.getElementById('categoryInputsDisplay');
     if (display) {
         let html = '<h4>Enter Category Names</h4>';
@@ -111,7 +108,6 @@ function setupCategories() {
         display.innerHTML = html;
     }
 
-    // Save to browser storage
     localStorage.setItem('pageantCategories', JSON.stringify(categories));
     localStorage.setItem('pageantCategoryNames', JSON.stringify(categoryNames));
 }
@@ -128,12 +124,10 @@ function saveCategoryNames() {
         }
     }
 
-    // Start storing scores for each category
     for (let i = 0; i < categories.length; i++) {
         scoresData[categories[i]] = [];
     }
 
-    // Save to browser storage
     localStorage.setItem('pageantCategoryNames', JSON.stringify(categoryNames));
 
     alert('Category names saved!');
@@ -165,7 +159,6 @@ function setupJudges() {
 
     console.log('Judges array:', judges);
 
-    // Show the judge count on page
     const display = document.getElementById('judgeListDisplay');
     if (display) {
         let html = '<p><strong>Judges created:</strong> ' + num + ' judges</p>';
@@ -175,10 +168,8 @@ function setupJudges() {
         console.error('judgeListDisplay element not found!');
     }
 
-    // Create score tables
     generateScoreTables();
 
-    // Save to browser storage
     localStorage.setItem('pageantJudges', JSON.stringify(judges));
     console.log('Judges saved to localStorage');
 }
@@ -210,7 +201,6 @@ function generateScoreTables() {
 
     let html = '';
 
-    // Make a table for each category
     for (let cat = 0; cat < categories.length; cat++) {
         const category = categories[cat];
         const categoryName = categoryNames[category];
@@ -225,7 +215,6 @@ function generateScoreTables() {
         html += '<tr>';
         html += '<th>Contestant #</th>';
 
-        // Add judge column headers
         for (let j = 0; j < judges.length; j++) {
             html += '<th>Judge #' + judges[j] + '</th>';
         }
@@ -234,13 +223,11 @@ function generateScoreTables() {
         html += '</thead>';
         html += '<tbody>';
 
-        // Add rows for each contestant
         for (let c = 0; c < contestants.length; c++) {
             const contestantNum = contestants[c];
             html += '<tr>';
             html += '<td><strong>Contestant #' + contestantNum + '</strong></td>';
 
-            // Add input boxes for each judge score
             for (let j = 0; j < judges.length; j++) {
                 const judgeNum = judges[j];
                 const inputId = 'score_' + category + '_' + contestantNum + '_' + judgeNum;
@@ -263,16 +250,32 @@ function generateScoreTables() {
 
     scoreTableContainer.innerHTML = html;
     scoreTableSection.style.display = 'block';
+    populateScoreTables();
+}
+
+// Populate score tables with existing data
+function populateScoreTables() {
+    for (let cat = 0; cat < categories.length; cat++) {
+        const category = categories[cat];
+        
+        for (let i = 0; i < scoresData[category].length; i++) {
+            const scoreItem = scoresData[category][i];
+            const inputId = 'score_' + category + '_' + scoreItem.contestantNumber + '_' + scoreItem.judgeNumber;
+            const input = document.getElementById(inputId);
+            
+            if (input) {
+                input.value = scoreItem.score;
+            }
+        }
+    }
 }
 
 // Save all scores for one category
 function saveScoresForCategory(category) {
-    // Clear old scores for this category
     scoresData[category] = [];
 
     let savedCount = 0;
 
-    // Get all scores from input boxes
     for (let c = 0; c < contestants.length; c++) {
         const contestantNum = contestants[c];
 
@@ -308,29 +311,31 @@ function toggleOutliers() {
     }
 }
 
+// Clear all data silently (helper function)
+function clearAllDataSilent() {
+    contestants = [];
+    contestantNames = {};
+    judges = [];
+    categories = [];
+    categoryNames = {};
+    for (const key in scoresData) {
+        delete scoresData[key];
+    }
+    dropOutliers = false;
+    currentCarouselIndex = 0;
+}
+
 // Clear all data and reset the calculator
 function clearAllData() {
     if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
-        // Clear all variables
-        contestants = [];
-        contestantNames = {};
-        judges = [];
-        categories = [];
-        categoryNames = {};
-        for (const key in scoresData) {
-            delete scoresData[key];
-        }
-        dropOutliers = false;
-        currentCarouselIndex = 0;
+        clearAllDataSilent();
         
-        // Clear all localStorage
         localStorage.removeItem('pageantContestants');
         localStorage.removeItem('pageantJudges');
         localStorage.removeItem('pageantCategories');
         localStorage.removeItem('pageantCategoryNames');
         localStorage.removeItem('pageantScores');
         
-        // Clear all displays
         document.getElementById('contestantListDisplay').innerHTML = '';
         document.getElementById('categoryInputsDisplay').innerHTML = '';
         document.getElementById('judgeListDisplay').innerHTML = '';
@@ -338,7 +343,6 @@ function clearAllData() {
         document.getElementById('scoreTableContainer').innerHTML = '';
         document.getElementById('finalScoresDisplay').innerHTML = '';
         
-        // Clear all input fields
         document.getElementById('numContestants').value = '';
         document.getElementById('numCategories').value = '';
         document.getElementById('numJudges').value = '';
@@ -347,44 +351,338 @@ function clearAllData() {
     }
 }
 
+// Load demo data from external JSON
+function loadDemoData() {
+    if (confirm('This will replace all current data. Continue?')) {
+        clearAllDataSilent();
+        
+        fetch('example.json')
+            .then(response => response.json())
+            .then(demoData => {
+                contestants = [];
+                contestantNames = {};
+                for (let i = 0; i < demoData.contestants.length; i++) {
+                    const c = demoData.contestants[i];
+                    contestants.push(c.number);
+                    contestantNames[c.number] = c.name;
+                }
+                
+                judges = demoData.judges.slice();
+                
+                categories = [];
+                categoryNames = {};
+                for (let i = 0; i < demoData.categories.length; i++) {
+                    const cat = demoData.categories[i];
+                    categories.push(cat.id);
+                    categoryNames[cat.id] = cat.name;
+                }
+                
+                for (let i = 0; i < categories.length; i++) {
+                    scoresData[categories[i]] = [];
+                }
+                
+                for (let i = 0; i < demoData.scores.length; i++) {
+                    const scoreItem = demoData.scores[i];
+                    const categoryKey = 'category_' + (demoData.categories.findIndex(c => c.name === scoreItem.category) + 1);
+                    
+                    scoresData[categoryKey].push({
+                        contestantNumber: scoreItem.contestant,
+                        judgeNumber: scoreItem.judge,
+                        score: scoreItem.score
+                    });
+                }
+                
+                const display = document.getElementById('contestantListDisplay');
+                if (display) {
+                    display.innerHTML = '<p><strong>Contestants loaded:</strong> ' + contestants.length + ' contestants</p>';
+                }
+                
+                const judgeDisplay = document.getElementById('judgeListDisplay');
+                if (judgeDisplay) {
+                    judgeDisplay.innerHTML = '<p><strong>Judges loaded:</strong> ' + judges.length + ' judges</p>';
+                }
+                
+                generateScoreTables();
+                saveToStorage();
+                
+                alert('Demo data loaded! Scroll to "Enter Scores by Category" to see the scores.');
+            })
+            .catch(error => {
+                alert('Error loading demo data: ' + error.message);
+                console.error(error);
+            });
+    }
+}
+
 // Export scores to CSV file
 function exportToCSV() {
-    // Check if there is any data to export
     if (Object.keys(scoresData).length === 0) {
         alert('No scores to export. Please enter some scores first.');
         return;
     }
 
-    // Create CSV header row
     let csv = 'Contestant,Judge,Category,Score\n';
 
-    // Loop through each category in scoresData
     for (const category in scoresData) {
-        // Loop through each score object in that category
         for (const scoreObj of scoresData[category]) {
-            // Add a row to the CSV with the contestant, judge, category, and score
-            csv += scoreObj.contestantNumber + ',' + scoreObj.judgeNumber + ',' + category + ',' + scoreObj.score + '\n';
+            const catName = categoryNames[category] || category;
+            csv += scoreObj.contestantNumber + ',' + scoreObj.judgeNumber + ',' + catName + ',' + scoreObj.score + '\n';
         }
     }
 
-    // Create a blob (binary data) from the CSV string
     const blob = new Blob([csv], { type: 'text/csv' });
-    
-    // Create a temporary URL for the blob
     const url = window.URL.createObjectURL(blob);
-    
-    // Create a temporary link element
     const link = document.createElement('a');
     link.href = url;
     link.download = 'pageant-scores-' + new Date().toISOString().split('T')[0] + '.csv';
-    
-    // Trigger the download by clicking the link
     link.click();
-    
-    // Clean up the temporary URL
     window.URL.revokeObjectURL(url);
     
     alert('Scores exported successfully!');
+}
+
+// Download blank score sheet with current setup
+function downloadBlankScores() {
+    if (!categories || categories.length === 0) {
+        alert('Please set up categories first');
+        return;
+    }
+
+    let csv = 'Contestant#';
+
+    // Add judge headers
+    for (let j = 0; j < judges.length; j++) {
+        csv += ',Judge\'s Score #' + judges[j];
+    }
+    csv += '\n';
+
+    // Add category name row for reference
+    csv += 'Category: ';
+    for (let c = 0; c < categories.length; c++) {
+        if (c === 0) {
+            csv += categoryNames[categories[c]];
+        }
+    }
+    csv += '\n';
+
+    // Add contestant rows
+    for (let con = 0; con < contestants.length; con++) {
+        const contestantNum = contestants[con];
+        csv += 'Contestant#' + contestantNum;
+
+        for (let j = 0; j < judges.length; j++) {
+            csv += ',';
+        }
+        csv += '\n';
+    }
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'blank-scores-' + new Date().toISOString().split('T')[0] + '.csv';
+    link.click();
+    window.URL.revokeObjectURL(url);
+    
+    alert('Blank score sheet downloaded! Fill it out in Excel/Sheets and upload it back.');
+}
+
+// Download filled scores from current category
+function downloadFilledScores() {
+    if (!categories || categories.length === 0) {
+        alert('Please set up categories first');
+        return;
+    }
+
+    const categoryKey = categories[0];
+    const categoryScores = scoresData[categoryKey];
+
+    if (categoryScores.length === 0) {
+        alert('No scores entered yet. Please enter scores first.');
+        return;
+    }
+
+    let csv = 'Contestant#';
+
+    // Add judge headers
+    for (let j = 0; j < judges.length; j++) {
+        csv += ',Judge\'s Score #' + judges[j];
+    }
+    csv += '\n';
+
+    // Add category name row for reference
+    csv += 'Category: ' + categoryNames[categoryKey] + '\n';
+
+    // Add contestant rows with scores
+    for (let con = 0; con < contestants.length; con++) {
+        const contestantNum = contestants[con];
+        csv += 'Contestant#' + contestantNum;
+
+        for (let j = 0; j < judges.length; j++) {
+            const judgeNum = judges[j];
+            
+            // Find score for this contestant and judge
+            let score = '';
+            for (let s = 0; s < categoryScores.length; s++) {
+                if (categoryScores[s].contestantNumber === contestantNum && 
+                    categoryScores[s].judgeNumber === judgeNum) {
+                    score = categoryScores[s].score;
+                    break;
+                }
+            }
+            
+            csv += ',' + score;
+        }
+        csv += '\n';
+    }
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'filled-scores-' + categoryNames[categoryKey] + '-' + new Date().toISOString().split('T')[0] + '.csv';
+    link.click();
+    window.URL.revokeObjectURL(url);
+    
+    alert('Filled score sheet downloaded! You can upload it back to restore these scores.');
+}
+
+// Import scores from CSV
+function importFromCSV() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv';
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            try {
+                const csv = event.target.result;
+                const lines = csv.trim().split('\n');
+                
+                if (lines.length < 2) {
+                    alert('CSV file is empty');
+                    return;
+                }
+                
+                const header = lines[0].split(',');
+                const judgeCount = header.length - 1;
+                
+                // Check if this is the new spreadsheet format or old format
+                const isSpreadsheetFormat = header[0].toLowerCase().includes('contestant') && 
+                                           header[1] && header[1].toLowerCase().includes('judge');
+                
+                let importedCount = 0;
+                
+                if (isSpreadsheetFormat) {
+                    // New spreadsheet format: Contestant#, Judge's Score #1, Judge's Score #2, etc
+                    for (let i = 2; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        
+                        const parts = line.split(',');
+                        if (parts.length < 2) continue;
+                        
+                        const contestantStr = parts[0].trim();
+                        const contestantNum = parseInt(contestantStr.replace('Contestant#', ''));
+                        
+                        if (isNaN(contestantNum)) continue;
+                        
+                        // For spreadsheet format, we need to know which category this is for
+                        // We'll store scores for each judge in order
+                        for (let j = 1; j < parts.length; j++) {
+                            const score = parseFloat(parts[j].trim());
+                            
+                            if (!isNaN(score) && score >= 1 && score <= 1000) {
+                                const judgeNum = j;
+                                
+                                // Get first category key by default
+                                const categoryKey = categories[0];
+                                
+                                if (!scoresData[categoryKey]) {
+                                    scoresData[categoryKey] = [];
+                                }
+                                
+                                scoresData[categoryKey].push({
+                                    contestantNumber: contestantNum,
+                                    judgeNumber: judgeNum,
+                                    score: score
+                                });
+                                
+                                importedCount++;
+                            }
+                        }
+                    }
+                    
+                    alert('Imported ' + importedCount + ' scores successfully!\n\nNote: Scores were imported for the first category. If you have multiple categories, please import the file multiple times or enter scores manually for other categories.');
+                } else {
+                    // Old CSV format: Contestant,Judge,Category,Score
+                    const headerLower = header[0].toLowerCase();
+                    if (!headerLower.includes('contestant') || !headerLower.includes('judge') || !headerLower.includes('category') || !headerLower.includes('score')) {
+                        alert('CSV format not recognized. Please use the format: Contestant,Judge,Category,Score');
+                        return;
+                    }
+                    
+                    for (let i = 1; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        
+                        const parts = line.split(',');
+                        if (parts.length < 4) continue;
+                        
+                        const contestantNum = parseInt(parts[0].trim());
+                        const judgeNum = parseInt(parts[1].trim());
+                        const categoryName = parts[2].trim();
+                        const score = parseFloat(parts[3].trim());
+                        
+                        if (isNaN(contestantNum) || isNaN(judgeNum) || isNaN(score)) {
+                            continue;
+                        }
+                        
+                        let categoryKey = null;
+                        for (const key in categoryNames) {
+                            if (categoryNames[key] === categoryName) {
+                                categoryKey = key;
+                                break;
+                            }
+                        }
+                        
+                        if (!categoryKey) {
+                            console.warn('Category not found: ' + categoryName);
+                            continue;
+                        }
+                        
+                        if (!scoresData[categoryKey]) {
+                            scoresData[categoryKey] = [];
+                        }
+                        
+                        scoresData[categoryKey].push({
+                            contestantNumber: contestantNum,
+                            judgeNumber: judgeNum,
+                            score: score
+                        });
+                        
+                        importedCount++;
+                    }
+                    
+                    if (importedCount === 0) {
+                        alert('No valid scores found in CSV');
+                        return;
+                    }
+                    
+                    alert('Imported ' + importedCount + ' scores successfully!');
+                }
+                
+                saveToStorage();
+                populateScoreTables();
+            } catch (error) {
+                alert('Error parsing CSV: ' + error.message);
+                console.error(error);
+            }
+        };
+        reader.readAsText(file);
+    };
+    input.click();
 }
 
 // Remove the highest and lowest score from a list
@@ -398,7 +696,6 @@ function getAdjustedScores(scores) {
         sorted.push(scores[i]);
     }
 
-    // Sort from lowest to highest
     for (let i = 0; i < sorted.length; i++) {
         for (let j = i + 1; j < sorted.length; j++) {
             if (sorted[j] < sorted[i]) {
@@ -409,7 +706,6 @@ function getAdjustedScores(scores) {
         }
     }
 
-    // Remove lowest and highest
     const adjusted = [];
     for (let i = 1; i < sorted.length - 1; i++) {
         adjusted.push(sorted[i]);
@@ -451,7 +747,6 @@ function carouselShow(n) {
 function calculateFinalScores() {
     const contestantScores = {};
 
-    // Create empty score holder for each contestant
     for (let i = 0; i < contestants.length; i++) {
         contestantScores[contestants[i]] = {};
         for (let c = 0; c < categories.length; c++) {
@@ -459,7 +754,6 @@ function calculateFinalScores() {
         }
     }
 
-    // Add all scores to the holders
     for (let c = 0; c < categories.length; c++) {
         const category = categories[c];
         for (let i = 0; i < scoresData[category].length; i++) {
@@ -470,27 +764,22 @@ function calculateFinalScores() {
         }
     }
 
-    // Calculate totals for each contestant
     const results = [];
     for (const contestantNum in contestantScores) {
         let allScores = [];
         const categoryBreakdown = {};
         const categoryAverages = {};
 
-        // Get scores from each category
         for (let i = 0; i < categories.length; i++) {
             const category = categories[i];
             let categoryScores = contestantScores[contestantNum][category];
 
-            // Save original scores
             categoryBreakdown[category] = categoryScores.slice();
 
-            // Remove high and low if checkbox is on
             if (dropOutliers && categoryScores.length > 0) {
                 categoryScores = getAdjustedScores(categoryScores);
             }
 
-            // Calculate average for this category
             if (categoryScores.length > 0) {
                 let categoryTotal = 0;
                 for (let j = 0; j < categoryScores.length; j++) {
@@ -501,7 +790,6 @@ function calculateFinalScores() {
                 categoryAverages[category] = '0.00';
             }
 
-            // Add all scores together
             for (let j = 0; j < categoryScores.length; j++) {
                 allScores.push(categoryScores[j]);
             }
@@ -511,7 +799,6 @@ function calculateFinalScores() {
             continue;
         }
 
-        // Calculate overall total
         let total = 0;
         for (let i = 0; i < allScores.length; i++) {
             total += allScores[i];
@@ -527,7 +814,6 @@ function calculateFinalScores() {
         });
     }
 
-    // Sort by total scores (highest first)
     for (let i = 0; i < results.length; i++) {
         for (let j = i + 1; j < results.length; j++) {
             if (parseFloat(results[j].total) > parseFloat(results[i].total)) {
@@ -538,7 +824,6 @@ function calculateFinalScores() {
         }
     }
 
-    // Show the results
     displayFinalScores(results);
 }
 
@@ -551,7 +836,6 @@ function displayFinalScores(results) {
         html += '<p><em>Outliers Removed (Highest and Lowest scores per category)</em></p>';
     }
 
-    // SUMMARY SECTION
     html += '<div class="card mb-4 border-success">';
     html += '<div class="card-header bg-success text-white">';
     html += '<h4 class="mb-0">WINNERS & SUMMARY</h4>';
@@ -560,7 +844,6 @@ function displayFinalScores(results) {
 
     html += '<p><strong>Ranking Method:</strong> Total Scores</p>';
 
-    // Show Highest Total Score (winner)
     html += '<h5>Highest Total Score:</h5>';
     let highestTotal = -Infinity;
     let highestTotalContestant = null;
@@ -572,13 +855,11 @@ function displayFinalScores(results) {
     }
     html += '<p><strong>Contestant #' + highestTotalContestant.contestantNumber + '</strong> - Total: ' + highestTotalContestant.total + '</p>';
 
-    // Category Winners (by total score)
     html += '<h5>Category Winners (by total score):</h5>';
     for (let c = 0; c < categories.length; c++) {
         const category = categories[c];
         const categoryName = categoryNames[category];
         
-        // Show category with highest total
         let highestCatTotal = -Infinity;
         let totalWinnerContestant = null;
         
@@ -603,7 +884,6 @@ function displayFinalScores(results) {
     html += '</div>';
     html += '</div>';
 
-    // CAROUSEL SECTION FOR TOP 3 WINNERS
     if (results.length >= 1) {
         html += '<div class="card mb-4 border-warning">';
         html += '<div class="card-header bg-warning text-dark">';
@@ -628,16 +908,14 @@ function displayFinalScores(results) {
         html += '<div class="carousel-container-inline">';
         html += '<div class="carousel-wrapper-inline">';
 
-        // Carousel slides - show 3rd, 2nd, then 1st
         for (let i = 2; i >= 0; i--) {
             if (i >= results.length) continue;
             
             const result = results[i];
-            const slideIndex = 2 - i; // 0, 1, 2
+            const slideIndex = 2 - i;
             const isActive = slideIndex === 0 ? ' active' : '';
             let medal = '';
 
-            // Use web-friendly relative paths for medal images stored in the Photos folder
             if (i === 2) {
                 medal = 'Photos/3rd.png';
             } else if (i === 1) {
@@ -670,7 +948,6 @@ function displayFinalScores(results) {
         html += '</div>';
     }
 
-    // Detailed breakdown for each contestant
     html += '<div class="card mb-3">';
     html += '<div class="card-header bg-primary text-white">';
     html += '<h4 class="mb-0">Detailed Breakdown by Contestant</h4>';
@@ -686,7 +963,6 @@ function displayFinalScores(results) {
         html += '<div class="mb-4">';
         html += '<h5>' + rankLabel + ' - <span>Contestant #' + result.contestantNumber + '</span></h5>';
         
-        // Show breakdown by category
         html += '<h6>Category Breakdown:</h6>';
         html += '<table class="table table-sm">';
         html += '<thead><tr><th>Category</th><th>Total Score</th><th>Average</th></tr></thead>';
@@ -715,7 +991,6 @@ function displayFinalScores(results) {
         
         html += '</tbody></table>';
         
-        // Show score summary
         html += '<div style="margin: 15px 0; padding: 10px; background: #f9f9f9; border-radius: 4px;">';
         html += '<p><strong>Total All Scores:</strong> ' + result.total + '</p>';
         html += '</div>';
@@ -726,7 +1001,6 @@ function displayFinalScores(results) {
     html += '</div>';
     html += '</div>';
 
-    // Judge averages for each contestant
     html += '<div class="card mb-4 border-info">';
     html += '<div class="card-header bg-info text-white">';
     html += '<h4 class="mb-0">Judge Overall Averages Per Contestant</h4>';
@@ -746,7 +1020,6 @@ function displayFinalScores(results) {
         html += '<tr>';
         html += '<td><strong>Contestant #' + result.contestantNumber + '</strong></td>';
 
-        // Calculate each judge's average for this contestant
         const judgeAverages = {};
         for (let c = 0; c < categories.length; c++) {
             const category = categories[c];
@@ -776,7 +1049,6 @@ function displayFinalScores(results) {
             html += '<td>' + judgeAvg + '</td>';
         }
 
-        // Calculate average of all judge averages
         let judgeOverallAvg = '-';
         if (allJudgeScores.length > 0) {
             let totalJudgeScores = 0;
@@ -828,7 +1100,6 @@ function loadFromStorage() {
             categoryNames = JSON.parse(storedCategoryNames);
         }
 
-        // Start storing scores for each category
         for (let i = 0; i < categories.length; i++) {
             scoresData[categories[i]] = [];
         }
@@ -876,11 +1147,8 @@ let deferredPrompt;
 
 // Listen for the beforeinstallprompt event
 window.addEventListener('beforeinstallprompt', (e) => {
-    // Prevent the mini-infobar from appearing
     e.preventDefault();
-    // Stash the event for later use
     deferredPrompt = e;
-    // Show the install button
     document.getElementById('installBtn').style.display = 'inline-block';
 });
 
@@ -901,15 +1169,16 @@ function installApp() {
 
 // Add event listeners when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    // Button event listeners
     document.getElementById('createContestantBtn').addEventListener('click', setupContestants);
     document.getElementById('createCategoryBtn').addEventListener('click', setupCategories);
     document.getElementById('createJudgeBtn').addEventListener('click', setupJudges);
     document.getElementById('calculateBtn').addEventListener('click', calculateFinalScores);
     document.getElementById('exportBtn').addEventListener('click', exportToCSV);
+    document.getElementById('importBtn').addEventListener('click', importFromCSV);
     document.getElementById('clearBtn').addEventListener('click', clearAllData);
+    document.getElementById('demoBtn').addEventListener('click', loadDemoData);
     document.getElementById('installBtn').addEventListener('click', installApp);
-    
-    // Checkbox event listener
     document.getElementById('outlierToggle').addEventListener('change', toggleOutliers);
+    document.getElementById('downloadBlankBtn').addEventListener('click', downloadBlankScores);
+    document.getElementById('downloadFilledBtn').addEventListener('click', downloadFilledScores);
 });
