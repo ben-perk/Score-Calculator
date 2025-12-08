@@ -1,7 +1,7 @@
 "use strict";
 
 // VERSION CONTROL - Increment this each time you update the JS
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.8';
 
 function checkVersion() {
     const stored = localStorage.getItem('appVersion');
