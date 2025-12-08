@@ -3,14 +3,14 @@
 // VERSION CONTROL - Increment this each time you update the JS
 const APP_VERSION = '1.0.8';
 
-function checkVersion() {
-    const stored = localStorage.getItem('appVersion');
-    if (stored !== APP_VERSION) {
-        localStorage.clear();
-        localStorage.setItem('appVersion', APP_VERSION);
-        console.log('App version updated to ' + APP_VERSION + ' - cache cleared');
-    }
-}
+// function checkVersion() {
+//     const stored = localStorage.getItem('appVersion');
+//     if (stored !== APP_VERSION) {
+//         localStorage.clear();
+//         localStorage.setItem('appVersion', APP_VERSION);
+//         console.log('App version updated to ' + APP_VERSION + ' - cache cleared');
+//     }
+// }
 
 //never change
 let contestants = [];
