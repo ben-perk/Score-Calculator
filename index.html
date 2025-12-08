@@ -42,8 +42,8 @@
                     <p>I am tired of it taking an hour to count the scores</p>
                     <p>Follow the 3 simple steps below to calculate your pageant scores</p>
                     <div class="mt-3">
-                        <button class="btn btn-info" id="demoBtn">Load Demo Data</button>
-                        <button class="btn btn-warning" id="importBtn">Upload Scores (CSV)</button>
+                        <!-- <button class="btn btn-info" id="demoBtn">Load Demo Data</button> -->
+                        <!-- <button class="btn btn-warning" id="importBtn">Upload Scores (CSV)</button> -->
                     </div>
                 </div>
             </section>
@@ -134,7 +134,7 @@
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script defer src="improved.js"></script>
+    <script defer src="improved.js?v=<?php echo time(); ?>"></script>
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js')
