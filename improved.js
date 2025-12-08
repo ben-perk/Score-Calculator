@@ -29,19 +29,19 @@ function setupContestants() {
         return;
     }
 
-    appState.contestants = [];
-    appState.contestantNames = {};
+    contestants = [];
+    contestantNames = {};
     for (let i = 1; i <= num; i++) {
-        appState.contestants.push(i);
-        appState.contestantNames[i] = 'Contestant #' + i;
+        contestants.push(i);
+        contestantNames[i] = 'Contestant #' + i;
     }
 
     const display = document.getElementById('contestantListDisplay');
     if (display) {
-        display.textContent = `Contestants created: ${num} contestants`;
+        display.innerHTML = `Contestants created: ${num} contestants`;
     }
 
-    localStorage.setItem('pageantContestants', JSON.stringify(appState.contestants));
+    localStorage.setItem('pageantContestants', JSON.stringify(contestants));
 }
 
 // Create category list
