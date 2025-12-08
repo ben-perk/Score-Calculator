@@ -1,5 +1,16 @@
-
 "use strict";
+
+// VERSION CONTROL - Increment this each time you update the JS
+const APP_VERSION = '1.0.0';
+
+function checkVersion() {
+    const stored = localStorage.getItem('appVersion');
+    if (stored !== APP_VERSION) {
+        localStorage.clear();
+        localStorage.setItem('appVersion', APP_VERSION);
+        console.log('App version updated to ' + APP_VERSION + ' - cache cleared');
+    }
+}
 
 //never change
 let contestants = [];
@@ -241,7 +252,6 @@ function populateScoreTables() {
     for (let cat = 0; cat < categories.length; cat++) {
         const category = categories[cat];
 
-        // ✅ Add safety check to prevent crash if scoresData[category] is undefined
         if (!scoresData[category]) continue;
 
         for (let i = 0; i < scoresData[category].length; i++) {
@@ -322,23 +332,29 @@ function clearAllData() {
         localStorage.removeItem('pageantCategoryNames');
         localStorage.removeItem('pageantScores');
         
-        document.getElementById('contestantListDisplay').innerHTML = '';
-        document.getElementById('categoryInputsDisplay').innerHTML = '';
-        document.getElementById('judgeListDisplay').innerHTML = '';
-        document.getElementById('scoreTableSection').style.display = 'none';
-        document.getElementById('scoreTableContainer').innerHTML = '';
-        document.getElementById('finalScoresDisplay').innerHTML = '';
+        const el1 = document.getElementById('contestantListDisplay');
+        const el2 = document.getElementById('categoryInputsDisplay');
+        const el3 = document.getElementById('judgeListDisplay');
+        const el4 = document.getElementById('scoreTableSection');
+        const el5 = document.getElementById('scoreTableContainer');
+        const el6 = document.getElementById('finalScoresDisplay');
+        const el7 = document.getElementById('numContestants');
+        const el8 = document.getElementById('numCategories');
+        const el9 = document.getElementById('numJudges');
         
-        document.getElementById('numContestants').value = '';
-        document.getElementById('numCategories').value = '';
-        document.getElementById('numJudges').value = '';
+        if (el1) el1.innerHTML = '';
+        if (el2) el2.innerHTML = '';
+        if (el3) el3.innerHTML = '';
+        if (el4) el4.style.display = 'none';
+        if (el5) el5.innerHTML = '';
+        if (el6) el6.innerHTML = '';
+        if (el7) el7.value = '';
+        if (el8) el8.value = '';
+        if (el9) el9.value = '';
         
         alert('All data has been cleared!');
     }
 }
-
-// Load demo data from external JSON
-// Replace the loadDemoData function in improved.js with this fixed version:
 
 function loadDemoData() {
     if (confirm('This will replace all current data. Continue?')) {
@@ -347,7 +363,6 @@ function loadDemoData() {
         fetch('example.json')
             .then(response => response.json())
             .then(demoData => {
-                // Load contestants
                 contestants = [];
                 contestantNames = {};
                 for (let i = 0; i < demoData.contestants.length; i++) {
@@ -356,10 +371,8 @@ function loadDemoData() {
                     contestantNames[c.number] = c.name;
                 }
                 
-                // Load judges
                 judges = demoData.judges.slice();
                 
-                // Load categories
                 categories = [];
                 categoryNames = {};
                 for (let i = 0; i < demoData.categories.length; i++) {
@@ -368,16 +381,13 @@ function loadDemoData() {
                     categoryNames[cat.id] = cat.name;
                 }
                 
-                // Initialize score data structure
                 for (let i = 0; i < categories.length; i++) {
                     scoresData[categories[i]] = [];
                 }
                 
-                // Load scores - FIXED: properly group by category
                 for (let i = 0; i < demoData.scores.length; i++) {
                     const scoreItem = demoData.scores[i];
                     
-                    // Find the category ID that matches the category name
                     let categoryKey = null;
                     for (let j = 0; j < demoData.categories.length; j++) {
                         if (demoData.categories[j].name === scoreItem.category) {
@@ -395,19 +405,16 @@ function loadDemoData() {
                     }
                 }
                 
-                // Update contestant display
                 const display = document.getElementById('contestantListDisplay');
                 if (display) {
                     display.innerHTML = '<p><strong>Contestants loaded:</strong> ' + contestants.length + ' contestants</p>';
                 }
                 
-                // Update judge display
                 const judgeDisplay = document.getElementById('judgeListDisplay');
                 if (judgeDisplay) {
                     judgeDisplay.innerHTML = '<p><strong>Judges loaded:</strong> ' + judges.length + ' judges</p>';
                 }
                 
-                // Update category display
                 const categoryDisplay = document.getElementById('categoryInputsDisplay');
                 if (categoryDisplay) {
                     let html = '<h4>Categories Loaded</h4>';
@@ -420,10 +427,8 @@ function loadDemoData() {
                     categoryDisplay.innerHTML = html;
                 }
                 
-                // Generate score tables and populate them
                 generateScoreTables();
                 
-                // Save to storage
                 saveToStorage();
                 localStorage.setItem('pageantContestants', JSON.stringify(contestants));
                 localStorage.setItem('pageantJudges', JSON.stringify(judges));
@@ -439,17 +444,14 @@ function loadDemoData() {
     }
 }
 
-// Export scores to CSV file
-   function exportToCSV() {
+function exportToCSV() {
     if (Object.keys(scoresData).length === 0) {
         alert('No scores to export. Please enter some scores first.');
         return;
     }
 
-    // CSV Header: Contestant #, Category, Judge, Score
     let csv = 'Contestant #,Category,Judge,Score\n';
 
-    // Sort by contestant, then category, then judge for readability
     for (let c = 0; c < contestants.length; c++) {
         const contestantNum = contestants[c];
         
@@ -479,7 +481,7 @@ function loadDemoData() {
     
     alert('Scores exported successfully!');
 }
-// Download blank score sheet with current setup
+
 function downloadBlankScores() {
     if (!categories || categories.length === 0) {
         alert('Please set up categories first');
@@ -488,13 +490,11 @@ function downloadBlankScores() {
 
     let csv = 'Contestant#';
 
-    // Add judge headers
     for (let j = 0; j < judges.length; j++) {
         csv += ',Judge\'s Score #' + judges[j];
     }
     csv += '\n';
 
-    // Add category name row for reference
     csv += 'Category: ';
     for (let c = 0; c < categories.length; c++) {
         if (c === 0) {
@@ -503,7 +503,6 @@ function downloadBlankScores() {
     }
     csv += '\n';
 
-    // Add contestant rows
     for (let con = 0; con < contestants.length; con++) {
         const contestantNum = contestants[con];
         csv += 'Contestant#' + contestantNum;
@@ -525,7 +524,6 @@ function downloadBlankScores() {
     alert('Blank score sheet downloaded! Fill it out in Excel/Sheets and upload it back.');
 }
 
-// Download filled scores from current category
 function downloadFilledScores() {
     if (!categories || categories.length === 0) {
         alert('Please set up categories first');
@@ -542,16 +540,13 @@ function downloadFilledScores() {
 
     let csv = 'Contestant#';
 
-    // Add judge headers
     for (let j = 0; j < judges.length; j++) {
         csv += ',Judge\'s Score #' + judges[j];
     }
     csv += '\n';
 
-    // Add category name row for reference
     csv += 'Category: ' + categoryNames[categoryKey] + '\n';
 
-    // Add contestant rows with scores
     for (let con = 0; con < contestants.length; con++) {
         const contestantNum = contestants[con];
         csv += 'Contestant#' + contestantNum;
@@ -559,7 +554,6 @@ function downloadFilledScores() {
         for (let j = 0; j < judges.length; j++) {
             const judgeNum = judges[j];
             
-            // Find score for this contestant and judge
             let score = '';
             for (let s = 0; s < categoryScores.length; s++) {
                 if (categoryScores[s].contestantNumber === contestantNum && 
@@ -585,7 +579,6 @@ function downloadFilledScores() {
     alert('Filled score sheet downloaded! You can upload it back to restore these scores.');
 }
 
-// Import scores from CSV
 function importFromCSV() {
     const input = document.createElement('input');
     input.type = 'file';
@@ -606,14 +599,12 @@ function importFromCSV() {
                 const header = lines[0].split(',');
                 const judgeCount = header.length - 1;
                 
-                // Check if this is the new spreadsheet format or old format
                 const isSpreadsheetFormat = header[0].toLowerCase().includes('contestant') && 
                                            header[1] && header[1].toLowerCase().includes('judge');
                 
                 let importedCount = 0;
                 
                 if (isSpreadsheetFormat) {
-                    // New spreadsheet format: Contestant#, Judge's Score #1, Judge's Score #2, etc
                     for (let i = 2; i < lines.length; i++) {
                         const line = lines[i].trim();
                         if (!line) continue;
@@ -626,15 +617,12 @@ function importFromCSV() {
                         
                         if (isNaN(contestantNum)) continue;
                         
-                        // For spreadsheet format, we need to know which category this is for
-                        // We'll store scores for each judge in order
                         for (let j = 1; j < parts.length; j++) {
                             const score = parseFloat(parts[j].trim());
                             
                             if (!isNaN(score) && score >= 1 && score <= 1000) {
                                 const judgeNum = j;
                                 
-                                // Get first category key by default
                                 const categoryKey = categories[0];
                                 
                                 if (!scoresData[categoryKey]) {
@@ -654,7 +642,6 @@ function importFromCSV() {
                     
                     alert('Imported ' + importedCount + ' scores successfully!\n\nNote: Scores were imported for the first category. If you have multiple categories, please import the file multiple times or enter scores manually for other categories.');
                 } else {
-                    // Old CSV format: Contestant,Judge,Category,Score
                     const headerLower = header[0].toLowerCase();
                     if (!headerLower.includes('contestant') || !headerLower.includes('judge') || !headerLower.includes('category') || !headerLower.includes('score')) {
                         alert('CSV format not recognized. Please use the format: Contestant,Judge,Category,Score');
@@ -723,7 +710,6 @@ function importFromCSV() {
     input.click();
 }
 
-// Remove the highest and lowest score from a list
 function getAdjustedScores(scores) {
     if (scores.length <= 2) {
         return scores;
@@ -752,17 +738,14 @@ function getAdjustedScores(scores) {
     return adjusted;
 }
 
-// Carousel functions
 function carouselNext() {
     const slides = document.querySelectorAll('.carousel-slide-inline');
-    const dots = document.querySelectorAll('.dot-inline');
     currentCarouselIndex = (currentCarouselIndex + 1) % slides.length;
     carouselShow(currentCarouselIndex);
 }
 
 function carouselPrev() {
     const slides = document.querySelectorAll('.carousel-slide-inline');
-    const dots = document.querySelectorAll('.dot-inline');
     currentCarouselIndex = (currentCarouselIndex - 1 + slides.length) % slides.length;
     carouselShow(currentCarouselIndex);
 }
@@ -781,7 +764,6 @@ function carouselShow(n) {
     dots[currentCarouselIndex].classList.add('active');
 }
 
-// Calculate final scores and rank contestants
 function calculateFinalScores() {
     const contestantScores = {};
 
