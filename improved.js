@@ -985,6 +985,8 @@ function displayFinalScores(results) {
         html += '</div>';
     }
 
+
+
     html += '<div class="card mb-3">';
     html += '<div class="card-header bg-primary text-white">';
     html += '<h4 class="mb-0">Detailed Breakdown by Contestant</h4>';
@@ -1115,8 +1117,7 @@ function loadFromStorage() {
         
         const display = document.getElementById('contestantListDisplay');
         if (display) {
-            let html = '<p><strong>Contestants loaded:</strong> ' + contestants.length + ' contestants</p>';
-            display.innerHTML = html;
+            display.innerHTML = '<p><strong>Contestants loaded:</strong> ' + contestants.length + ' contestants</p>';
         }
     }
 
@@ -1132,6 +1133,17 @@ function loadFromStorage() {
         for (let i = 0; i < categories.length; i++) {
             scoresData[categories[i]] = [];
         }
+        
+        // Show the category names in the display
+        const catDisplay = document.getElementById('categoryInputsDisplay');
+        if (catDisplay && categories.length > 0) {
+            let html = '<h4>Categories Loaded</h4><ul>';
+            for (let i = 0; i < categories.length; i++) {
+                html += '<li>' + categoryNames[categories[i]] + '</li>';
+            }
+            html += '</ul>';
+            catDisplay.innerHTML = html;
+        }
     }
 
     const storedJudges = localStorage.getItem('pageantJudges');
@@ -1140,17 +1152,21 @@ function loadFromStorage() {
         
         const display = document.getElementById('judgeListDisplay');
         if (display) {
-            let html = '<p><strong>Judges loaded:</strong> ' + judges.length + ' judges</p>';
-            display.innerHTML = html;
+            display.innerHTML = '<p><strong>Judges loaded:</strong> ' + judges.length + ' judges</p>';
         }
     }
 
-    const stored = localStorage.getItem('pageantScores');
-    if (stored) {
-        const parsed = JSON.parse(stored);
+    const storedScores = localStorage.getItem('pageantScores');
+    if (storedScores) {
+        const parsed = JSON.parse(storedScores);
         for (const key in parsed) {
             scoresData[key] = parsed[key];
         }
+    }
+    
+    // CRITICAL: If we have all the setup data, regenerate the score tables
+    if (contestants.length > 0 && categories.length > 0 && judges.length > 0) {
+        generateScoreTables();
     }
 }
 
