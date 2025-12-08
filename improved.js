@@ -1185,16 +1185,31 @@ function installApp() {
 
 // Add event listeners when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('createContestantBtn').addEventListener('click', setupContestants);
-    document.getElementById('createCategoryBtn').addEventListener('click', setupCategories);
-    document.getElementById('createJudgeBtn').addEventListener('click', setupJudges);
-    document.getElementById('calculateBtn').addEventListener('click', calculateFinalScores);
-    document.getElementById('exportBtn').addEventListener('click', exportToCSV);
-    document.getElementById('importBtn').addEventListener('click', importFromCSV);
-    document.getElementById('clearBtn').addEventListener('click', clearAllData);
-    document.getElementById('demoBtn').addEventListener('click', loadDemoData);
-    document.getElementById('installBtn').addEventListener('click', installApp);
-    document.getElementById('outlierToggle').addEventListener('change', toggleOutliers);
-    document.getElementById('downloadBlankBtn').addEventListener('click', downloadBlankScores);
-    document.getElementById('downloadFilledBtn').addEventListener('click', downloadFilledScores);
+    const elements = {
+        createContestantBtn: setupContestants,
+        createCategoryBtn: setupCategories,
+        createJudgeBtn: setupJudges,
+        calculateBtn: calculateFinalScores,
+        exportBtn: exportToCSV,
+        importBtn: importFromCSV,
+        clearBtn: clearAllData,
+        demoBtn: loadDemoData,
+        installBtn: installApp,
+        outlierToggle: toggleOutliers,
+        downloadBlankBtn: downloadBlankScores,
+        downloadFilledBtn: downloadFilledScores
+    };
+
+    for (const [id, handler] of Object.entries(elements)) {
+        const element = document.getElementById(id);
+        if (element) {
+            if (id === 'outlierToggle') {
+                element.addEventListener('change', handler);
+            } else {
+                element.addEventListener('click', handler);
+            }
+        } else {
+            console.warn(`Element with id "${id}" not found`);
+        }
+    }
 });
