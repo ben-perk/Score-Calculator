@@ -109,6 +109,7 @@ select:focus,
 
 .card-header {
     font-weight: bold;
+    background-color: #0d6efd;
 }
 
 .card-body {
