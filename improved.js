@@ -334,6 +334,8 @@ function clearAllData() {
 }
 
 // Load demo data from external JSON
+// Replace the loadDemoData function in improved.js with this fixed version:
+
 function loadDemoData() {
     if (confirm('This will replace all current data. Continue?')) {
         clearAllDataSilent();
@@ -341,6 +343,7 @@ function loadDemoData() {
         fetch('example.json')
             .then(response => response.json())
             .then(demoData => {
+                // Load contestants
                 contestants = [];
                 contestantNames = {};
                 for (let i = 0; i < demoData.contestants.length; i++) {
@@ -349,8 +352,10 @@ function loadDemoData() {
                     contestantNames[c.number] = c.name;
                 }
                 
+                // Load judges
                 judges = demoData.judges.slice();
                 
+                // Load categories
                 categories = [];
                 categoryNames = {};
                 for (let i = 0; i < demoData.categories.length; i++) {
@@ -359,35 +364,69 @@ function loadDemoData() {
                     categoryNames[cat.id] = cat.name;
                 }
                 
+                // Initialize score data structure
                 for (let i = 0; i < categories.length; i++) {
                     scoresData[categories[i]] = [];
                 }
                 
+                // Load scores - FIXED: properly group by category
                 for (let i = 0; i < demoData.scores.length; i++) {
                     const scoreItem = demoData.scores[i];
-                    const categoryKey = 'category_' + (demoData.categories.findIndex(c => c.name === scoreItem.category) + 1);
                     
-                    scoresData[categoryKey].push({
-                        contestantNumber: scoreItem.contestant,
-                        judgeNumber: scoreItem.judge,
-                        score: scoreItem.score
-                    });
+                    // Find the category ID that matches the category name
+                    let categoryKey = null;
+                    for (let j = 0; j < demoData.categories.length; j++) {
+                        if (demoData.categories[j].name === scoreItem.category) {
+                            categoryKey = demoData.categories[j].id;
+                            break;
+                        }
+                    }
+                    
+                    if (categoryKey && scoresData[categoryKey]) {
+                        scoresData[categoryKey].push({
+                            contestantNumber: scoreItem.contestant,
+                            judgeNumber: scoreItem.judge,
+                            score: scoreItem.score
+                        });
+                    }
                 }
                 
+                // Update contestant display
                 const display = document.getElementById('contestantListDisplay');
                 if (display) {
                     display.innerHTML = '<p><strong>Contestants loaded:</strong> ' + contestants.length + ' contestants</p>';
                 }
                 
+                // Update judge display
                 const judgeDisplay = document.getElementById('judgeListDisplay');
                 if (judgeDisplay) {
                     judgeDisplay.innerHTML = '<p><strong>Judges loaded:</strong> ' + judges.length + ' judges</p>';
                 }
                 
-                generateScoreTables();
-                saveToStorage();
+                // Update category display
+                const categoryDisplay = document.getElementById('categoryInputsDisplay');
+                if (categoryDisplay) {
+                    let html = '<h4>Categories Loaded</h4>';
+                    html += '<ul>';
+                    for (let i = 0; i < categories.length; i++) {
+                        const catKey = categories[i];
+                        html += '<li>' + categoryNames[catKey] + '</li>';
+                    }
+                    html += '</ul>';
+                    categoryDisplay.innerHTML = html;
+                }
                 
-                alert('Demo data loaded! Scroll to "Enter Scores by Category" to see the scores.');
+                // Generate score tables and populate them
+                generateScoreTables();
+                
+                // Save to storage
+                saveToStorage();
+                localStorage.setItem('pageantContestants', JSON.stringify(contestants));
+                localStorage.setItem('pageantJudges', JSON.stringify(judges));
+                localStorage.setItem('pageantCategories', JSON.stringify(categories));
+                localStorage.setItem('pageantCategoryNames', JSON.stringify(categoryNames));
+                
+                alert('Demo data loaded successfully! Scroll down to see the scores and calculate results.');
             })
             .catch(error => {
                 alert('Error loading demo data: ' + error.message);
