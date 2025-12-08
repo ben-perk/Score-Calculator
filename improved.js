@@ -1,16 +1,15 @@
 "use strict";
 
-// Encapsulated application state for better modularity
-const appState = {
-    contestants: [],
-    contestantNames: {},
-    judges: [],
-    categories: [],
-    categoryNames: {},
-    scoresData: {},
-    dropOutliers: false,
-    currentCarouselIndex: 0
-};
+//never change
+let contestants = [];
+let contestantNames = {};
+let judges = [];
+let categories = [];
+let categoryNames = {};
+let scoresData = {};
+let dropOutliers = false;
+let currentCarouselIndex = 0;
+
 
 /**
  * Sets up the list of contestants based on user input.
