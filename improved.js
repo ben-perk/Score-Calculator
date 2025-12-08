@@ -1,3 +1,4 @@
+
 "use strict";
 
 //never change
@@ -239,7 +240,10 @@ function generateScoreTables() {
 function populateScoreTables() {
     for (let cat = 0; cat < categories.length; cat++) {
         const category = categories[cat];
-        
+
+        // ✅ Add safety check to prevent crash if scoresData[category] is undefined
+        if (!scoresData[category]) continue;
+
         for (let i = 0; i < scoresData[category].length; i++) {
             const scoreItem = scoresData[category][i];
             const inputId = 'score_' + category + '_' + scoreItem.contestantNumber + '_' + scoreItem.judgeNumber;
@@ -1104,7 +1108,7 @@ function saveToStorage() {
     localStorage.setItem('pageantScores', JSON.stringify(scoresData));
 }
 
-// Load saved data from browser storage when page opens
+// Load scores from browser storage when page opens
 function loadFromStorage() {
     const storedContestants = localStorage.getItem('pageantContestants');
     if (storedContestants) {
@@ -1170,10 +1174,6 @@ function loadFromStorage() {
     }
 }
 
-// Load saved data when page first opens
-loadFromStorage();
-
-
 // PWA Install functionality
 let deferredPrompt;
 
@@ -1228,4 +1228,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.warn(`Element with id "${id}" not found`);
         }
     }
+
+    // Load saved data after DOM is ready
+    loadFromStorage();
 });
