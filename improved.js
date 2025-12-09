@@ -769,7 +769,7 @@ async function downloadBlankTemplate() {
         instructionsData.push(['Number of Categories:', categories.length]);
         instructionsData.push(['']);
         instructionsData.push(['CATEGORIES:']);
-        InstructionsData.push(['Delete the instructions sheet before you import scores.']);
+        instructionsData.push(['Delete the instructions sheet before you import scores.']);
         categories.forEach((category, idx) => {
             instructionsData.push([`${idx + 1}. ${categoryNames[category]}`]);
         });
