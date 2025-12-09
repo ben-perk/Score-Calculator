@@ -445,9 +445,7 @@ function loadDemoData() {
 }
 
 // Export results
-// Replace your exportToExcel function with this complete version
 
-// Replace your exportToExcel function with this complete version
 
 async function exportToExcel() {
     if (Object.keys(scoresData).length === 0) {
@@ -733,7 +731,7 @@ async function exportToExcel() {
     }
 }
 
-// NEW FUNCTION: Download Blank Template for Score Entry
+// Download Blank Template for Score Entry
 async function downloadBlankTemplate() {
     if (!categories || categories.length === 0) {
         alert('Please set up categories first (Step 3)');
