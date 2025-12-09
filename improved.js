@@ -823,7 +823,7 @@ async function downloadBlankTemplate() {
         const timestamp = new Date().toISOString().split('T')[0];
         XLSX.writeFile(wb, 'pageant-blank-template-' + timestamp + '.xlsx');
 
-        alert('Blank template downloaded! Fill it out and import it back using the "Import from Template" button.');
+        alert('Blank template downloaded! Fill it out and upload it back using the "Upload from Template" button.');
     } catch (error) {
         console.error('Template download error:', error);
         alert('Error downloading template: ' + error.message);
