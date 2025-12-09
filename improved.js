@@ -444,42 +444,164 @@ function loadDemoData() {
     }
 }
 
-function exportToCSV() {
+async function exportToExcel() {
     if (Object.keys(scoresData).length === 0) {
-        alert('No scores to export. Please enter some scores first.');
+        alert('No scores to export. Please calculate final scores first.');
         return;
     }
-
-    let csv = 'Contestant #,Category,Judge,Score\n';
-
-    for (let c = 0; c < contestants.length; c++) {
-        const contestantNum = contestants[c];
+    
+    try {
+        const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs');
+        const results = calculateResultsForExport();
+        const wb = XLSX.utils.book_new();
         
-        for (let cat = 0; cat < categories.length; cat++) {
-            const category = categories[cat];
-            const categoryName = categoryNames[category] || category;
-            
-            if (!scoresData[category]) continue;
-            
-            for (let s = 0; s < scoresData[category].length; s++) {
-                const scoreObj = scoresData[category][s];
-                
-                if (scoreObj.contestantNumber === contestantNum) {
-                    csv += contestantNum + ',' + categoryName + ',' + scoreObj.judgeNumber + ',' + scoreObj.score + '\n';
+        // SHEET 1: Winners & Rankings
+        const winnersData = [];
+        winnersData.push(['PAGEANT RESULTS - WINNERS & RANKINGS']);
+        winnersData.push(['Date: ' + new Date().toLocaleDateString()]);
+        winnersData.push(['']);
+        winnersData.push(['RANK', 'CONTESTANT #', 'TOTAL SCORE', 'STATUS']);
+        
+        results.slice(0, 3).forEach((result, idx) => {
+            const status = idx === 0 ? 'WINNER 🏆' : idx === 1 ? '1ST ALTERNATE 🥈' : '2ND ALTERNATE 🥉';
+            winnersData.push([idx + 1, 'Contestant #' + result.contestantNumber, result.total, status]);
+        });
+        
+        winnersData.push(['']);
+        winnersData.push(['CATEGORY WINNERS']);
+        winnersData.push(['CATEGORY', 'WINNER', 'TOTAL SCORE']);
+        
+        categories.forEach(category => {
+            const categoryName = categoryNames[category];
+            let maxScore = -1;
+            let winner = null;
+            results.forEach(result => {
+                const catTotal = result.categoryTotals[category] || 0;
+                if (catTotal > maxScore) {
+                    maxScore = catTotal;
+                    winner = result.contestantNumber;
                 }
+            });
+            winnersData.push([categoryName, 'Contestant #' + winner, maxScore.toFixed(2)]);
+        });
+        
+        const ws1 = XLSX.utils.aoa_to_sheet(winnersData);
+        ws1['!cols'] = [{ width: 15 }, { width: 20 }, { width: 15 }, { width: 25 }];
+        
+        // SHEET 2: Detailed Scores
+        const detailedData = [];
+        detailedData.push(['DETAILED SCORES BY CONTESTANT']);
+        detailedData.push(['']);
+        
+        const headers = ['RANK', 'CONTESTANT #', 'TOTAL SCORE'];
+        categories.forEach(cat => headers.push(categoryNames[cat]));
+        detailedData.push(headers);
+        
+        results.forEach((result, idx) => {
+            const row = [idx + 1, 'Contestant #' + result.contestantNumber, result.total];
+            categories.forEach(cat => {
+                row.push(result.categoryTotals[cat].toFixed(2));
+            });
+            detailedData.push(row);
+        });
+        
+        detailedData.push(['']);
+        detailedData.push(['SUMMARY STATISTICS']);
+        detailedData.push(['Highest Total Score', Math.max(...results.map(r => parseFloat(r.total))).toFixed(2)]);
+        detailedData.push(['Lowest Total Score', Math.min(...results.map(r => parseFloat(r.total))).toFixed(2)]);
+        detailedData.push(['Average Score', (results.reduce((sum, r) => sum + parseFloat(r.total), 0) / results.length).toFixed(2)]);
+        detailedData.push(['Number of Contestants', results.length]);
+        
+        const ws2 = XLSX.utils.aoa_to_sheet(detailedData);
+        ws2['!cols'] = [{ width: 10 }, { width: 18 }, { width: 15 }, ...categories.map(() => ({ width: 15 }))];
+        
+        // SHEET 3: Raw Scores
+        const rawData = [];
+        rawData.push(['RAW JUDGE SCORES']);
+        rawData.push(['']);
+        rawData.push(['CONTESTANT #', 'CATEGORY', 'JUDGE #', 'SCORE']);
+        
+        contestants.forEach(contestantNum => {
+            categories.forEach(category => {
+                const categoryName = categoryNames[category];
+                const categoryScores = scoresData[category] || [];
+                categoryScores.forEach(scoreItem => {
+                    if (scoreItem.contestantNumber === contestantNum) {
+                        rawData.push([
+                            'Contestant #' + contestantNum,
+                            categoryName,
+                            'Judge #' + scoreItem.judgeNumber,
+                            scoreItem.score
+                        ]);
+                    }
+                });
+            });
+        });
+        
+        const ws3 = XLSX.utils.aoa_to_sheet(rawData);
+        ws3['!cols'] = [{ width: 18 }, { width: 20 }, { width: 12 }, { width: 10 }];
+        
+        XLSX.utils.book_append_sheet(wb, ws1, 'Winners & Rankings');
+        XLSX.utils.book_append_sheet(wb, ws2, 'Detailed Scores');
+        XLSX.utils.book_append_sheet(wb, ws3, 'Raw Scores');
+        
+        const timestamp = new Date().toISOString().split('T')[0];
+        XLSX.writeFile(wb, 'pageant-results-' + timestamp + '.xlsx');
+        
+        alert('Excel file exported successfully!');
+    } catch (error) {
+        console.error('Export error:', error);
+        alert('Error exporting to Excel: ' + error.message);
+    }
+}
+
+function calculateResultsForExport() {
+    const contestantScores = {};
+    for (let i = 0; i < contestants.length; i++) {
+        contestantScores[contestants[i]] = {};
+        for (let c = 0; c < categories.length; c++) {
+            contestantScores[contestants[i]][categories[c]] = [];
+        }
+    }
+    for (let c = 0; c < categories.length; c++) {
+        const category = categories[c];
+        for (let i = 0; i < scoresData[category].length; i++) {
+            const item = scoresData[category][i];
+            if (contestantScores[item.contestantNumber]) {
+                contestantScores[item.contestantNumber][category].push(item.score);
             }
         }
     }
-
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'pageant-scores-' + new Date().toISOString().split('T')[0] + '.csv';
-    link.click();
-    window.URL.revokeObjectURL(url);
-    
-    alert('Scores exported successfully!');
+    const results = [];
+    for (const contestantNum in contestantScores) {
+        let allScores = [];
+        const categoryTotals = {};
+        for (let i = 0; i < categories.length; i++) {
+            const category = categories[i];
+            let adjustedScores = contestantScores[contestantNum][category].slice();
+            if (dropOutliers && adjustedScores.length > 2) {
+                adjustedScores = getAdjustedScores(adjustedScores);
+            }
+            let categoryTotal = 0;
+            for (let j = 0; j < adjustedScores.length; j++) {
+                categoryTotal += adjustedScores[j];
+                allScores.push(adjustedScores[j]);
+            }
+            categoryTotals[category] = categoryTotal;
+        }
+        if (allScores.length === 0) continue;
+        let total = 0;
+        for (let i = 0; i < allScores.length; i++) {
+            total += allScores[i];
+        }
+        results.push({
+            contestantNumber: contestantNum,
+            total: total.toFixed(2),
+            categoryTotals: categoryTotals
+        });
+    }
+    results.sort((a, b) => parseFloat(b.total) - parseFloat(a.total));
+    return results;
 }
 
 function downloadBlankScores() {
@@ -1188,7 +1310,7 @@ document.addEventListener('DOMContentLoaded', function() {
         createCategoryBtn: setupCategories,
         createJudgeBtn: setupJudges,
         calculateBtn: calculateFinalScores,
-        exportBtn: exportToCSV,
+        exportBtn: exportToExcel,
         importBtn: importFromCSV,
         clearBtn: clearAllData,
         demoBtn: loadDemoData,
