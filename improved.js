@@ -732,6 +732,7 @@ async function exportToExcel() {
 }
 
 // Download Blank Template for Score Entry
+// Download Blank Template for Score Entry
 async function downloadBlankTemplate() {
     if (!categories || categories.length === 0) {
         alert('Please set up categories first (Step 3)');
@@ -749,8 +750,8 @@ async function downloadBlankTemplate() {
     try {
         const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs');
         const wb = XLSX.utils.book_new();
-        
-       // ============= INSTRUCTIONS SHEET =============
+
+        // ============= INSTRUCTIONS SHEET =============
         const instructionsData = [];
         instructionsData.push(['PAGEANT SCORE TEMPLATE - INSTRUCTIONS']);
         instructionsData.push(['']);
@@ -772,66 +773,63 @@ async function downloadBlankTemplate() {
         instructionsData.push(['Number of Categories:', categories.length]);
         instructionsData.push(['']);
         instructionsData.push(['CATEGORIES:']);
+
+        // FIXED: properly loop through categories
+        categories.forEach((category, idx) => {
             instructionsData.push([`${idx + 1}. ${categoryNames[category]}`]);
-        };
-        
+        });
+
         const wsInstructions = XLSX.utils.aoa_to_sheet(instructionsData);
         wsInstructions['!cols'] = [{ width: 40 }, { width: 20 }];
-        
-        // ============= SCORE ENTRY SHEET (BLANK TEMPLATE) =============
+
+        // ============= SCORE ENTRY SHEET =============
         const templateData = [];
         templateData.push(['SCORE ENTRY TEMPLATE']);
         templateData.push(['Fill in scores below - Leave blank cells empty, do not use 0']);
         templateData.push(['']);
-        
-        categories.forEach((category, catIndex) => {
+
+        categories.forEach((category) => {
             const categoryName = categoryNames[category];
-            
-            // Category header
-            templateData.push([categoryName]);
-            
-            // Table header: Contestant # | Judge #1 | Judge #2 | Judge #3 | etc.
+
+            templateData.push([categoryName]); // category header
+
+            // Table header: Contestant # | Judge #1 | Judge #2 | ...
             const categoryHeaders = ['Contestant #'];
             judges.forEach(j => categoryHeaders.push('Judge #' + j));
             templateData.push(categoryHeaders);
-            
-            // Rows for each contestant (BLANK for them to fill in)
+
+            // Blank rows for user to fill in
             contestants.forEach(contestantNum => {
                 const row = ['Contestant #' + contestantNum];
-                
-                // Add empty cells for each judge
-                judges.forEach(() => {
-                    row.push('');
-                });
-                
+                judges.forEach(() => row.push(''));
                 templateData.push(row);
             });
-            
-            // Add spacing between tables
+
             templateData.push(['']);
             templateData.push(['']);
         });
-        
+
         const wsTemplate = XLSX.utils.aoa_to_sheet(templateData);
+
+        // FIXED: correct column-width syntax
         wsTemplate['!cols'] = [
             { width: 18 },
             ...judges.map(() => ({ width: 12 }))
         ];
-        
-        // Add sheets to workbook
+
         XLSX.utils.book_append_sheet(wb, wsInstructions, 'Instructions');
         XLSX.utils.book_append_sheet(wb, wsTemplate, 'Score Entry');
-        
-        // Generate and download
+
         const timestamp = new Date().toISOString().split('T')[0];
         XLSX.writeFile(wb, 'pageant-blank-template-' + timestamp + '.xlsx');
-        
+
         alert('Blank template downloaded! Fill it out and import it back using the "Import from Template" button.');
     } catch (error) {
         console.error('Template download error:', error);
         alert('Error downloading template: ' + error.message);
     }
 }
+
 
 // NEW FUNCTION: Import Scores from Filled Template
 async function importFromTemplate() {
