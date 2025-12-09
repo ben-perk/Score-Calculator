@@ -447,6 +447,8 @@ function loadDemoData() {
 // Export results
 // Replace your exportToExcel function with this complete version
 
+// Replace your exportToExcel function with this complete version
+
 async function exportToExcel() {
     if (Object.keys(scoresData).length === 0) {
         alert('No scores to export. Please calculate final scores first.');
@@ -729,6 +731,321 @@ async function exportToExcel() {
         console.error('Export error:', error);
         alert('Error exporting to Excel: ' + error.message);
     }
+}
+
+// NEW FUNCTION: Download Blank Template for Score Entry
+async function downloadBlankTemplate() {
+    if (!categories || categories.length === 0) {
+        alert('Please set up categories first (Step 3)');
+        return;
+    }
+    if (!judges || judges.length === 0) {
+        alert('Please set up judges first (Step 2)');
+        return;
+    }
+    if (!contestants || contestants.length === 0) {
+        alert('Please set up contestants first (Step 1)');
+        return;
+    }
+    
+    try {
+        const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs');
+        const wb = XLSX.utils.book_new();
+        
+        // ============= INSTRUCTIONS SHEET =============
+        const instructionsData = [];
+        instructionsData.push(['PAGEANT SCORE TEMPLATE - INSTRUCTIONS']);
+        instructionsData.push(['']);
+        instructionsData.push(['HOW TO USE THIS TEMPLATE:']);
+        instructionsData.push(['']);
+        instructionsData.push(['1. Go to the "Score Entry" sheet']);
+        instructionsData.push(['2. Fill in scores for each contestant under each judge column']);
+        instructionsData.push(['3. Each category has its own table - scroll down to see all categories']);
+        instructionsData.push(['4. Enter scores between 1 and 1000']);
+        instructionsData.push(['5. Save the file when done']);
+        instructionsData.push(['6. Use the "Import Scores from Template" button in the calculator to upload this file']);
+        instructionsData.push(['']);
+        instructionsData.push(['SETUP INFORMATION:']);
+        instructionsData.push(['Number of Contestants:', contestants.length]);
+        instructionsData.push(['Number of Judges:', judges.length]);
+        instructionsData.push(['Number of Categories:', categories.length]);
+        instructionsData.push(['']);
+        instructionsData.push(['CATEGORIES:']);
+        categories.forEach((category, idx) => {
+            instructionsData.push([`${idx + 1}. ${categoryNames[category]}`]);
+        });
+        
+        const wsInstructions = XLSX.utils.aoa_to_sheet(instructionsData);
+        wsInstructions['!cols'] = [{ width: 40 }, { width: 20 }];
+        
+        // ============= SCORE ENTRY SHEET (BLANK TEMPLATE) =============
+        const templateData = [];
+        templateData.push(['SCORE ENTRY TEMPLATE']);
+        templateData.push(['Fill in scores below - Leave blank cells empty, do not use 0']);
+        templateData.push(['']);
+        
+        categories.forEach((category, catIndex) => {
+            const categoryName = categoryNames[category];
+            
+            // Category header
+            templateData.push([categoryName]);
+            
+            // Table header: Contestant # | Judge #1 | Judge #2 | Judge #3 | etc.
+            const categoryHeaders = ['Contestant #'];
+            judges.forEach(j => categoryHeaders.push('Judge #' + j));
+            templateData.push(categoryHeaders);
+            
+            // Rows for each contestant (BLANK for them to fill in)
+            contestants.forEach(contestantNum => {
+                const row = ['Contestant #' + contestantNum];
+                
+                // Add empty cells for each judge
+                judges.forEach(() => {
+                    row.push('');
+                });
+                
+                templateData.push(row);
+            });
+            
+            // Add spacing between tables
+            templateData.push(['']);
+            templateData.push(['']);
+        });
+        
+        const wsTemplate = XLSX.utils.aoa_to_sheet(templateData);
+        wsTemplate['!cols'] = [
+            { width: 18 },
+            ...judges.map(() => ({ width: 12 }))
+        ];
+        
+        // Add sheets to workbook
+        XLSX.utils.book_append_sheet(wb, wsInstructions, 'Instructions');
+        XLSX.utils.book_append_sheet(wb, wsTemplate, 'Score Entry');
+        
+        // Generate and download
+        const timestamp = new Date().toISOString().split('T')[0];
+        XLSX.writeFile(wb, 'pageant-blank-template-' + timestamp + '.xlsx');
+        
+        alert('Blank template downloaded! Fill it out and import it back using the "Import from Template" button.');
+    } catch (error) {
+        console.error('Template download error:', error);
+        alert('Error downloading template: ' + error.message);
+    }
+}
+
+// NEW FUNCTION: Import Scores from Filled Template
+async function importFromTemplate() {
+    if (!categories || categories.length === 0) {
+        alert('Please set up categories, judges, and contestants first');
+        return;
+    }
+    
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.xlsx,.xls';
+    
+    input.onchange = async function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        try {
+            const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs');
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const data = new Uint8Array(event.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // Read the "Score Entry" sheet
+                    const sheetName = 'Score Entry';
+                    if (!workbook.SheetNames.includes(sheetName)) {
+                        alert('Could not find "Score Entry" sheet. Please use the correct template.');
+                        return;
+                    }
+                    
+                    const worksheet = workbook.Sheets[sheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    
+                    let importedCount = 0;
+                    let currentCategory = null;
+                    let currentCategoryIndex = -1;
+                    
+                    // Parse the data
+                    for (let i = 0; i < jsonData.length; i++) {
+                        const row = jsonData[i];
+                        if (!row || row.length === 0) continue;
+                        
+                        const firstCell = String(row[0] || '').trim();
+                        
+                        // Check if this is a category header
+                        let foundCategory = false;
+                        for (let c = 0; c < categories.length; c++) {
+                            if (categoryNames[categories[c]] === firstCell) {
+                                currentCategory = categories[c];
+                                currentCategoryIndex = c;
+                                foundCategory = true;
+                                break;
+                            }
+                        }
+                        
+                        if (foundCategory) continue;
+                        
+                        // Check if this is a contestant row
+                        if (firstCell.includes('Contestant #')) {
+                            if (currentCategory === null) continue;
+                            
+                            const contestantNum = parseInt(firstCell.replace('Contestant #', '').trim());
+                            if (isNaN(contestantNum)) continue;
+                            
+                            // Read scores from this row
+                            for (let j = 1; j < row.length && j <= judges.length; j++) {
+                                const score = parseFloat(row[j]);
+                                
+                                if (!isNaN(score) && score >= 1 && score <= 1000) {
+                                    const judgeNum = judges[j - 1];
+                                    
+                                    if (!scoresData[currentCategory]) {
+                                        scoresData[currentCategory] = [];
+                                    }
+                                    
+                                    // Remove any existing score for this contestant/judge/category
+                                    scoresData[currentCategory] = scoresData[currentCategory].filter(s => 
+                                        !(s.contestantNumber === contestantNum && s.judgeNumber === judgeNum)
+                                    );
+                                    
+                                    // Add the new score
+                                    scoresData[currentCategory].push({
+                                        contestantNumber: contestantNum,
+                                        judgeNumber: judgeNum,
+                                        score: score
+                                    });
+                                    
+                                    importedCount++;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (importedCount === 0) {
+                        alert('No valid scores found in the template. Please check the format.');
+                        return;
+                    }
+                    
+                    saveToStorage();
+                    populateScoreTables();
+                    
+                    alert(`Successfully imported ${importedCount} scores from template!\n\nScroll down to see the scores in the tables, then click "Calculate Final Scores".`);
+                    
+                } catch (error) {
+                    console.error('Parse error:', error);
+                    alert('Error reading template file: ' + error.message);
+                }
+            };
+            
+            reader.readAsArrayBuffer(file);
+            
+        } catch (error) {
+            console.error('Import error:', error);
+            alert('Error importing template: ' + error.message);
+        }
+    };
+    
+    input.click();
+}
+
+// Helper function to calculate full results like the webpage displays
+function calculateFullResults() {
+    const contestantScores = {};
+
+    for (let i = 0; i < contestants.length; i++) {
+        contestantScores[contestants[i]] = {};
+        for (let c = 0; c < categories.length; c++) {
+            contestantScores[contestants[i]][categories[c]] = [];
+        }
+    }
+
+    for (let c = 0; c < categories.length; c++) {
+        const category = categories[c];
+        for (let i = 0; i < scoresData[category].length; i++) {
+            const item = scoresData[category][i];
+            if (contestantScores[item.contestantNumber]) {
+                contestantScores[item.contestantNumber][category].push(item.score);
+            }
+        }
+    }
+
+    const results = [];
+    for (const contestantNum in contestantScores) {
+        let allScores = [];
+        const categoryBreakdown = {};
+        const categoryAdjusted = {};
+        const categoryAverages = {};
+        const categoryTotals = {};
+
+        for (let i = 0; i < categories.length; i++) {
+            const category = categories[i];
+            const originalScores = contestantScores[contestantNum][category].slice();
+
+            categoryBreakdown[category] = originalScores.slice();
+
+            let adjustedScores = originalScores.slice();
+            if (dropOutliers && adjustedScores.length > 0) {
+                adjustedScores = getAdjustedScores(adjustedScores);
+            }
+
+            categoryAdjusted[category] = adjustedScores.slice();
+
+            if (adjustedScores.length > 0) {
+                let categoryTotal = 0;
+                for (let j = 0; j < adjustedScores.length; j++) {
+                    categoryTotal += adjustedScores[j];
+                }
+                categoryAverages[category] = (categoryTotal / adjustedScores.length).toFixed(2);
+                categoryTotals[category] = categoryTotal;
+            } else {
+                categoryAverages[category] = '0.00';
+                categoryTotals[category] = 0;
+            }
+
+            for (let j = 0; j < adjustedScores.length; j++) {
+                allScores.push(adjustedScores[j]);
+            }
+        }
+
+        if (allScores.length === 0) {
+            continue;
+        }
+
+        let total = 0;
+        for (let i = 0; i < allScores.length; i++) {
+            total += allScores[i];
+        }
+        const average = (total / allScores.length).toFixed(2);
+        
+        results.push({
+            contestantNumber: contestantNum,
+            average: average,
+            total: total.toFixed(2),
+            categoryBreakdown: categoryBreakdown,
+            categoryAdjusted: categoryAdjusted,
+            categoryAverages: categoryAverages,
+            categoryTotals: categoryTotals
+        });
+    }
+
+    // Sort by total score
+    for (let i = 0; i < results.length; i++) {
+        for (let j = i + 1; j < results.length; j++) {
+            if (parseFloat(results[j].total) > parseFloat(results[i].total)) {
+                const temp = results[i];
+                results[i] = results[j];
+                results[j] = temp;
+            }
+        }
+    }
+
+    return results;
 }
 
 // Helper function to calculate full results like the webpage displays
