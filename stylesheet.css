@@ -91,6 +91,12 @@ select:focus,
 }
 
 /* Buttons - Let Bootstrap handle these */
+
+button{
+    padding: auto;
+}
+
+
 .btn {
     font-weight: 600;
     transition: all 0.3s ease;
