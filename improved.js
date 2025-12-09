@@ -444,6 +444,8 @@ function loadDemoData() {
     }
 }
 
+// Replace your exportToExcel function with this complete version
+
 async function exportToExcel() {
     if (Object.keys(scoresData).length === 0) {
         alert('No scores to export. Please calculate final scores first.');
@@ -452,29 +454,42 @@ async function exportToExcel() {
     
     try {
         const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs');
-        const results = calculateResultsForExport();
+        
+        // Calculate full results like on the webpage
+        const results = calculateFullResults();
+        
         const wb = XLSX.utils.book_new();
         
-        // SHEET 1: Winners & Rankings
+        // ============= SHEET 1: WINNERS & SUMMARY =============
         const winnersData = [];
-        winnersData.push(['PAGEANT RESULTS - WINNERS & RANKINGS']);
+        winnersData.push(['PAGEANT RESULTS - WINNERS & SUMMARY']);
         winnersData.push(['Date: ' + new Date().toLocaleDateString()]);
+        winnersData.push(['Outliers Removed: ' + (dropOutliers ? 'Yes (Highest and Lowest scores per category)' : 'No')]);
         winnersData.push(['']);
-        winnersData.push(['RANK', 'CONTESTANT #', 'TOTAL SCORE', 'STATUS']);
+        
+        winnersData.push(['TOP 3 OVERALL WINNERS']);
+        winnersData.push(['RANK', 'CONTESTANT #', 'TOTAL SCORE', 'AVERAGE', 'STATUS']);
         
         results.slice(0, 3).forEach((result, idx) => {
             const status = idx === 0 ? 'WINNER 🏆' : idx === 1 ? '1ST ALTERNATE 🥈' : '2ND ALTERNATE 🥉';
-            winnersData.push([idx + 1, 'Contestant #' + result.contestantNumber, result.total, status]);
+            winnersData.push([
+                idx + 1, 
+                'Contestant #' + result.contestantNumber, 
+                result.total, 
+                result.average,
+                status
+            ]);
         });
         
         winnersData.push(['']);
-        winnersData.push(['CATEGORY WINNERS']);
+        winnersData.push(['CATEGORY WINNERS (By Total Score)']);
         winnersData.push(['CATEGORY', 'WINNER', 'TOTAL SCORE']);
         
         categories.forEach(category => {
             const categoryName = categoryNames[category];
             let maxScore = -1;
             let winner = null;
+            
             results.forEach(result => {
                 const catTotal = result.categoryTotals[category] || 0;
                 if (catTotal > maxScore) {
@@ -482,52 +497,170 @@ async function exportToExcel() {
                     winner = result.contestantNumber;
                 }
             });
+            
             winnersData.push([categoryName, 'Contestant #' + winner, maxScore.toFixed(2)]);
         });
         
         const ws1 = XLSX.utils.aoa_to_sheet(winnersData);
-        ws1['!cols'] = [{ width: 15 }, { width: 20 }, { width: 15 }, { width: 25 }];
+        ws1['!cols'] = [{ width: 15 }, { width: 20 }, { width: 15 }, { width: 12 }, { width: 25 }];
         
-        // SHEET 2: Detailed Scores
+        // ============= SHEET 2: DETAILED BREAKDOWN BY CONTESTANT =============
         const detailedData = [];
-        detailedData.push(['DETAILED SCORES BY CONTESTANT']);
+        detailedData.push(['DETAILED BREAKDOWN BY CONTESTANT']);
         detailedData.push(['']);
         
-        const headers = ['RANK', 'CONTESTANT #', 'TOTAL SCORE'];
-        categories.forEach(cat => headers.push(categoryNames[cat]));
-        detailedData.push(headers);
+        const rankLabels = ['WINNER', '1ST ALTERNATE', '2ND ALTERNATE'];
         
         results.forEach((result, idx) => {
-            const row = [idx + 1, 'Contestant #' + result.contestantNumber, result.total];
-            categories.forEach(cat => {
-                row.push(result.categoryTotals[cat].toFixed(2));
+            const rankLabel = rankLabels[idx] || 'Rank #' + (idx + 1);
+            
+            detailedData.push([rankLabel + ' - Contestant #' + result.contestantNumber]);
+            detailedData.push(['']);
+            
+            // Category Breakdown
+            detailedData.push(['CATEGORY BREAKDOWN' + (dropOutliers ? ' (outliers removed)' : '')]);
+            detailedData.push(['Category', 'Total Score', 'Average Score']);
+            
+            categories.forEach(category => {
+                const categoryName = categoryNames[category];
+                const totalCategoryScore = result.categoryTotals[category] || 0;
+                const categoryAverage = result.categoryAverages[category];
+                
+                detailedData.push([
+                    categoryName,
+                    totalCategoryScore.toFixed(2),
+                    categoryAverage
+                ]);
             });
-            detailedData.push(row);
+            
+            detailedData.push(['']);
+            detailedData.push(['TOTAL ALL SCORES', result.total]);
+            detailedData.push(['OVERALL AVERAGE', result.average]);
+            detailedData.push(['']);
+            detailedData.push(['']);
         });
         
-        detailedData.push(['']);
-        detailedData.push(['SUMMARY STATISTICS']);
-        detailedData.push(['Highest Total Score', Math.max(...results.map(r => parseFloat(r.total))).toFixed(2)]);
-        detailedData.push(['Lowest Total Score', Math.min(...results.map(r => parseFloat(r.total))).toFixed(2)]);
-        detailedData.push(['Average Score', (results.reduce((sum, r) => sum + parseFloat(r.total), 0) / results.length).toFixed(2)]);
-        detailedData.push(['Number of Contestants', results.length]);
-        
         const ws2 = XLSX.utils.aoa_to_sheet(detailedData);
-        ws2['!cols'] = [{ width: 10 }, { width: 18 }, { width: 15 }, ...categories.map(() => ({ width: 15 }))];
+        ws2['!cols'] = [{ width: 25 }, { width: 15 }, { width: 15 }];
         
-        // SHEET 3: Raw Scores
+        // ============= SHEET 3: JUDGE AVERAGES PER CONTESTANT =============
+        const judgeAvgData = [];
+        judgeAvgData.push(['JUDGE OVERALL AVERAGES PER CONTESTANT']);
+        judgeAvgData.push(['']);
+        
+        const judgeHeaders = ['Contestant #'];
+        judges.forEach(j => judgeHeaders.push('Judge #' + j));
+        judgeHeaders.push('Overall Judge Avg');
+        judgeAvgData.push(judgeHeaders);
+        
+        results.forEach(result => {
+            const judgeAverages = {};
+            
+            // Calculate judge averages for this contestant
+            categories.forEach(category => {
+                if (!scoresData[category]) return;
+                scoresData[category].forEach(scoreItem => {
+                    if (scoreItem.contestantNumber == result.contestantNumber) {
+                        if (!judgeAverages[scoreItem.judgeNumber]) {
+                            judgeAverages[scoreItem.judgeNumber] = [];
+                        }
+                        judgeAverages[scoreItem.judgeNumber].push(scoreItem.score);
+                    }
+                });
+            });
+            
+            const row = ['Contestant #' + result.contestantNumber];
+            let allJudgeScores = [];
+            
+            judges.forEach(judgeNum => {
+                if (judgeAverages[judgeNum] && judgeAverages[judgeNum].length > 0) {
+                    const judgeTotal = judgeAverages[judgeNum].reduce((sum, score) => sum + score, 0);
+                    const judgeAvg = (judgeTotal / judgeAverages[judgeNum].length).toFixed(2);
+                    row.push(judgeAvg);
+                    allJudgeScores.push(...judgeAverages[judgeNum]);
+                } else {
+                    row.push('-');
+                }
+            });
+            
+            // Overall judge average
+            if (allJudgeScores.length > 0) {
+                const totalJudgeScores = allJudgeScores.reduce((sum, score) => sum + score, 0);
+                const judgeOverallAvg = (totalJudgeScores / allJudgeScores.length).toFixed(2);
+                row.push(judgeOverallAvg);
+            } else {
+                row.push('-');
+            }
+            
+            judgeAvgData.push(row);
+        });
+        
+        const ws3 = XLSX.utils.aoa_to_sheet(judgeAvgData);
+        ws3['!cols'] = [
+            { width: 18 },
+            ...judges.map(() => ({ width: 12 })),
+            { width: 18 }
+        ];
+        
+        // ============= SHEET 4: RAW SCORES BY CATEGORY =============
         const rawData = [];
-        rawData.push(['RAW JUDGE SCORES']);
+        rawData.push(['RAW SCORES BY CATEGORY']);
         rawData.push(['']);
-        rawData.push(['CONTESTANT #', 'CATEGORY', 'JUDGE #', 'SCORE']);
+        
+        categories.forEach(category => {
+            const categoryName = categoryNames[category];
+            rawData.push([categoryName]);
+            
+            const categoryHeaders = ['Contestant #'];
+            judges.forEach(j => categoryHeaders.push('Judge #' + j + ' Score'));
+            rawData.push(categoryHeaders);
+            
+            contestants.forEach(contestantNum => {
+                const row = ['Contestant #' + contestantNum];
+                
+                judges.forEach(judgeNum => {
+                    let score = '-';
+                    
+                    if (scoresData[category]) {
+                        const scoreItem = scoresData[category].find(s => 
+                            s.contestantNumber === contestantNum && 
+                            s.judgeNumber === judgeNum
+                        );
+                        if (scoreItem) {
+                            score = scoreItem.score;
+                        }
+                    }
+                    
+                    row.push(score);
+                });
+                
+                rawData.push(row);
+            });
+            
+            rawData.push(['']);
+            rawData.push(['']);
+        });
+        
+        const ws4 = XLSX.utils.aoa_to_sheet(rawData);
+        ws4['!cols'] = [
+            { width: 18 },
+            ...judges.map(() => ({ width: 15 }))
+        ];
+        
+        // ============= SHEET 5: ALL RAW SCORES (FLAT) =============
+        const flatRawData = [];
+        flatRawData.push(['ALL RAW SCORES']);
+        flatRawData.push(['']);
+        flatRawData.push(['CONTESTANT #', 'CATEGORY', 'JUDGE #', 'SCORE']);
         
         contestants.forEach(contestantNum => {
             categories.forEach(category => {
                 const categoryName = categoryNames[category];
                 const categoryScores = scoresData[category] || [];
+                
                 categoryScores.forEach(scoreItem => {
                     if (scoreItem.contestantNumber === contestantNum) {
-                        rawData.push([
+                        flatRawData.push([
                             'Contestant #' + contestantNum,
                             categoryName,
                             'Judge #' + scoreItem.judgeNumber,
@@ -538,21 +671,152 @@ async function exportToExcel() {
             });
         });
         
-        const ws3 = XLSX.utils.aoa_to_sheet(rawData);
-        ws3['!cols'] = [{ width: 18 }, { width: 20 }, { width: 12 }, { width: 10 }];
+        const ws5 = XLSX.utils.aoa_to_sheet(flatRawData);
+        ws5['!cols'] = [{ width: 18 }, { width: 20 }, { width: 12 }, { width: 10 }];
         
-        XLSX.utils.book_append_sheet(wb, ws1, 'Winners & Rankings');
-        XLSX.utils.book_append_sheet(wb, ws2, 'Detailed Scores');
-        XLSX.utils.book_append_sheet(wb, ws3, 'Raw Scores');
+        // ============= SHEET 6: SUMMARY STATISTICS =============
+        const statsData = [];
+        statsData.push(['SUMMARY STATISTICS']);
+        statsData.push(['']);
         
+        statsData.push(['OVERALL STATISTICS']);
+        statsData.push(['Total Contestants', results.length]);
+        statsData.push(['Total Judges', judges.length]);
+        statsData.push(['Total Categories', categories.length]);
+        statsData.push(['']);
+        
+        statsData.push(['SCORE STATISTICS']);
+        const totalScores = results.map(r => parseFloat(r.total));
+        statsData.push(['Highest Total Score', Math.max(...totalScores).toFixed(2)]);
+        statsData.push(['Lowest Total Score', Math.min(...totalScores).toFixed(2)]);
+        statsData.push(['Average Total Score', (totalScores.reduce((a, b) => a + b, 0) / totalScores.length).toFixed(2)]);
+        statsData.push(['']);
+        
+        statsData.push(['CATEGORY STATISTICS']);
+        categories.forEach(category => {
+            const categoryName = categoryNames[category];
+            const categoryTotals = results.map(r => r.categoryTotals[category]);
+            
+            statsData.push([categoryName + ' - Highest', Math.max(...categoryTotals).toFixed(2)]);
+            statsData.push([categoryName + ' - Lowest', Math.min(...categoryTotals).toFixed(2)]);
+            statsData.push([categoryName + ' - Average', (categoryTotals.reduce((a, b) => a + b, 0) / categoryTotals.length).toFixed(2)]);
+            statsData.push(['']);
+        });
+        
+        const ws6 = XLSX.utils.aoa_to_sheet(statsData);
+        ws6['!cols'] = [{ width: 30 }, { width: 15 }];
+        
+        // Add all sheets to workbook
+        XLSX.utils.book_append_sheet(wb, ws1, 'Winners & Summary');
+        XLSX.utils.book_append_sheet(wb, ws2, 'Detailed Breakdown');
+        XLSX.utils.book_append_sheet(wb, ws3, 'Judge Averages');
+        XLSX.utils.book_append_sheet(wb, ws4, 'Scores by Category');
+        XLSX.utils.book_append_sheet(wb, ws5, 'All Raw Scores');
+        XLSX.utils.book_append_sheet(wb, ws6, 'Statistics');
+        
+        // Generate and download
         const timestamp = new Date().toISOString().split('T')[0];
-        XLSX.writeFile(wb, 'pageant-results-' + timestamp + '.xlsx');
+        XLSX.writeFile(wb, 'pageant-complete-results-' + timestamp + '.xlsx');
         
-        alert('Excel file exported successfully!');
+        alert('Complete Excel file exported successfully with 6 sheets!');
     } catch (error) {
         console.error('Export error:', error);
         alert('Error exporting to Excel: ' + error.message);
     }
+}
+
+// Helper function to calculate full results like the webpage displays
+function calculateFullResults() {
+    const contestantScores = {};
+
+    for (let i = 0; i < contestants.length; i++) {
+        contestantScores[contestants[i]] = {};
+        for (let c = 0; c < categories.length; c++) {
+            contestantScores[contestants[i]][categories[c]] = [];
+        }
+    }
+
+    for (let c = 0; c < categories.length; c++) {
+        const category = categories[c];
+        for (let i = 0; i < scoresData[category].length; i++) {
+            const item = scoresData[category][i];
+            if (contestantScores[item.contestantNumber]) {
+                contestantScores[item.contestantNumber][category].push(item.score);
+            }
+        }
+    }
+
+    const results = [];
+    for (const contestantNum in contestantScores) {
+        let allScores = [];
+        const categoryBreakdown = {};
+        const categoryAdjusted = {};
+        const categoryAverages = {};
+        const categoryTotals = {};
+
+        for (let i = 0; i < categories.length; i++) {
+            const category = categories[i];
+            const originalScores = contestantScores[contestantNum][category].slice();
+
+            categoryBreakdown[category] = originalScores.slice();
+
+            let adjustedScores = originalScores.slice();
+            if (dropOutliers && adjustedScores.length > 0) {
+                adjustedScores = getAdjustedScores(adjustedScores);
+            }
+
+            categoryAdjusted[category] = adjustedScores.slice();
+
+            if (adjustedScores.length > 0) {
+                let categoryTotal = 0;
+                for (let j = 0; j < adjustedScores.length; j++) {
+                    categoryTotal += adjustedScores[j];
+                }
+                categoryAverages[category] = (categoryTotal / adjustedScores.length).toFixed(2);
+                categoryTotals[category] = categoryTotal;
+            } else {
+                categoryAverages[category] = '0.00';
+                categoryTotals[category] = 0;
+            }
+
+            for (let j = 0; j < adjustedScores.length; j++) {
+                allScores.push(adjustedScores[j]);
+            }
+        }
+
+        if (allScores.length === 0) {
+            continue;
+        }
+
+        let total = 0;
+        for (let i = 0; i < allScores.length; i++) {
+            total += allScores[i];
+        }
+        const average = (total / allScores.length).toFixed(2);
+        
+        results.push({
+            contestantNumber: contestantNum,
+            average: average,
+            total: total.toFixed(2),
+            categoryBreakdown: categoryBreakdown,
+            categoryAdjusted: categoryAdjusted,
+            categoryAverages: categoryAverages,
+            categoryTotals: categoryTotals
+        });
+    }
+
+    // Sort by total score
+    for (let i = 0; i < results.length; i++) {
+        for (let j = i + 1; j < results.length; j++) {
+            if (parseFloat(results[j].total) > parseFloat(results[i].total)) {
+                const temp = results[i];
+                results[i] = results[j];
+                results[j] = temp;
+            }
+        }
+    }
+
+    return results;
 }
 
 function calculateResultsForExport() {
