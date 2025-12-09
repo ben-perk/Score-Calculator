@@ -750,18 +750,21 @@ async function downloadBlankTemplate() {
         const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs');
         const wb = XLSX.utils.book_new();
         
-        // ============= INSTRUCTIONS SHEET =============
+       // ============= INSTRUCTIONS SHEET =============
         const instructionsData = [];
         instructionsData.push(['PAGEANT SCORE TEMPLATE - INSTRUCTIONS']);
         instructionsData.push(['']);
         instructionsData.push(['HOW TO USE THIS TEMPLATE:']);
         instructionsData.push(['']);
-        instructionsData.push(['1. Go to the "Score Entry" sheet']);
+        instructionsData.push(['1. Go to the "Score Entry" sheet (click the tab at the bottom)']);
         instructionsData.push(['2. Fill in scores for each contestant under each judge column']);
         instructionsData.push(['3. Each category has its own table - scroll down to see all categories']);
         instructionsData.push(['4. Enter scores between 1 and 1000']);
-        instructionsData.push(['5. Save the file when done']);
-        instructionsData.push(['6. Use the "Import Scores from Template" button in the calculator to upload this file']);
+        instructionsData.push(['5. Leave cells blank if no score (do NOT enter 0)']);
+        instructionsData.push(['6. Save the file when done']);
+        instructionsData.push(['7. IMPORTANT: DELETE this "Instructions" sheet before importing!']);
+        instructionsData.push(['   (Right-click the sheet tab → Delete)']);
+        instructionsData.push(['8. Use the "Import from Template" button in the calculator to upload this file']);
         instructionsData.push(['']);
         instructionsData.push(['SETUP INFORMATION:']);
         instructionsData.push(['Number of Contestants:', contestants.length]);
@@ -769,9 +772,8 @@ async function downloadBlankTemplate() {
         instructionsData.push(['Number of Categories:', categories.length]);
         instructionsData.push(['']);
         instructionsData.push(['CATEGORIES:']);
-        categories.forEach((category, idx) => {
             instructionsData.push([`${idx + 1}. ${categoryNames[category]}`]);
-        });
+        };
         
         const wsInstructions = XLSX.utils.aoa_to_sheet(instructionsData);
         wsInstructions['!cols'] = [{ width: 40 }, { width: 20 }];
