@@ -1997,6 +1997,8 @@ document.addEventListener('DOMContentLoaded', function() {
         outlierToggle: toggleOutliers,
         downloadBlankBtn: downloadBlankScores,
         downloadFilledBtn: downloadFilledScores
+        downloadTemplateBtn: downloadBlankTemplate,  
+        importTemplateBtn: importFromTemplate      
     };
 
     for (const [id, handler] of Object.entries(elements)) {
