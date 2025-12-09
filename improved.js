@@ -444,6 +444,7 @@ function loadDemoData() {
     }
 }
 
+// Export results
 // Replace your exportToExcel function with this complete version
 
 async function exportToExcel() {
@@ -602,24 +603,28 @@ async function exportToExcel() {
             { width: 18 }
         ];
         
-        // ============= SHEET 4: RAW SCORES BY CATEGORY =============
+        // ============= SHEET 4: RAW SCORES - ALL CATEGORIES ON ONE PAGE =============
         const rawData = [];
-        rawData.push(['RAW SCORES BY CATEGORY']);
+        rawData.push(['RAW SCORES - ALL CATEGORIES']);
         rawData.push(['']);
         
-        categories.forEach(category => {
+        categories.forEach((category, catIndex) => {
             const categoryName = categoryNames[category];
+            
+            // Category header
             rawData.push([categoryName]);
             
+            // Table header: Contestant # | Judge #1 | Judge #2 | Judge #3 | etc.
             const categoryHeaders = ['Contestant #'];
-            judges.forEach(j => categoryHeaders.push('Judge #' + j + ' Score'));
+            judges.forEach(j => categoryHeaders.push('Judge #' + j));
             rawData.push(categoryHeaders);
             
+            // Rows for each contestant
             contestants.forEach(contestantNum => {
                 const row = ['Contestant #' + contestantNum];
                 
                 judges.forEach(judgeNum => {
-                    let score = '-';
+                    let score = '';
                     
                     if (scoresData[category]) {
                         const scoreItem = scoresData[category].find(s => 
@@ -637,6 +642,7 @@ async function exportToExcel() {
                 rawData.push(row);
             });
             
+            // Add spacing between tables
             rawData.push(['']);
             rawData.push(['']);
         });
@@ -644,7 +650,7 @@ async function exportToExcel() {
         const ws4 = XLSX.utils.aoa_to_sheet(rawData);
         ws4['!cols'] = [
             { width: 18 },
-            ...judges.map(() => ({ width: 15 }))
+            ...judges.map(() => ({ width: 12 }))
         ];
         
         // ============= SHEET 5: ALL RAW SCORES (FLAT) =============
@@ -723,6 +729,100 @@ async function exportToExcel() {
         console.error('Export error:', error);
         alert('Error exporting to Excel: ' + error.message);
     }
+}
+
+// Helper function to calculate full results like the webpage displays
+function calculateFullResults() {
+    const contestantScores = {};
+
+    for (let i = 0; i < contestants.length; i++) {
+        contestantScores[contestants[i]] = {};
+        for (let c = 0; c < categories.length; c++) {
+            contestantScores[contestants[i]][categories[c]] = [];
+        }
+    }
+
+    for (let c = 0; c < categories.length; c++) {
+        const category = categories[c];
+        for (let i = 0; i < scoresData[category].length; i++) {
+            const item = scoresData[category][i];
+            if (contestantScores[item.contestantNumber]) {
+                contestantScores[item.contestantNumber][category].push(item.score);
+            }
+        }
+    }
+
+    const results = [];
+    for (const contestantNum in contestantScores) {
+        let allScores = [];
+        const categoryBreakdown = {};
+        const categoryAdjusted = {};
+        const categoryAverages = {};
+        const categoryTotals = {};
+
+        for (let i = 0; i < categories.length; i++) {
+            const category = categories[i];
+            const originalScores = contestantScores[contestantNum][category].slice();
+
+            categoryBreakdown[category] = originalScores.slice();
+
+            let adjustedScores = originalScores.slice();
+            if (dropOutliers && adjustedScores.length > 0) {
+                adjustedScores = getAdjustedScores(adjustedScores);
+            }
+
+            categoryAdjusted[category] = adjustedScores.slice();
+
+            if (adjustedScores.length > 0) {
+                let categoryTotal = 0;
+                for (let j = 0; j < adjustedScores.length; j++) {
+                    categoryTotal += adjustedScores[j];
+                }
+                categoryAverages[category] = (categoryTotal / adjustedScores.length).toFixed(2);
+                categoryTotals[category] = categoryTotal;
+            } else {
+                categoryAverages[category] = '0.00';
+                categoryTotals[category] = 0;
+            }
+
+            for (let j = 0; j < adjustedScores.length; j++) {
+                allScores.push(adjustedScores[j]);
+            }
+        }
+
+        if (allScores.length === 0) {
+            continue;
+        }
+
+        let total = 0;
+        for (let i = 0; i < allScores.length; i++) {
+            total += allScores[i];
+        }
+        const average = (total / allScores.length).toFixed(2);
+        
+        results.push({
+            contestantNumber: contestantNum,
+            average: average,
+            total: total.toFixed(2),
+            categoryBreakdown: categoryBreakdown,
+            categoryAdjusted: categoryAdjusted,
+            categoryAverages: categoryAverages,
+            categoryTotals: categoryTotals
+        });
+    }
+
+    // Sort by total score
+    for (let i = 0; i < results.length; i++) {
+        for (let j = i + 1; j < results.length; j++) {
+            if (parseFloat(results[j].total) > parseFloat(results[i].total)) {
+                const temp = results[i];
+                results[i] = results[j];
+                results[j] = temp;
+            }
+        }
+    }
+
+    return results;
 }
 
 // Helper function to calculate full results like the webpage displays
