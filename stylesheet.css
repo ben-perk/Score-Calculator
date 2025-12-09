@@ -93,7 +93,7 @@ select:focus,
 /* Buttons - Let Bootstrap handle these */
 
 button{
-    padding: auto;
+    padding: 10px 20px;
 }
 
 
