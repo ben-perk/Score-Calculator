@@ -2,39 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Benjamin Perkton">
-    <meta name="description" content="A fast and easy pageant score calculator to speed up and check scoring at pageants">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
+    <meta name="theme-color" content="#0d6efd">
     <title>Pageant Calculator</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="stylesheet.css">
+    <style>
+        body { background: #f0f0f0; font-family: Arial, sans-serif; }
+        .card { border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .btn { font-weight: 600; transition: all 0.3s; margin: 5px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .carousel-wrapper { position: relative; height: 450px; overflow: hidden; border: 1px solid #ddd; background: #f9f9f9; }
+        .carousel-slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 0.5s; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .carousel-slide.active { opacity: 1; z-index: 10; }
+        .medal { font-size: 120px; margin-bottom: 15px; }
+        .winner-name { font-size: 28px; font-weight: bold; margin: 10px 0; }
+        .carousel-controls { display: flex; justify-content: center; gap: 15px; align-items: center; margin: 20px 0; }
+        .carousel-controls button { background: #007bff; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 4px; }
+        .carousel-controls button:hover { background: #0056b3; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #ccc; cursor: pointer; margin: 0 4px; display: inline-block; }
+        .dot.active { background: #007bff; }
+        .offline-badge { position: fixed; top: 60px; right: 20px; z-index: 1000; }
+        .install-prompt { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; max-width: 90%; }
+        @media (max-width: 768px) { .btn { width: 100%; margin: 5px 0; } }
+    </style>
 </head>
 <body>
+    <div id="offlineBadge" class="offline-badge d-none">
+        <span class="badge bg-warning text-dark"> Offline</span>
+    </div>
+
+    <div id="installPrompt" class="install-prompt d-none">
+        <div class="alert alert-success">
+            <button class="btn btn-success btn-sm" id="installBtn"> Install App</button>
+            <button class="btn btn-secondary btn-sm ms-2" id="dismissBtn">✕</button>
+        </div>
+    </div>
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
         <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold" href="#home">Pageant Calculator</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand fw-bold" href="#home"> Pageant Calculator</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse" id="nav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#step1">Contestants</a>
-                    </li>
-                     <li class="nav-item">
-                        <a class="nav-link" href="#step2">Categories</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#step3">Judges</a>
-                    </li>
-                   
-                    <li class="nav-item">
-                        <a class="nav-link" href="#scores">Results</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#step1">Contestants</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step2">Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#step3">Judges</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#results">Results</a></li>
                 </ul>
             </div>
         </div>
@@ -42,119 +57,406 @@
 
     <main class="mt-4">
         <div class="container">
-            <section id="home" class="mb-5">
-                <div class="alert alert-info">
-                    <h1 class="mb-3">Welcome to the Pageant Calculator</h1>
-                    <p>Fast and easy pageant score calculator</p>
-                    <p>Follow the steps below to calculate your pageant scores</p>
-                    <p>Give it a try?</p>
-                    <button class="btn btn-primary" id="demoBtn">Load Demo Data</button>
-
-                </div>
-            </section>
-
-            <section id="step1" class="mb-5">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><span class="badge bg-white text-primary me-2">1</span>Contestant Setup</h4>
-                    </div>
-                    <div class="card-body">
-                        <p>Enter the number of contestants competing in this pageant.</p>
-                        <div class="mb-3">
-                            <label for="numContestants" class="form-label">Number of Contestants:</label>
-                            <input type="number" id="numContestants" class="form-control w-25" min="1" placeholder="Enter number">
-                        </div>
-                        <button class="btn btn-primary" id="createContestantBtn">Create Contestant List</button>
-                        <div id="contestantListDisplay" class="mt-3"></div>
-                    </div>
-                </div>
-            </section>
-            <section id="step2" class="mb-5">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><span class="badge bg-white text-primary me-2">2</span>Category Setup</h4>
-                    </div>
-                    <div class="card-body">
-                        <p>Enter the number of categories and their names.</p>
-                        <div class="mb-3">
-                            <label for="numCategories" class="form-label">Number of Categories:</label>
-                            <input type="number" id="numCategories" class="form-control w-25" min="1" placeholder="Enter number">
-                        </div>
-                        <button class="btn btn-primary" id="createCategoryBtn">Create Category List</button>
-                        <div id="categoryInputsDisplay" class="mt-3"></div>
-                    </div>
-                </div>
-            </section>
-            <section id="step3" class="mb-5">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><span class="badge bg-white text-primary me-2">3</span>Judge Setup</h4>
-                    </div>
-                    <div class="card-body">
-                        <p>Enter the number of judges for this pageant.</p>
-                        <div class="mb-3">
-                            <label for="numJudges" class="form-label">Number of Judges:</label>
-                            <input type="number" id="numJudges" class="form-control w-25" min="1" placeholder="Enter number">
-                        </div>
-                        <button class="btn btn-primary" id="createJudgeBtn">Create Judge List</button>
-                        <div id="judgeListDisplay" class="mt-3"></div>
-                    </div>
-                </div>
-            </section>
-
-          
-
             <div class="alert alert-info">
-                <h5>Score Entry Options</h5>
-                <p><strong>Option 1:</strong> Fill scores directly in the tables below</p>
-                <p><strong>Option 2:</strong> Download a blank template, fill it in Excel, then upload it back</p>
-            </div>
-            
-            <div class="btn-group flex-wrap mb-3" role="group">
-                <button class="btn btn-primary" id="downloadTemplateBtn"> Download Blank Template</button>
-                <button class="btn btn-primary" id="importTemplateBtn"> Upload from Template</button>
+                <h1>Welcome to Pageant Calculator</h1>
+                <p> Fast pageant scoring |  Works offline when installed!</p>
             </div>
 
-            <section id="scoreTableSection" class="mb-5">
+            <section id="step1" class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4><span class="badge bg-white text-primary me-2">1</span>Contestants</h4>
+                </div>
+                <div class="card-body">
+                    <label class="form-label">Number of Contestants:</label>
+                    <input type="number" id="numContestants" class="form-control w-25 mb-3" min="1">
+                    <button class="btn btn-primary" id="btnContestants">Create List</button>
+                    <div id="displayContestants" class="mt-3"></div>
+                </div>
+            </section>
+
+            <section id="step2" class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4><span class="badge bg-white text-primary me-2">2</span>Categories</h4>
+                </div>
+                <div class="card-body">
+                    <label class="form-label">Number of Categories:</label>
+                    <input type="number" id="numCategories" class="form-control w-25 mb-3" min="1">
+                    <button class="btn btn-primary" id="btnCategories">Create List</button>
+                    <div id="displayCategories" class="mt-3"></div>
+                </div>
+            </section>
+
+            <section id="step3" class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4><span class="badge bg-white text-primary me-2">3</span>Judges</h4>
+                </div>
+                <div class="card-body">
+                    <label class="form-label">Number of Judges:</label>
+                    <input type="number" id="numJudges" class="form-control w-25 mb-3" min="1">
+                    <button class="btn btn-primary" id="btnJudges">Create List</button>
+                    <div id="displayJudges" class="mt-3"></div>
+                </div>
+            </section>
+
+            <section id="scoring" class="d-none">
                 <div class="card">
                     <div class="card-body">
-                        <div id="scoreTableContainer"></div>
+                        <div id="scoreTables"></div>
                     </div>
                 </div>
             </section>
 
-
-            <section id="scores" class="mb-5">
-                <div class="card">
-                    <div class="card-header bg-dark text-white">
-                        <h4 class="mb-0">Final Scores</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="outlierToggle" class="form-check-label">
-                                <input type="checkbox" id="outlierToggle" class="form-check-input">
-                                Remove Highest and Lowest Scores of each Category
-                            </label>
-                        </div>
-                        <div class="btn-group flex-wrap" role="group">
-                            <button class="btn btn-success" id="calculateBtn">Calculate Final Scores</button>
-                            <button class="btn btn-primary" id="exportBtn">Download Results (Excel)</button>
-                        </div>
-                        <div id="finalScoresDisplay" class="mt-4"></div>
-                    </div>
+            <section id="results" class="card">
+                <div class="card-header bg-dark text-white">
+                    <h4>Final Scores</h4>
+                </div>
+                <div class="card-body">
+                    <label class="form-check-label mb-3">
+                        <input type="checkbox" id="chkOutliers" class="form-check-input">
+                        Remove highest/lowest scores per category
+                    </label><br>
+                    <button class="btn btn-success" id="btnCalculate">Calculate Scores</button>
+                    <button class="btn btn-primary" id="btnExport">Export to Excel</button>
+                    <button class="btn btn-danger" id="btnClear">Clear All</button>
+                    <div id="displayResults" class="mt-4"></div>
                 </div>
             </section>
         </div>
-         <button class="btn btn-danger" id="clearBtn">Clear All Data</button>
-
     </main>
 
     <footer class="bg-dark text-white text-center py-4 mt-5">
-        <p class="mb-0">&copy; 2025 Pageant Calculator | Created by: B. Perk</p>
+        <p>&copy; 2025 Pageant Calculator | PWA Edition | B. Perk</p>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script defer src="improved.js"></script>
+    <script type="module">
+        // PWA Setup
+        if ('serviceWorker' in navigator) {
+            const sw = `
+                const CACHE = 'pageant-v1';
+                const urls = [
+                    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css',
+                    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js',
+                    'https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs'
+                ];
+                self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(urls))));
+                self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
+            `;
+            const blob = new Blob([sw], {type: 'application/javascript'});
+            navigator.serviceWorker.register(URL.createObjectURL(blob));
+        }
+
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', e => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').classList.remove('d-none');
+        });
+
+        document.getElementById('installBtn').onclick = async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                document.getElementById('installPrompt').classList.add('d-none');
+            }
+        };
+
+        document.getElementById('dismissBtn').onclick = () => {
+            document.getElementById('installPrompt').classList.add('d-none');
+        };
+
+        window.addEventListener('offline', () => {
+            document.getElementById('offlineBadge').classList.remove('d-none');
+        });
+
+        window.addEventListener('online', () => {
+            document.getElementById('offlineBadge').classList.add('d-none');
+        });
+
+        // App State
+        let state = {
+            contestants: [],
+            categories: [],
+            categoryNames: {},
+            judges: [],
+            scores: {},
+            dropOutliers: false,
+            carouselIndex: 0
+        };
+
+        async function save() {
+            try {
+                await window.storage.set('pageant-data', JSON.stringify(state));
+            } catch(e) { console.log('Save error:', e); }
+        }
+
+        async function load() {
+            try {
+                const r = await window.storage.get('pageant-data');
+                if (r?.value) {
+                    state = JSON.parse(r.value);
+                    if (state.contestants.length) {
+                        document.getElementById('displayContestants').innerHTML = 
+                            `<p class="text-success">✓ ${state.contestants.length} contestants loaded</p>`;
+                    }
+                    if (state.categories.length) {
+                        let html = '<p class="text-success">✓ Categories loaded:</p><ul>';
+                        state.categories.forEach(c => html += `<li>${state.categoryNames[c]}</li>`);
+                        html += '</ul>';
+                        document.getElementById('displayCategories').innerHTML = html;
+                    }
+                    if (state.judges.length) {
+                        document.getElementById('displayJudges').innerHTML = 
+                            `<p class="text-success">✓ ${state.judges.length} judges loaded</p>`;
+                        if (state.contestants.length && state.categories.length) genTables();
+                    }
+                }
+            } catch(e) { console.log('Load error:', e); }
+        }
+
+        document.getElementById('btnContestants').onclick = () => {
+            const n = parseInt(document.getElementById('numContestants').value);
+            if (isNaN(n) || n < 1) return alert('Invalid number');
+            state.contestants = Array.from({length: n}, (_, i) => i + 1);
+            document.getElementById('displayContestants').innerHTML = 
+                `<p class="text-success">✓ Created ${n} contestants</p>`;
+            save();
+        };
+
+        document.getElementById('btnCategories').onclick = () => {
+            const n = parseInt(document.getElementById('numCategories').value);
+            if (isNaN(n) || n < 1) return alert('Invalid number');
+            state.categories = Array.from({length: n}, (_, i) => `cat_${i+1}`);
+            state.categoryNames = {};
+            state.categories.forEach((c, i) => state.categoryNames[c] = `Category ${i+1}`);
+            
+            let html = '<h5>Name Your Categories</h5><div class="row">';
+            state.categories.forEach((c, i) => {
+                html += `<div class="col-md-6 mb-3">
+                    <input type="text" id="catName${i}" class="form-control" 
+                           value="${state.categoryNames[c]}" placeholder="Category ${i+1}">
+                </div>`;
+            });
+            html += '</div><button class="btn btn-success" id="btnSaveCats">Save Names</button>';
+            document.getElementById('displayCategories').innerHTML = html;
+
+            document.getElementById('btnSaveCats').onclick = () => {
+                state.categories.forEach((c, i) => {
+                    const val = document.getElementById(`catName${i}`).value.trim();
+                    if (val) state.categoryNames[c] = val;
+                });
+                state.categories.forEach(c => { if (!state.scores[c]) state.scores[c] = []; });
+                alert('Category names saved!');
+                save();
+            };
+        };
+
+        document.getElementById('btnJudges').onclick = () => {
+            const n = parseInt(document.getElementById('numJudges').value);
+            if (isNaN(n) || n < 1) return alert('Invalid number');
+            state.judges = Array.from({length: n}, (_, i) => i + 1);
+            document.getElementById('displayJudges').innerHTML = 
+                `<p class="text-success">✓ Created ${n} judges</p>`;
+            genTables();
+            save();
+        };
+
+        function genTables() {
+            if (!state.contestants.length || !state.categories.length || !state.judges.length) {
+                return alert('Complete all setup steps first');
+            }
+
+            let html = '';
+            state.categories.forEach(cat => {
+                html += `<div class="card mb-4">
+                    <div class="card-header bg-info text-white"><h5>${state.categoryNames[cat]}</h5></div>
+                    <div class="card-body"><div class="table-responsive"><table class="table table-bordered">
+                        <thead><tr><th>Contestant</th>${state.judges.map(j => `<th>Judge ${j}</th>`).join('')}</tr></thead>
+                        <tbody>${state.contestants.map(c => `
+                            <tr><td><strong>#${c}</strong></td>
+                            ${state.judges.map(j => {
+                                const ex = state.scores[cat]?.find(s => s.c === c && s.j === j);
+                                return `<td><input type="number" id="s_${cat}_${c}_${j}" class="form-control" min="1" max="1000" value="${ex?.v||''}"></td>`;
+                            }).join('')}</tr>
+                        `).join('')}</tbody>
+                    </table></div>
+                    <button class="btn btn-success" onclick="window.saveCat('${cat}')">Save ${state.categoryNames[cat]}</button>
+                    </div></div>`;
+            });
+
+            document.getElementById('scoreTables').innerHTML = html;
+            document.getElementById('scoring').classList.remove('d-none');
+        }
+
+        window.saveCat = (cat) => {
+            state.scores[cat] = [];
+            let cnt = 0;
+            state.contestants.forEach(c => {
+                state.judges.forEach(j => {
+                    const inp = document.getElementById(`s_${cat}_${c}_${j}`);
+                    if (inp?.value) {
+                        const v = parseFloat(inp.value);
+                        if (!isNaN(v) && v >= 1 && v <= 1000) {
+                            state.scores[cat].push({c, j, v});
+                            cnt++;
+                        }
+                    }
+                });
+            });
+            alert(`Saved ${cnt} scores for ${state.categoryNames[cat]}`);
+            save();
+        };
+
+        document.getElementById('chkOutliers').onchange = (e) => {
+            state.dropOutliers = e.target.checked;
+            save();
+        };
+
+        function adjScores(arr) {
+            if (arr.length <= 2) return arr;
+            const sorted = [...arr].sort((a,b) => a-b);
+            return sorted.slice(1, -1);
+        }
+
+        document.getElementById('btnCalculate').onclick = () => {
+            const cScores = {};
+            state.contestants.forEach(c => {
+                cScores[c] = {};
+                state.categories.forEach(cat => cScores[c][cat] = []);
+            });
+
+            state.categories.forEach(cat => {
+                (state.scores[cat] || []).forEach(item => {
+                    if (cScores[item.c]) cScores[item.c][cat].push(item.v);
+                });
+            });
+
+            const results = [];
+            Object.keys(cScores).forEach(c => {
+                let all = [];
+                const catTotals = {};
+                const catAvgs = {};
+
+                state.categories.forEach(cat => {
+                    let adj = cScores[c][cat].slice();
+                    if (state.dropOutliers && adj.length > 0) adj = adjScores(adj);
+                    const tot = adj.reduce((s, v) => s + v, 0);
+                    catTotals[cat] = tot;
+                    catAvgs[cat] = adj.length > 0 ? (tot / adj.length).toFixed(2) : '0.00';
+                    all.push(...adj);
+                });
+
+                if (all.length === 0) return;
+                const tot = all.reduce((s, v) => s + v, 0);
+                results.push({
+                    c: parseInt(c),
+                    total: tot.toFixed(2),
+                    avg: (tot / all.length).toFixed(2),
+                    catTotals,
+                    catAvgs
+                });
+            });
+
+            results.sort((a, b) => parseFloat(b.total) - parseFloat(a.total));
+            displayResults(results);
+        };
+
+        function displayResults(results) {
+            const medals = ['🥇', '🥈', '🥉'];
+            const ranks = ['WINNER', '1ST ALTERNATE', '2ND ALTERNATE'];
+
+            let html = '';
+            if (state.dropOutliers) html += '<p class="text-info"><em>📊 Outliers removed</em></p>';
+
+            if (results.length >= 1) {
+                html += `<div class="card mb-4 border-warning">
+                    <div class="card-header bg-warning"><h5>🏆 TOP 3</h5></div>
+                    <div class="card-body"><div class="carousel-wrapper">`;
+
+                for (let i = 0; i < Math.min(3, results.length); i++) {
+                    html += `<div class="carousel-slide ${i===0?'active':''}">
+                        <div class="medal">${medals[i]}</div>
+                        <div class="winner-name">${ranks[i]}</div>
+                        <div class="winner-name">Contestant #${results[i].c}</div>
+                        <p class="h5">Total: ${results[i].total}</p>
+                    </div>`;
+                }
+
+                html += `</div><div class="carousel-controls">
+                    <button onclick="window.carPrev()">← Prev</button>
+                    <div>`;
+
+                for (let i = 0; i < Math.min(3, results.length); i++) {
+                    html += `<span class="dot ${i===0?'active':''}" onclick="window.carShow(${i})"></span>`;
+                }
+
+                html += `</div><button onclick="window.carNext()">Next →</button>
+                    </div></div></div>`;
+            }
+
+            html += '<div class="card mb-4"><div class="card-header bg-success text-white"><h5>Category Winners</h5></div><div class="card-body">';
+            state.categories.forEach(cat => {
+                let max = -Infinity, winner = null;
+                results.forEach(r => {
+                    if (r.catTotals[cat] > max) {
+                        max = r.catTotals[cat];
+                        winner = r.c;
+                    }
+                });
+                html += `<p><strong>${state.categoryNames[cat]}:</strong> Contestant #${winner} (${max.toFixed(2)})</p>`;
+            });
+            html += '</div></div>';
+
+            html += '<div class="card"><div class="card-header bg-primary text-white"><h5>All Results</h5></div><div class="card-body">';
+            results.forEach((r, i) => {
+                html += `<h6 class="mt-3">${i < 3 ? ranks[i] : `Rank ${i+1}`} - Contestant #${r.c}</h6>
+                    <p><strong>Total:</strong> ${r.total} | <strong>Average:</strong> ${r.avg}</p>
+                    <table class="table table-sm"><thead><tr><th>Category</th><th>Total</th><th>Average</th></tr></thead><tbody>`;
+                state.categories.forEach(cat => {
+                    html += `<tr><td>${state.categoryNames[cat]}</td><td>${r.catTotals[cat].toFixed(2)}</td><td>${r.catAvgs[cat]}</td></tr>`;
+                });
+                html += '</tbody></table>';
+            });
+            html += '</div></div>';
+
+            document.getElementById('displayResults').innerHTML = html;
+        }
+
+        window.carNext = () => {
+            const slides = document.querySelectorAll('.carousel-slide');
+            state.carouselIndex = (state.carouselIndex + 1) % slides.length;
+            window.carShow(state.carouselIndex);
+        };
+
+        window.carPrev = () => {
+            const slides = document.querySelectorAll('.carousel-slide');
+            state.carouselIndex = (state.carouselIndex - 1 + slides.length) % slides.length;
+            window.carShow(state.carouselIndex);
+        };
+
+        window.carShow = (n) => {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.dot');
+            state.carouselIndex = n;
+            slides.forEach((s, i) => s.classList.toggle('active', i === n));
+            dots.forEach((d, i) => d.classList.toggle('active', i === n));
+        };
+
+        document.getElementById('btnExport').onclick = async () => {
+            alert('Excel export requires SheetJS library. Download the HTML file and add offline Excel export capability.');
+        };
+
+        document.getElementById('btnClear').onclick = async () => {
+            if (!confirm('Clear all data? Cannot be undone!')) return;
+            state = { contestants: [], categories: [], categoryNames: {}, judges: [], scores: {}, dropOutliers: false, carouselIndex: 0 };
+            try {
+                await window.storage.delete('pageant-data');
+            } catch(e) {}
+            location.reload();
+        };
+
+        load();
+    </script>
 </body>
 </html>
