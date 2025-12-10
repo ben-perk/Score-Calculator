@@ -14,7 +14,9 @@
     <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <a href="#main-content" class="visually-hidden-focusable">Skip to main content</a>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top" aria-label="Main navigation">
         <div class="container-fluid px-4">
             <a class="navbar-brand fw-bold" href="#home">Pageant Calculator</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,116 +42,121 @@
         </div>
     </nav>
 
-    <main class="mt-4">
+    <main class="mt-4" id="main-content">
         <div class="container">
-            <section id="home" class="mb-5">
-                <div class="alert alert-info">
-                    <h1 class="mb-3">Welcome to the Pageant Calculator</h1>
+            <section id="home" class="mb-5" aria-labelledby="welcome-heading">
+                <div class="alert alert-info" role="region" aria-label="Welcome information">
+                    <h1 id="welcome-heading" class="mb-3">Welcome to the Pageant Calculator</h1>
                     <p>Fast and easy pageant score calculator</p>
                     <p>Follow the steps below to calculate your pageant scores</p>
                     <p>Give it a try?</p>
-                    <button class="btn btn-primary" id="demoBtn">Load Demo Data</button>
+                    <button class="btn btn-primary" id="demoBtn" aria-label="Load demonstration data">Load Demo Data</button>
 
                 </div>
             </section>
 
-            <section id="step1" class="mb-5">
+            <section id="step1" class="mb-5" aria-labelledby="step1-heading">
                 <div class="card">
                     <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><span class="badge bg-white text-primary me-2">1</span>Contestant Setup</h4>
+                        <h2 id="step1-heading" class="mb-0 h4"><span class="badge bg-white text-primary me-2" aria-label="Step">1</span>Contestant Setup</h2>
                     </div>
                     <div class="card-body">
                         <p>Enter the number of contestants competing in this pageant.</p>
                         <div class="mb-3">
                             <label for="numContestants" class="form-label">Number of Contestants:</label>
-                            <input type="number" id="numContestants" class="form-control w-25" min="1" placeholder="Enter number">
+                            <input type="number" id="numContestants" class="form-control w-25" min="1" placeholder="Enter number" aria-required="true" aria-describedby="numContestants-desc">
+                            <span id="numContestants-desc" class="visually-hidden">Enter a positive number for total contestants</span>
                         </div>
-                        <button class="btn btn-primary" id="createContestantBtn">Create Contestant List</button>
-                        <div id="contestantListDisplay" class="mt-3"></div>
+                        <button class="btn btn-primary" id="createContestantBtn" aria-label="Create contestant list based on number entered">Create Contestant List</button>
+                        <div id="contestantListDisplay" class="mt-3" role="region" aria-live="polite" aria-label="Contestant list"></div>
                     </div>
                 </div>
             </section>
-            <section id="step2" class="mb-5">
+            <section id="step2" class="mb-5" aria-labelledby="step2-heading">
                 <div class="card">
                     <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><span class="badge bg-white text-primary me-2">2</span>Category Setup</h4>
+                        <h2 id="step2-heading" class="mb-0 h4"><span class="badge bg-white text-primary me-2" aria-label="Step">2</span>Category Setup</h2>
                     </div>
                     <div class="card-body">
                         <p>Enter the number of categories and their names.</p>
                         <div class="mb-3">
                             <label for="numCategories" class="form-label">Number of Categories:</label>
-                            <input type="number" id="numCategories" class="form-control w-25" min="1" placeholder="Enter number">
+                            <input type="number" id="numCategories" class="form-control w-25" min="1" placeholder="Enter number" aria-required="true" aria-describedby="numCategories-desc">
+                            <span id="numCategories-desc" class="visually-hidden">Enter a positive number for total categories</span>
                         </div>
-                        <button class="btn btn-primary" id="createCategoryBtn">Create Category List</button>
-                        <div id="categoryInputsDisplay" class="mt-3"></div>
+                        <button class="btn btn-primary" id="createCategoryBtn" aria-label="Create category list based on number entered">Create Category List</button>
+                        <div id="categoryInputsDisplay" class="mt-3" role="region" aria-live="polite" aria-label="Category list"></div>
                     </div>
                 </div>
             </section>
-            <section id="step3" class="mb-5">
+            <section id="step3" class="mb-5" aria-labelledby="step3-heading">
                 <div class="card">
                     <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><span class="badge bg-white text-primary me-2">3</span>Judge Setup</h4>
+                        <h2 id="step3-heading" class="mb-0 h4"><span class="badge bg-white text-primary me-2" aria-label="Step">3</span>Judge Setup</h2>
                     </div>
                     <div class="card-body">
                         <p>Enter the number of judges for this pageant.</p>
                         <div class="mb-3">
                             <label for="numJudges" class="form-label">Number of Judges:</label>
-                            <input type="number" id="numJudges" class="form-control w-25" min="1" placeholder="Enter number">
+                            <input type="number" id="numJudges" class="form-control w-25" min="1" placeholder="Enter number" aria-required="true" aria-describedby="numJudges-desc">
+                            <span id="numJudges-desc" class="visually-hidden">Enter a positive number for total judges</span>
                         </div>
-                        <button class="btn btn-primary" id="createJudgeBtn">Create Judge List</button>
-                        <div id="judgeListDisplay" class="mt-3"></div>
+                        <button class="btn btn-primary" id="createJudgeBtn" aria-label="Create judge list based on number entered">Create Judge List</button>
+                        <div id="judgeListDisplay" class="mt-3" role="region" aria-live="polite" aria-label="Judge list"></div>
                     </div>
                 </div>
             </section>
 
           
 
-            <div class="alert alert-info">
-                <h5>Score Entry Options</h5>
+            <div class="alert alert-info" role="region" aria-labelledby="score-entry-heading">
+                <h3 id="score-entry-heading" class="h5">Score Entry Options</h3>
                 <p><strong>Option 1:</strong> Fill scores directly in the tables below</p>
                 <p><strong>Option 2:</strong> Download a blank template, fill it in Excel, then upload it back</p>
             </div>
             
-            <div class="btn-group flex-wrap mb-3" role="group">
-                <button class="btn btn-primary" id="downloadTemplateBtn"> Download Blank Template</button>
-                <button class="btn btn-primary" id="importTemplateBtn"> Upload from Template</button>
+            <div class="btn-group flex-wrap mb-3" role="group" aria-label="Template options">
+                <button class="btn btn-primary" id="downloadTemplateBtn" aria-label="Download blank Excel template"> Download Blank Template</button>
+                <button class="btn btn-primary" id="importTemplateBtn" aria-label="Upload filled Excel template"> Upload from Template</button>
             </div>
 
-            <section id="scoreTableSection" class="mb-5">
+            <section id="scoreTableSection" class="mb-5" aria-labelledby="score-table-heading">
                 <div class="card">
                     <div class="card-body">
-                        <div id="scoreTableContainer"></div>
+                        <h2 id="score-table-heading" class="visually-hidden">Score Entry Tables</h2>
+                        <div id="scoreTableContainer" role="region" aria-live="polite" aria-label="Score entry tables"></div>
                     </div>
                 </div>
             </section>
 
 
-            <section id="scores" class="mb-5">
+            <section id="scores" class="mb-5" aria-labelledby="final-scores-heading">
                 <div class="card">
                     <div class="card-header bg-dark text-white">
-                        <h4 class="mb-0">Final Scores</h4>
+                        <h2 id="final-scores-heading" class="mb-0 h4">Final Scores</h2>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
                             <label for="outlierToggle" class="form-check-label">
-                                <input type="checkbox" id="outlierToggle" class="form-check-input">
+                                <input type="checkbox" id="outlierToggle" class="form-check-input" aria-describedby="outlier-desc">
                                 Remove Highest and Lowest Scores of each Category
                             </label>
+                            <span id="outlier-desc" class="visually-hidden">When checked, the highest and lowest score from each judge in each category will be removed before calculating totals</span>
                         </div>
-                        <div class="btn-group flex-wrap" role="group">
-                            <button class="btn btn-success" id="calculateBtn">Calculate Final Scores</button>
-                            <button class="btn btn-primary" id="exportBtn">Download Results (Excel)</button>
+                        <div class="btn-group flex-wrap" role="group" aria-label="Results actions">
+                            <button class="btn btn-success" id="calculateBtn" aria-label="Calculate final scores based on entered data">Calculate Final Scores</button>
+                            <button class="btn btn-primary" id="exportBtn" aria-label="Download results as Excel file">Download Results (Excel)</button>
                         </div>
-                        <div id="finalScoresDisplay" class="mt-4"></div>
+                        <div id="finalScoresDisplay" class="mt-4" role="region" aria-live="polite" aria-label="Final scores results"></div>
                     </div>
                 </div>
             </section>
         </div>
-         <button class="btn btn-danger" id="clearBtn">Clear All Data</button>
+         <button class="btn btn-danger" id="clearBtn" aria-label="Clear all entered data and reset calculator">Clear All Data</button>
 
     </main>
 
-    <footer class="bg-dark text-white text-center py-4 mt-5">
+    <footer class="bg-dark text-white text-center py-4 mt-5" role="contentinfo">
         <p class="mb-0">&copy; 2025 Pageant Calculator | Created by: B. Perk</p>
     </footer>
 
