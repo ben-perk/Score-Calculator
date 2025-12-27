@@ -5,18 +5,37 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Benjamin Perkton">
-    <meta name="description" content="A fast and easy pageant score calculator to speed up and check scoring at pageants">
+    <meta name="description" content="A fast and easy pageant score calculator">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <meta name="theme-color" content="#0d6efd">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Pageant Calculator">
     <title>Pageant Calculator</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="Photos/icon/icon.png">
+    <link rel="apple-touch-icon" href="Photos/icon/icon.png">
+    
+    <!-- Bootstrap CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
+    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
         <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold" href="#home">Pageant Calculator</a>
+            <a class="navbar-brand fw-bold" href="#home">
+                <img src="Photos/icon/icon.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top me-2">
+                Pageant Calculator
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -25,13 +44,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#step1">Contestants</a>
                     </li>
-                     <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link" href="#step2">Categories</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#step3">Judges</a>
                     </li>
-                   
                     <li class="nav-item">
                         <a class="nav-link" href="#scores">Results</a>
                     </li>
@@ -40,23 +58,24 @@
         </div>
     </nav>
 
+    <!-- MAIN CONTENT -->
     <main class="mt-4">
         <div class="container">
+            <!-- HOME SECTION -->
             <section id="home" class="mb-5">
                 <div class="alert alert-info">
                     <h1 class="mb-3">Welcome to the Pageant Calculator</h1>
                     <p>Fast and easy pageant score calculator</p>
                     <p>Follow the steps below to calculate your pageant scores</p>
-                    <p>Give it a try?</p>
                     <button class="btn btn-primary" id="demoBtn">Load Demo Data</button>
-
                 </div>
             </section>
 
+            <!-- STEP 1: CONTESTANT SETUP -->
             <section id="step1" class="mb-5">
                 <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><span class="badge bg-white text-primary me-2">1</span>Contestant Setup</h4>
+                    <div class="card-header">
+                        <h4><span class="badge bg-white text-primary me-2">1</span>Contestant Setup</h4>
                     </div>
                     <div class="card-body">
                         <p>Enter the number of contestants competing in this pageant.</p>
@@ -69,10 +88,12 @@
                     </div>
                 </div>
             </section>
+
+            <!-- STEP 2: CATEGORY SETUP -->
             <section id="step2" class="mb-5">
                 <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><span class="badge bg-white text-primary me-2">2</span>Category Setup</h4>
+                    <div class="card-header">
+                        <h4><span class="badge bg-white text-primary me-2">2</span>Category Setup</h4>
                     </div>
                     <div class="card-body">
                         <p>Enter the number of categories and their names.</p>
@@ -85,10 +106,12 @@
                     </div>
                 </div>
             </section>
+
+            <!-- STEP 3: JUDGE SETUP -->
             <section id="step3" class="mb-5">
                 <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><span class="badge bg-white text-primary me-2">3</span>Judge Setup</h4>
+                    <div class="card-header">
+                        <h4><span class="badge bg-white text-primary me-2">3</span>Judge Setup</h4>
                     </div>
                     <div class="card-body">
                         <p>Enter the number of judges for this pageant.</p>
@@ -102,20 +125,21 @@
                 </div>
             </section>
 
-          
-
+            <!-- SCORE ENTRY OPTIONS -->
             <div class="alert alert-info">
                 <h5>Score Entry Options</h5>
                 <p><strong>Option 1:</strong> Fill scores directly in the tables below</p>
                 <p><strong>Option 2:</strong> Download a blank template, fill it in Excel, then upload it back</p>
             </div>
             
+            <!-- TEMPLATE BUTTONS -->
             <div class="btn-group flex-wrap mb-3" role="group">
-                <button class="btn btn-primary" id="downloadTemplateBtn"> Download Blank Template</button>
-                <button class="btn btn-primary" id="importTemplateBtn"> Upload from Template</button>
+                <button class="btn btn-primary" id="downloadTemplateBtn">Download Blank Template</button>
+                <button class="btn btn-primary" id="importTemplateBtn">Upload from Template</button>
             </div>
 
-            <section id="scoreTableSection" class="mb-5">
+            <!-- SCORE TABLES SECTION -->
+            <section id="scoreTableSection" class="mb-5" style="display: none;">
                 <div class="card">
                     <div class="card-body">
                         <div id="scoreTableContainer"></div>
@@ -123,11 +147,11 @@
                 </div>
             </section>
 
-
+            <!-- FINAL SCORES SECTION -->
             <section id="scores" class="mb-5">
                 <div class="card">
-                    <div class="card-header bg-dark text-white">
-                        <h4 class="mb-0">Final Scores</h4>
+                    <div class="card-header">
+                        <h4>Final Scores</h4>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
@@ -145,16 +169,34 @@
                 </div>
             </section>
         </div>
-         <button class="btn btn-danger" id="clearBtn">Clear All Data</button>
 
+        <!-- CLEAR BUTTON -->
+        <div class="container mb-4">
+            <button class="btn btn-danger" id="clearBtn">Clear All Data</button>
+        </div>
     </main>
 
+    <!-- FOOTER -->
     <footer class="bg-dark text-white text-center py-4 mt-5">
         <p class="mb-0">&copy; 2025 Pageant Calculator | Created by: B. Perk</p>
     </footer>
 
+    <!-- SCRIPTS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.20.1/xlsx.min.js"></script>
+    <script defer src="excel.js"></script>
     <script defer src="improved.js"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => console.log('ServiceWorker registered'))
+                    .catch(err => console.log('ServiceWorker registration failed'));
+            });
+        }
+    </script>
 </body>
 </html>
