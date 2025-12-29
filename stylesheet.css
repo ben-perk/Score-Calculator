@@ -477,3 +477,164 @@ main {
         font-size: 0.85rem;
     }
 }
+
+/* Table Wrapper for Horizontal Scrolling on Mobile */
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    margin: 15px 0;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    margin: 20px 0;
+    width: 100%;
+    min-width: 500px; /* Prevents table from shrinking too small */
+}
+
+td, th {
+    padding: 8px;
+    border: 1px solid var(--table-border);
+    text-align: left;
+    white-space: nowrap; /* Keeps text on one line */
+}
+
+th {
+    background-color: var(--table-header-bg);
+    color: var(--table-header-text);
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: var(--table-hover-bg);
+}
+
+/* Mobile Responsive Design - UPDATED */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    .btn-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    /* TABLE SCROLLING FIX FOR MOBILE */
+    .table-responsive-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border: 1px solid var(--table-border);
+        border-radius: 4px;
+        margin: 15px 0;
+    }
+
+    table {
+        font-size: 0.85rem;
+        min-width: 600px;
+    }
+
+    td, th {
+        padding: 6px 8px;
+        white-space: nowrap;
+    }
+
+    th {
+        position: sticky;
+        left: 0;
+        z-index: 10;
+    }
+
+    /* Stick first column for better readability */
+    td:first-child,
+    th:first-child {
+        position: sticky;
+        left: 0;
+        background-color: var(--table-stripe-bg);
+        z-index: 9;
+    }
+
+    th:first-child {
+        background-color: var(--table-header-bg);
+        z-index: 11;
+    }
+
+    p {
+        text-align: left;
+    }
+
+    /* Carousel Mobile Styles */
+    .carousel-wrapper-inline {
+        max-width: 100%;
+        padding: 15px;
+    }
+
+    .medal-image-inline {
+        width: 160px;
+        height: 160px;
+    }
+
+    .winner-name-inline {
+        font-size: 1.3rem;
+    }
+
+    .carousel-controls-inline {
+        padding: 0 10px;
+    }
+
+    .carousel-controls-inline button {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+
+    .dot-inline {
+        height: 12px;
+        width: 12px;
+    }
+
+    /* Input fields in tables */
+    input[type="number"] {
+        width: 60px;
+        padding: 6px 4px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Extra small devices */
+    table {
+        min-width: 500px;
+        font-size: 0.8rem;
+    }
+
+    td, th {
+        padding: 5px 6px;
+    }
+
+    input[type="number"] {
+        width: 50px;
+        padding: 5px 3px;
+        font-size: 0.85rem;
+    }
+
+    .medal-image-inline {
+        width: 130px;
+        height: 130px;
+    }
+
+    .winner-name-inline {
+        font-size: 1.1rem;
+    }
+
+    .carousel-controls-inline button {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+}

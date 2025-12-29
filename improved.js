@@ -109,7 +109,11 @@ function generateScoreTables() {
         const category = categories[cat];
         const categoryName = categoryNames[category];
         html += '<div class="card mb-4"><div class="card-header bg-info text-white"><h4 class="mb-0">' + categoryName + '</h4></div>';
-        html += '<div class="card-body"><table class="table table-bordered"><thead><tr><th>Contestant #</th>';
+        html += '<div class="card-body">';
+        
+        // WRAP TABLE IN SCROLLABLE CONTAINER
+        html += '<div class="table-responsive-wrapper">';
+        html += '<table class="table table-bordered"><thead><tr><th>Contestant #</th>';
         for (let j = 0; j < judges.length; j++) html += '<th>Judge #' + judges[j] + '</th>';
         html += '</tr></thead><tbody>';
         for (let c = 0; c < contestants.length; c++) {
@@ -122,7 +126,10 @@ function generateScoreTables() {
             }
             html += '</tr>';
         }
-        html += '</tbody></table><button class="btn btn-success mt-2" onclick="saveScoresForCategory(\'' + category + '\')">Save ' + categoryName + ' Scores</button></div></div>';
+        html += '</tbody></table>';
+        html += '</div>'; // CLOSE WRAPPER
+        
+        html += '<button class="btn btn-success mt-2" onclick="saveScoresForCategory(\'' + category + '\')">Save ' + categoryName + ' Scores</button></div></div>';
     }
     html += '<button class="btn btn-primary mt-3" onclick="calculateFinalScores()">Calculate Final Scores</button>';
     scoreTableContainer.innerHTML = html;
