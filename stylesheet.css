@@ -234,6 +234,8 @@ button {
 .card-header {
     font-weight: bold;
     background-color: var(--card-header-bg);
+    color: var(--card-header-text);
+    padding: 16px;
 }
 
 .card-body {
