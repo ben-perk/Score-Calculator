@@ -264,6 +264,10 @@ footer {
     margin-top: 40px;
 }
 
+footer p{
+    color: var(--footer-text);
+}
+
 /* Utility Classes */
 .bg-primary {
     background-color: var(--primary-color) !important;
@@ -302,7 +306,7 @@ main {
 
 .carousel-slide-inline.active {
     display: block;
-    background-color: var(--alert-info-border);
+    background-color: var(--bg-primary);
 }
 
 @keyframes fadeIn {
