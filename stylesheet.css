@@ -563,6 +563,7 @@ tr:hover {
 
     th:first-child {
         background-color: var(--table-header-bg);
+        colo: var(--table-header-text);
         z-index: 11;
     }
 
