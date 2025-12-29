@@ -4,16 +4,47 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Benjamin Perkton">
-    <meta name="description" content="A fast and easy pageant score calculator">
+    
+    <!-- Primary Meta Tags for SEO -->
+    <title>Pageant Score Calculator | Free to Use</title>
+    <meta name="description" content="Free online pageant score calculator with automated scoring, Excel import/export, and outlier removal. Perfect for pageant directors and judges. Fast, easy, and accurate.">
+    <meta name="keywords" content="free pageant calculator, score calculator, pageant Calculator, pageant scoring tool, automated pageant scores, judge scoring system, pageant software free">
+    <meta name="author" content="Ben Perk">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://pageant-calculator.netlify.app/">
+    
+    <!-- Open Graph Meta Tags (Social Media) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pageant-calculator.netlify.app/">
+    <meta property="og:title" content="Pageant Calculator | Free to Use">
+    <meta property="og:description" content="Free online pageant score calculator. Manage contestants, judges, and categories. Download templates, import scores, and export results to Excel.">
+    <meta property="og:image" content="https://ben-perk.github.io/Photos/icon/icon.png">
+    <meta property="og:site_name" content="Pageant Calculator">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://pageant-calculator.netlify.app/">
+    <meta property="twitter:title" content="Free Pageant Score Calculator | Automated Scoring Tool">
+    <meta property="twitter:description" content="Free online pageant score calculator. Manage contestants, judges, and categories. Download templates, import scores, and export results to Excel.">
+    <meta property="twitter:image" content="https://ben-perk.github.io/Photos/icon/icon.png">
+    
+    <!-- Additional SEO Meta Tags -->
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Caching Instructions -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    
+    <!-- Progressive Web App Meta Tags -->
     <meta name="theme-color" content="#0d6efd">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Pageant Calculator">
-    <title>Pageant Calculator</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="Photos/icon/icon.png">
@@ -27,13 +58,81 @@
     
     <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="stylesheet.css">
+    
+    <!-- Schema.org Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Pageant Calculator",
+      "description": "Free online pageant score calculator with automated scoring, Excel import/export, and outlier removal",
+      "url": "https://pageant-calculator.netlify.app/",
+      "applicationCategory": "UtilityApplication",
+      "image": "https://ben-perk.github.io/Photos/icon/icon.png",
+      "author": {
+        "@type": "Person",
+        "name": "Ben Perk",
+        "url": "https://pageant-calculator.netlify.app/"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "description": "Free tool"
+      },
+      "featureList": [
+        "Manage unlimited contestants",
+        "Support multiple scoring categories",
+        "Manage judge scores",
+        "Excel template download and upload",
+        "Automated score calculation",
+        "Outlier removal option",
+        "Export results to Excel",
+        "Demo data for quick testing"
+      ]
+    }
+    </script>
+    
+    <!-- Additional FAQSchema for better search visibility -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is this pageant calculator really free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! Our pageant score calculator is completely free to use. No sign-up required, no hidden fees."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I import scores from Excel?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! You can download a blank template, fill it in Excel, and upload it back into the calculator."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does this tool remove outlier scores?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! You can optionally remove the highest and lowest scores from each category to avoid bias."
+          }
+        }
+      ]
+    }
+    </script>
 </head>
 <body>
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
         <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold" href="#home">
-                <img src="Photos/icon/icon.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top me-2">
+            <a class="navbar-brand fw-bold" href="#home" aria-label="Pageant Calculator Home">
+                <img src="Photos/icon/icon.png" alt="Pageant Calculator Logo" width="30" height="30" class="d-inline-block align-text-top me-2">
                 Pageant Calculator
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,10 +163,10 @@
             <!-- HOME SECTION -->
             <section id="home" class="mb-5">
                 <div class="alert alert-info">
-                    <h1 class="mb-3">Welcome to the Pageant Calculator</h1>
-                    <p>Fast and easy pageant score calculator</p>
-                    <p>Follow the steps below to calculate your pageant scores</p>
-                    <button class="btn btn-primary" id="demoBtn">Load Demo Data</button>
+                    <h1 class="mb-3">Free Pageant Score Calculator</h1>
+                    <p class="lead">Fast, easy, and automated pageant scoring with Excel integration</p>
+                    <p>Manage contestants, judges, and categories with automatic calculation and optional outlier removal.</p>
+                    <button class="btn btn-primary" id="demoBtn" aria-label="Load demo data to see calculator in action">Load Demo Data</button>
                 </div>
             </section>
 
@@ -75,7 +174,7 @@
             <section id="step1" class="mb-5">
                 <div class="card">
                     <div class="card-header">
-                        <h4><span class="badge bg-white text-primary me-2">1</span>Contestant Setup</h4>
+                        <h2><span class="badge bg-white text-primary me-2">1</span>Contestant Setup</h2>
                     </div>
                     <div class="card-body">
                         <p>Enter the number of contestants competing in this pageant.</p>
@@ -94,7 +193,7 @@
             <section id="step2" class="mb-5">
                 <div class="card">
                     <div class="card-header">
-                        <h4><span class="badge bg-white text-primary me-2">2</span>Category Setup</h4>
+                        <h2><span class="badge bg-white text-primary me-2">2</span>Category Setup</h2>
                     </div>
                     <div class="card-body">
                         <p>Enter the number of categories and their names.</p>
@@ -113,7 +212,7 @@
             <section id="step3" class="mb-5">
                 <div class="card">
                     <div class="card-header">
-                        <h4><span class="badge bg-white text-primary me-2">3</span>Judge Setup</h4>
+                        <h2><span class="badge bg-white text-primary me-2">3</span>Judge Setup</h2>
                     </div>
                     <div class="card-body">
                         <p>Enter the number of judges for this pageant.</p>
@@ -130,22 +229,22 @@
 
             <!-- SCORE ENTRY OPTIONS -->
             <div class="alert alert-info">
-                <h5>Score Entry Options</h5>
+                <h3>Score Entry Options</h3>
                 <p><strong>Option 1:</strong> Fill scores directly in the tables below</p>
                 <p><strong>Option 2:</strong> Download a blank template, fill it in Excel, then upload it back</p>
             </div>
             
             <!-- TEMPLATE BUTTONS -->
-            <div class="btn-group flex-wrap mb-3" role="group">
-                <button class="btn btn-primary" id="downloadTemplateBtn">Download Blank Template</button>
-                <button class="btn btn-primary" id="importTemplateBtn">Upload from Template</button>
+            <div class="btn-group flex-wrap mb-3" role="group" aria-label="Template options">
+                <button class="btn btn-primary" id="downloadTemplateBtn" aria-label="Download blank Excel template for score entry">Download Blank Template</button>
+                <button class="btn btn-primary" id="importTemplateBtn" aria-label="Upload completed Excel template with scores">Upload from Template</button>
             </div>
 
             <!-- SCORE TABLES SECTION -->
             <section id="scoreTableSection" class="mb-5" style="display: none;">
                 <div class="card">
                     <div class="card-body">
-                        <h2 id="score-table-heading" class="visually-hidden">Score Entry Tables</h2>
+                        <h2 id="score-table-heading">Score Entry Tables</h2>
                         <div id="scoreTableContainer" role="region" aria-live="polite" aria-label="Score entry tables"></div>
                     </div>
                 </div>
@@ -155,7 +254,7 @@
             <section id="scores" class="mb-5">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Final Scores</h4>
+                        <h2>Final Scores</h2>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
@@ -177,13 +276,14 @@
 
         <!-- CLEAR BUTTON -->
         <div class="container mb-4">
-            <button class="btn btn-danger" id="clearBtn">Clear All Data</button>
+            <button class="btn btn-danger" id="clearBtn" aria-label="Clear all data and reset calculator">Clear All Data</button>
         </div>
     </main>
 
     <!-- FOOTER -->
     <footer class="bg-dark text-white text-center py-4 mt-5">
-        <p class="mb-0">&copy; 2025 Pageant Calculator | Created by: B. Perk</p>
+        <p class="mb-2">&copy; 2025 Free Pageant Calculator | Created by <a href="https://ben-perk.github.io/" style="color: #0d6efd; text-decoration: none;">Benjamin Perkton</a></p>
+        <p class="mb-0">Fast, free, and easy pageant scoring solution</p>
     </footer>
 
     <!-- SCRIPTS -->
