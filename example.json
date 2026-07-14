@@ -1,5 +1,5 @@
 {
-  "pageantName": "Mr. Example 2025",
+  "pageantName": "Mx. Example 2026",
   "contestants": [
     {
       "number": 1,
@@ -22,110 +22,477 @@
       "name": "Contestant #5"
     }
   ],
-  "judges": [1, 2, 3, 4, 5],
+  "judges": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
   "categories": [
     {
       "id": "category_1",
-      "name": "Evening Gown"
+      "name": "Evening Wear",
     },
     {
       "id": "category_2",
-      "name": "Talent"
+      "name": "Talent",
     },
     {
       "id": "category_3",
-      "name": "Interview"
+      "name": "Interview",
     }
   ],
   "scores": [
-    {"contestant":1,"judge":1,"category":"Evening Gown","score":2},
-    {"contestant":1,"judge":2,"category":"Evening Gown","score":2},
-    {"contestant":1,"judge":3,"category":"Evening Gown","score":3},
-    {"contestant":1,"judge":4,"category":"Evening Gown","score":3},
-    {"contestant":1,"judge":5,"category":"Evening Gown","score":10},
-
-    {"contestant":2,"judge":1,"category":"Evening Gown","score":8},
-    {"contestant":2,"judge":2,"category":"Evening Gown","score":7},
-    {"contestant":2,"judge":3,"category":"Evening Gown","score":8},
-    {"contestant":2,"judge":4,"category":"Evening Gown","score":7},
-    {"contestant":2,"judge":5,"category":"Evening Gown","score":8},
-
-    {"contestant":3,"judge":1,"category":"Evening Gown","score":6},
-    {"contestant":3,"judge":2,"category":"Evening Gown","score":6},
-    {"contestant":3,"judge":3,"category":"Evening Gown","score":7},
-    {"contestant":3,"judge":4,"category":"Evening Gown","score":7},
-    {"contestant":3,"judge":5,"category":"Evening Gown","score":7},
-
-    {"contestant":4,"judge":1,"category":"Evening Gown","score":9},
-    {"contestant":4,"judge":2,"category":"Evening Gown","score":2},
-    {"contestant":4,"judge":3,"category":"Evening Gown","score":9},
-    {"contestant":4,"judge":4,"category":"Evening Gown","score":8},
-    {"contestant":4,"judge":5,"category":"Evening Gown","score":9},
-
-    {"contestant":5,"judge":1,"category":"Evening Gown","score":5},
-    {"contestant":5,"judge":2,"category":"Evening Gown","score":5},
-    {"contestant":5,"judge":3,"category":"Evening Gown","score":6},
-    {"contestant":5,"judge":4,"category":"Evening Gown","score":6},
-    {"contestant":5,"judge":5,"category":"Evening Gown","score":6},
-
-    {"contestant":1,"judge":1,"category":"Talent","score":15},
-    {"contestant":1,"judge":2,"category":"Talent","score":12},
-    {"contestant":1,"judge":3,"category":"Talent","score":18},
-    {"contestant":1,"judge":4,"category":"Talent","score":14},
-    {"contestant":1,"judge":5,"category":"Talent","score":95},
-
-    {"contestant":2,"judge":1,"category":"Talent","score":75},
-    {"contestant":2,"judge":2,"category":"Talent","score":70},
-    {"contestant":2,"judge":3,"category":"Talent","score":76},
-    {"contestant":2,"judge":4,"category":"Talent","score":72},
-    {"contestant":2,"judge":5,"category":"Talent","score":78},
-
-    {"contestant":3,"judge":1,"category":"Talent","score":85},
-    {"contestant":3,"judge":2,"category":"Talent","score":82},
-    {"contestant":3,"judge":3,"category":"Talent","score":88},
-    {"contestant":3,"judge":4,"category":"Talent","score":86},
-    {"contestant":3,"judge":5,"category":"Talent","score":84},
-
-    {"contestant":4,"judge":1,"category":"Talent","score":90},
-    {"contestant":4,"judge":2,"category":"Talent","score":70},
-    {"contestant":4,"judge":3,"category":"Talent","score":92},
-    {"contestant":4,"judge":4,"category":"Talent","score":88},
-    {"contestant":4,"judge":5,"category":"Talent","score":94},
-
-    {"contestant":5,"judge":1,"category":"Talent","score":60},
-    {"contestant":5,"judge":2,"category":"Talent","score":58},
-    {"contestant":5,"judge":3,"category":"Talent","score":62},
-    {"contestant":5,"judge":4,"category":"Talent","score":61},
-    {"contestant":5,"judge":5,"category":"Talent","score":63},
-
-    {"contestant":1,"judge":1,"category":"Interview","score":3},
-    {"contestant":1,"judge":2,"category":"Interview","score":2},
-    {"contestant":1,"judge":3,"category":"Interview","score":3},
-    {"contestant":1,"judge":4,"category":"Interview","score":2},
-    {"contestant":1,"judge":5,"category":"Interview","score":10},
-
-    {"contestant":2,"judge":1,"category":"Interview","score":8},
-    {"contestant":2,"judge":2,"category":"Interview","score":7},
-    {"contestant":2,"judge":3,"category":"Interview","score":8},
-    {"contestant":2,"judge":4,"category":"Interview","score":7},
-    {"contestant":2,"judge":5,"category":"Interview","score":8},
-
-    {"contestant":3,"judge":1,"category":"Interview","score":6},
-    {"contestant":3,"judge":2,"category":"Interview","score":6},
-    {"contestant":3,"judge":3,"category":"Interview","score":7},
-    {"contestant":3,"judge":4,"category":"Interview","score":7},
-    {"contestant":3,"judge":5,"category":"Interview","score":7},
-
-    {"contestant":4,"judge":1,"category":"Interview","score":9},
-    {"contestant":4,"judge":2,"category":"Interview","score":3},
-    {"contestant":4,"judge":3,"category":"Interview","score":10},
-    {"contestant":4,"judge":4,"category":"Interview","score":9},
-    {"contestant":4,"judge":5,"category":"Interview","score":9},
-
-    {"contestant":5,"judge":1,"category":"Interview","score":5},
-    {"contestant":5,"judge":2,"category":"Interview","score":5},
-    {"contestant":5,"judge":3,"category":"Interview","score":6},
-    {"contestant":5,"judge":4,"category":"Interview","score":6},
-    {"contestant":5,"judge":5,"category":"Interview","score":6}
+    {
+      "contestant": 1,
+      "judge": 1,
+      "category": "Evening Wear",
+      "score": 8
+    },
+    {
+      "contestant": 1,
+      "judge": 2,
+      "category": "Evening Wear",
+      "score": 6
+    },
+    {
+      "contestant": 1,
+      "judge": 3,
+      "category": "Evening Wear",
+      "score": 10
+    },
+    {
+      "contestant": 1,
+      "judge": 4,
+      "category": "Evening Wear",
+      "score": 8
+    },
+    {
+      "contestant": 1,
+      "judge": 5,
+      "category": "Evening Wear",
+      "score": 8
+    },
+    {
+      "contestant": 2,
+      "judge": 1,
+      "category": "Evening Wear",
+      "score": 3
+    },
+    {
+      "contestant": 2,
+      "judge": 2,
+      "category": "Evening Wear",
+      "score": 7
+    },
+    {
+      "contestant": 2,
+      "judge": 3,
+      "category": "Evening Wear",
+      "score": 9
+    },
+    {
+      "contestant": 2,
+      "judge": 4,
+      "category": "Evening Wear",
+      "score": 9
+    },
+    {
+      "contestant": 2,
+      "judge": 5,
+      "category": "Evening Wear",
+      "score": 9
+    },
+    {
+      "contestant": 3,
+      "judge": 1,
+      "category": "Evening Wear",
+      "score": 8
+    },
+    {
+      "contestant": 3,
+      "judge": 2,
+      "category": "Evening Wear",
+      "score": 6
+    },
+    {
+      "contestant": 3,
+      "judge": 3,
+      "category": "Evening Wear",
+      "score": 8
+    },
+    {
+      "contestant": 3,
+      "judge": 4,
+      "category": "Evening Wear",
+      "score": 8
+    },
+    {
+      "contestant": 3,
+      "judge": 5,
+      "category": "Evening Wear",
+      "score": 8
+    },
+    {
+      "contestant": 4,
+      "judge": 1,
+      "category": "Evening Wear",
+      "score": 8
+    },
+    {
+      "contestant": 4,
+      "judge": 2,
+      "category": "Evening Wear",
+      "score": 7
+    },
+    {
+      "contestant": 4,
+      "judge": 3,
+      "category": "Evening Wear",
+      "score": 8
+    },
+    {
+      "contestant": 4,
+      "judge": 4,
+      "category": "Evening Wear",
+      "score": 8
+    },
+    {
+      "contestant": 4,
+      "judge": 5,
+      "category": "Evening Wear",
+      "score": 8
+    },
+    {
+      "contestant": 5,
+      "judge": 1,
+      "category": "Evening Wear",
+      "score": 6
+    },
+    {
+      "contestant": 5,
+      "judge": 2,
+      "category": "Evening Wear",
+      "score": 4
+    },
+    {
+      "contestant": 5,
+      "judge": 3,
+      "category": "Evening Wear",
+      "score": 6
+    },
+    {
+      "contestant": 5,
+      "judge": 4,
+      "category": "Evening Wear",
+      "score": 6
+    },
+    {
+      "contestant": 5,
+      "judge": 5,
+      "category": "Evening Wear",
+      "score": 6
+    },
+    {
+      "contestant": 1,
+      "judge": 1,
+      "category": "Talent",
+      "score": 40
+    },
+    {
+      "contestant": 1,
+      "judge": 2,
+      "category": "Talent",
+      "score": 20
+    },
+    {
+      "contestant": 1,
+      "judge": 3,
+      "category": "Talent",
+      "score": 41
+    },
+    {
+      "contestant": 1,
+      "judge": 4,
+      "category": "Talent",
+      "score": 39
+    },
+    {
+      "contestant": 1,
+      "judge": 5,
+      "category": "Talent",
+      "score": 42
+    },
+    {
+      "contestant": 2,
+      "judge": 1,
+      "category": "Talent",
+      "score": 19
+    },
+    {
+      "contestant": 2,
+      "judge": 2,
+      "category": "Talent",
+      "score": 45
+    },
+    {
+      "contestant": 2,
+      "judge": 3,
+      "category": "Talent",
+      "score": 66
+    },
+    {
+      "contestant": 2,
+      "judge": 4,
+      "category": "Talent",
+      "score": 64
+    },
+    {
+      "contestant": 2,
+      "judge": 5,
+      "category": "Talent",
+      "score": 67
+    },
+    {
+      "contestant": 3,
+      "judge": 1,
+      "category": "Talent",
+      "score": 72
+    },
+    {
+      "contestant": 3,
+      "judge": 2,
+      "category": "Talent",
+      "score": 52
+    },
+    {
+      "contestant": 3,
+      "judge": 3,
+      "category": "Talent",
+      "score": 73
+    },
+    {
+      "contestant": 3,
+      "judge": 4,
+      "category": "Talent",
+      "score": 71
+    },
+    {
+      "contestant": 3,
+      "judge": 5,
+      "category": "Talent",
+      "score": 74
+    },
+    {
+      "contestant": 4,
+      "judge": 1,
+      "category": "Talent",
+      "score": 80
+    },
+    {
+      "contestant": 4,
+      "judge": 2,
+      "category": "Talent",
+      "score": 60
+    },
+    {
+      "contestant": 4,
+      "judge": 3,
+      "category": "Talent",
+      "score": 81
+    },
+    {
+      "contestant": 4,
+      "judge": 4,
+      "category": "Talent",
+      "score": 79
+    },
+    {
+      "contestant": 4,
+      "judge": 5,
+      "category": "Talent",
+      "score": 82
+    },
+    {
+      "contestant": 5,
+      "judge": 1,
+      "category": "Talent",
+      "score": 90
+    },
+    {
+      "contestant": 5,
+      "judge": 2,
+      "category": "Talent",
+      "score": 70
+    },
+    {
+      "contestant": 5,
+      "judge": 3,
+      "category": "Talent",
+      "score": 91
+    },
+    {
+      "contestant": 5,
+      "judge": 4,
+      "category": "Talent",
+      "score": 89
+    },
+    {
+      "contestant": 5,
+      "judge": 5,
+      "category": "Talent",
+      "score": 92
+    },
+    {
+      "contestant": 1,
+      "judge": 1,
+      "category": "Interview",
+      "score": 8
+    },
+    {
+      "contestant": 1,
+      "judge": 2,
+      "category": "Interview",
+      "score": 6
+    },
+    {
+      "contestant": 1,
+      "judge": 3,
+      "category": "Interview",
+      "score": 10
+    },
+    {
+      "contestant": 1,
+      "judge": 4,
+      "category": "Interview",
+      "score": 8
+    },
+    {
+      "contestant": 1,
+      "judge": 5,
+      "category": "Interview",
+      "score": 8
+    },
+    {
+      "contestant": 2,
+      "judge": 1,
+      "category": "Interview",
+      "score": 3
+    },
+    {
+      "contestant": 2,
+      "judge": 2,
+      "category": "Interview",
+      "score": 7
+    },
+    {
+      "contestant": 2,
+      "judge": 3,
+      "category": "Interview",
+      "score": 9
+    },
+    {
+      "contestant": 2,
+      "judge": 4,
+      "category": "Interview",
+      "score": 9
+    },
+    {
+      "contestant": 2,
+      "judge": 5,
+      "category": "Interview",
+      "score": 9
+    },
+    {
+      "contestant": 3,
+      "judge": 1,
+      "category": "Interview",
+      "score": 8
+    },
+    {
+      "contestant": 3,
+      "judge": 2,
+      "category": "Interview",
+      "score": 6
+    },
+    {
+      "contestant": 3,
+      "judge": 3,
+      "category": "Interview",
+      "score": 8
+    },
+    {
+      "contestant": 3,
+      "judge": 4,
+      "category": "Interview",
+      "score": 8
+    },
+    {
+      "contestant": 3,
+      "judge": 5,
+      "category": "Interview",
+      "score": 8
+    },
+    {
+      "contestant": 4,
+      "judge": 1,
+      "category": "Interview",
+      "score": 8
+    },
+    {
+      "contestant": 4,
+      "judge": 2,
+      "category": "Interview",
+      "score": 7
+    },
+    {
+      "contestant": 4,
+      "judge": 3,
+      "category": "Interview",
+      "score": 8
+    },
+    {
+      "contestant": 4,
+      "judge": 4,
+      "category": "Interview",
+      "score": 8
+    },
+    {
+      "contestant": 4,
+      "judge": 5,
+      "category": "Interview",
+      "score": 8
+    },
+    {
+      "contestant": 5,
+      "judge": 1,
+      "category": "Interview",
+      "score": 6
+    },
+    {
+      "contestant": 5,
+      "judge": 2,
+      "category": "Interview",
+      "score": 4
+    },
+    {
+      "contestant": 5,
+      "judge": 3,
+      "category": "Interview",
+      "score": 6
+    },
+    {
+      "contestant": 5,
+      "judge": 4,
+      "category": "Interview",
+      "score": 6
+    },
+    {
+      "contestant": 5,
+      "judge": 5,
+      "category": "Interview",
+      "score": 6
+    }
   ]
 }
