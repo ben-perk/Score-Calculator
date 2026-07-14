@@ -32,15 +32,15 @@
   "categories": [
     {
       "id": "category_1",
-      "name": "Evening Wear",
+      "name": "Evening Wear"
     },
     {
       "id": "category_2",
-      "name": "Talent",
+      "name": "Talent"
     },
     {
       "id": "category_3",
-      "name": "Interview",
+      "name": "Interview"
     }
   ],
   "scores": [
