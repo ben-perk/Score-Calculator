@@ -168,31 +168,31 @@
       "contestant": 5,
       "judge": 1,
       "category": "Evening Wear",
-      "score": 6
+      "score": 4
     },
     {
       "contestant": 5,
       "judge": 2,
       "category": "Evening Wear",
-      "score": 4
+      "score": 2
     },
     {
       "contestant": 5,
       "judge": 3,
       "category": "Evening Wear",
-      "score": 6
+      "score": 4
     },
     {
       "contestant": 5,
       "judge": 4,
       "category": "Evening Wear",
-      "score": 6
+      "score": 4
     },
     {
       "contestant": 5,
       "judge": 5,
       "category": "Evening Wear",
-      "score": 6
+      "score": 4
     },
     {
       "contestant": 1,
@@ -288,61 +288,61 @@
       "contestant": 4,
       "judge": 1,
       "category": "Talent",
-      "score": 80
+      "score": 82
     },
     {
       "contestant": 4,
       "judge": 2,
       "category": "Talent",
-      "score": 60
+      "score": 62
     },
     {
       "contestant": 4,
       "judge": 3,
+      "category": "Talent",
+      "score": 83
+    },
+    {
+      "contestant": 4,
+      "judge": 4,
       "category": "Talent",
       "score": 81
     },
     {
       "contestant": 4,
-      "judge": 4,
-      "category": "Talent",
-      "score": 79
-    },
-    {
-      "contestant": 4,
       "judge": 5,
       "category": "Talent",
-      "score": 82
+      "score": 84
     },
     {
       "contestant": 5,
       "judge": 1,
       "category": "Talent",
-      "score": 90
+      "score": 86
     },
     {
       "contestant": 5,
       "judge": 2,
       "category": "Talent",
-      "score": 70
+      "score": 66
     },
     {
       "contestant": 5,
       "judge": 3,
       "category": "Talent",
-      "score": 91
+      "score": 87
     },
     {
       "contestant": 5,
       "judge": 4,
       "category": "Talent",
-      "score": 89
+      "score": 85
     },
     {
       "contestant": 5,
       "judge": 5,
       "category": "Talent",
-      "score": 92
+      "score": 88
     },
     {
       "contestant": 1,
@@ -468,31 +468,31 @@
       "contestant": 5,
       "judge": 1,
       "category": "Interview",
-      "score": 6
+      "score": 4
     },
     {
       "contestant": 5,
       "judge": 2,
       "category": "Interview",
-      "score": 4
+      "score": 2
     },
     {
       "contestant": 5,
       "judge": 3,
       "category": "Interview",
-      "score": 6
+      "score": 4
     },
     {
       "contestant": 5,
       "judge": 4,
       "category": "Interview",
-      "score": 6
+      "score": 4
     },
     {
       "contestant": 5,
       "judge": 5,
       "category": "Interview",
-      "score": 6
+      "score": 4
     }
   ]
 }
